@@ -21,9 +21,10 @@ data/            datos de entrada + PROCEDENCIA.md (de dónde sale cada cosa)
 src/dosregimenes/  código (un módulo por eslabón de la cadena)
 checks/          un test por número; run_checks.py corre todos e imprime una línea c/u
 scripts/         un script por figura del informe
-figures/         salida
+figures/         figuras generadas
+resultados/      tablas numéricas derivadas (CSV) que cita el informe
 notas/           wiki del proyecto: notación, log append-only, fichas de fuentes
-informe/         informe.html + informe.pdf (para personas)
+informe/         teoria.md + informe.html + informe.pdf (para personas)
 ```
 
 ## Reproducir

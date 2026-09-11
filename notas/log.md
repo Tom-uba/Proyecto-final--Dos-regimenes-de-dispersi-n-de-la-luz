@@ -52,3 +52,83 @@ Una entrada por sesión de trabajo. Al cerrar cada etapa: qué se hizo, qué dio
 - `uv sync` / `uv.lock`: falta correr una vez que el entorno esté.
 
 **Próximo:** Etapa 1 (marco teórico) — en paralelo, Etapa 2 (reducción de datos ópticos).
+
+---
+
+## 2026-09-11 — Etapas 1 y 2 · COMPLETAS
+
+### Etapa 2 — reducción de datos ópticos
+
+**Hecho**
+
+- Sub-bandas corregidas a **(470–590)** y **(600–745) nm** (antes arrancaban en 450, fuera
+  de la banda de análisis). La máscara de 560–568 nm se saltea dentro de la primera.
+- `scripts/02_espectros_promedio.py` → `figures/02_espectros_promedio.{pdf,png}`.
+  Cruce de la muestra 4 con el promedio de 1–3 en **λ ≈ 586 nm**.
+- `scripts/02_pendiente_por_muestra.py` → `resultados/02_pendiente.csv` (16 filas: 4
+  muestras × 2 métodos × 2 sub-bandas) y `figures/02_pendiente_por_muestra.{pdf,png}`.
+- Nuevo directorio `resultados/` para tablas numéricas derivadas que cita el informe.
+
+**Resultado central — pendiente espectral `s = −d ln R / d ln λ`**
+
+| sub-banda | s₁₂₃ | s₄ | Δ |
+|---|---|---|---|
+| 470–590 nm | 0.58 | 1.30 | 0.71 |
+| 600–745 nm | **0.21** | **1.44** | **1.23** |
+
+Las muestras micrométricas se **aplanan** hacia el rojo (0.58 → 0.21) mientras la
+nanométrica se mantiene empinada (1.30 → 1.44). Es la firma esperada: plateau acromático
+de Mie vs. flanco cromático de la transición.
+
+**Checks**
+
+- `check 2.1` PASA — los dos métodos coinciden (peor discrepancia relativa **5 %**, en
+  m1 600–745 nm) y el orden m4 > m1,m2,m3 se mantiene en ambas sub-bandas.
+- `check 2.2` PASA — pero con un matiz que se reporta explícito, no se esconde:
+
+  | sub-banda | Δ | σ_entre (muestra a muestra en 1–3) | σ_ajuste (por ajuste individual) |
+  |---|---|---|---|
+  | 470–590 | 0.71 | 61σ | **1.3σ** |
+  | 600–745 | 1.23 | 59σ | **4.9σ** |
+
+  El "61σ" usa la dispersión entre las muestras 1–3, que es minúscula (0.01–0.02) porque
+  esas tres son casi idénticas. Con la vara conservadora (incertidumbre del ajuste,
+  0.2–0.4) la separación es **sólida en el rojo pero marginal en el azul**. El check se
+  reescribió para reportar las dos varas.
+
+**Hallazgo metodológico**
+
+**La banda discriminante es 600–745 nm.** Es donde el contraste entre regímenes es máximo
+(1–3 ya aplanadas, 4 todavía empinada). La comparación modelo–medición de las Etapas 5 y 6
+debe ponderar esa banda.
+
+### Etapa 1 — marco teórico
+
+**Hecho**
+
+- `informe/teoria.md`: capítulo autocontenido con ecuaciones numeradas (1)–(10) y citadas.
+  Cubre: parámetro de tamaño y contraste (m ≈ 0.68, el scatterer es aire en sólido, m < 1);
+  límites Rayleigh (Q_sca = 8/3 x⁴|…|², σ ∝ D⁶/λ⁴) y difracción (Q_sca → 2, paradoja de la
+  extinción); la transición; ℓ* y la reflectancia de lámina; factor de estructura de
+  Percus–Yevick y dispersión dependiente; óptimo de blancura.
+- **Frontera definida operacionalmente.** Tres candidatas: F1 `x = 1` (estándar, no depende
+  de Mie), F2 el `x` donde `|d ln σ_sca/d ln λ|` baja de un umbral, F3 el `x` del máximo de
+  `|dQ_sca/dx|`. **F1 designada primaria**; F2 y F3 se calculan en la Etapa 5 como
+  sensibilidad. Razón decisiva: las 4 muestras caen lejos de la frontera por ambos lados
+  (x ≈ 0.45–0.8 vs. 7–13), así que la conclusión **no depende** de dónde se ponga la línea.
+
+**Punto conceptual que quedó establecido (§3.3 de `teoria.md`)**
+
+`s` medida **no** es el exponente de `σ_sca(λ)`. La cadena σ_sca → ℓ* → R comprime los
+exponentes porque `R` está acotada y satura. Un medio perfectamente Rayleigh **no** da
+`s = 4`. Por eso medir `s₄ ≈ 1.4` no refuta el régimen de transición — y por eso hace falta
+el modelo de lámina de la Etapa 5 para convertir una pendiente en una afirmación sobre el
+régimen. Esto es lo que la Etapa 5 tiene que reproducir sin parámetros de ajuste.
+
+**Pendiente**
+
+- `uv` sigue sin instalar; los scripts se corrieron con el intérprete de `tareas/peters1964`
+  vía `PYTHONPATH`. Falta `uv sync` y generar `uv.lock`.
+- Las ecuaciones con límite conocido ((3) y (5)) esperan sus tests en `check_5_1_*`.
+
+**Próximo:** Etapa 3 (morfometría: P(D) desde las SEM, con el conjunto de anotación manual).

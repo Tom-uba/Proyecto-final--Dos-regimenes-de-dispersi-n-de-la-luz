@@ -12,7 +12,7 @@ from dataclasses import dataclass
 import numpy as np
 from scipy.interpolate import UnivariateSpline
 
-SUBBANDAS_NM = ((450.0, 600.0), (600.0, 750.0))
+SUBBANDAS_NM = ((470.0, 590.0), (600.0, 745.0))
 
 
 @dataclass
