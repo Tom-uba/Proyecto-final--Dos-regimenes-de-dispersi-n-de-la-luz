@@ -125,10 +125,18 @@ exponentes porque `R` está acotada y satura. Un medio perfectamente Rayleigh **
 el modelo de lámina de la Etapa 5 para convertir una pendiente en una afirmación sobre el
 régimen. Esto es lo que la Etapa 5 tiene que reproducir sin parámetros de ajuste.
 
+### Entorno reproducible · CERRADO
+
+- `uv` 0.12.13 instalado. `uv sync` construyó el entorno: 21 paquetes, incluido
+  **miepython 3.3.0** (lo que necesita la Etapa 5). `uv.lock` versionado.
+- Verificado que todo reproduce **sin parches de `PYTHONPATH`**:
+  `uv run python checks/run_checks.py` → 3 checks, 0 fallas, valores idénticos a los
+  obtenidos con el intérprete prestado. Los scripts también.
+- La ruta de reproducción del README (`uv sync` → `uv run …`) ya es real, no aspiracional.
+
 **Pendiente**
 
-- `uv` sigue sin instalar; los scripts se corrieron con el intérprete de `tareas/peters1964`
-  vía `PYTHONPATH`. Falta `uv sync` y generar `uv.lock`.
-- Las ecuaciones con límite conocido ((3) y (5)) esperan sus tests en `check_5_1_*`.
+- Las ecuaciones con límite conocido ((3) y (5) de `teoria.md`) esperan sus tests en
+  `check_5_1_*`.
 
 **Próximo:** Etapa 3 (morfometría: P(D) desde las SEM, con el conjunto de anotación manual).
