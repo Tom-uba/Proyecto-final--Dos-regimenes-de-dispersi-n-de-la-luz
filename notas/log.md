@@ -326,3 +326,78 @@ que era la pregunta de la propuesta hermana archivada.
 
 Queda como **limitación declarada** del proyecto, con su firma esperada escrita de
 antemano para que no se pueda racionalizar después.
+
+---
+
+## 2026-09-11 (e) — Etapa 5, primera parte · HERRAMIENTAS LISTAS, COMPARACIÓN BLOQUEADA
+
+**Hecho**
+
+- `src/dosregimenes/mie.py` real: `Q_sca`, `g`, promedios sobre P(D), `ell_star_diluido`.
+- `src/dosregimenes/estructura.py` real: `S_py` de Percus–Yevick por integración numérica
+  de `c(r)`, y `factor_transporte`.
+- `src/dosregimenes/lamina.py` real: índice efectivo, reflectancia interna, `R_difusion`
+  con bordes extrapolados, `espesor_optico`.
+- `check 5.1` PASA: Rayleigh con pendiente 4 (error 1.3e-3) y **prefactor a +0.002 %** del
+  `8/3|(m²−1)/(m²+2)|²` de la ec. (3); difracción ⟨Q_sca⟩ = 2.0196 (+0.98 % de 2).
+- `check 5.4` PASA: `S(0)` coincide con `(1−η)⁴/(1+2η)²` **al 0.00 %** en η ∈ [0.15, 0.40];
+  `|S(q→∞)−1| ≤ 0.009`.
+
+**Sutileza de convención — resuelta y documentada**
+
+El `x` de Mie usa λ EN EL MEDIO: `x_Mie = n_sol·x ≈ 1.47·x`. No es el `x = πD/λ₀` del eje
+de la Etapa 4. Confundirlos mete un factor 1.47. Documentado en el encabezado de `mie.py`.
+No afecta la conclusión (ambos grupos escalan igual; solape y hueco no cambian), y las
+fronteras físicas calculadas con Mie, que no dependen de convención, son:
+
+| definición | x_Mie | x_vacío |
+|---|---|---|
+| F1 (convención del proyecto) | 1.47 | 1.00 |
+| F2 (p baja de 2) | 2.44 | **1.66** |
+| F3 (máx \|dQ_sca/dx\|) | 3.18 | **2.16** |
+
+F2 y F3 caen POR ENCIMA de F1, o sea que F1 = 1 es una elección conservadora, no un
+artefacto. Las cuatro muestras siguen del mismo lado con cualquiera de las tres.
+
+**Porosidad φ — dos rutas independientes coinciden**
+
+%Area de ImageJ: Z1 (campo 94 µm, con pieles) 10.1 %; Z2 (campo 35 µm) 21.3 %; Z4 de m4
+(campo 5.6 µm, dentro del núcleo) 33.0 %. Corrigiendo Z1 por la dilución de las pieles
+(núcleo/total de la slide 13) da 0.18–0.20, que coincide con el 0.21 crudo de Z2.
+Se adopta **φ = 0.20 ± 0.05 (m1–3)** y **0.33 ± 0.03 (m4)**.
+
+**Primera corrida de la cadena completa — y tres problemas**
+
+| m | ℓ*(470) | ℓ*(750) | L/ℓ* | R(470) pred | R(750) pred | s_pred (rojo) | s_med (rojo) |
+|---|---|---|---|---|---|---|---|
+| 1 | 22.0 | 24.0 | **2.00** | 0.507 | 0.493 | 0.06 | 0.19 |
+| 2 | 23.3 | 25.3 | **1.68** | 0.480 | 0.467 | 0.06 | 0.20 |
+| 3 | 29.4 | 31.7 | **1.31** | 0.443 | 0.432 | 0.05 | 0.22 |
+| 4 | 2.41 | 5.94 | 8.74 | 0.830 | 0.686 | 0.51 | 1.44 |
+
+**P1 · La difusión está fuera de rango para las muestras 1–3.** Requiere L ≫ ℓ* y da
+L/ℓ* ≈ 1.3–2.0. Hace falta el Monte Carlo, que era opcional y pasa a ser necesario.
+
+**P2 · R + T > 1 en los datos medidos.** Exceso +0.115 / +0.128 / +0.126 / +0.182 (m1–m4),
+imposible en un material no absorbente. Y **no es constante**: la pendiente de ln(R+T) vs
+ln λ es −0.10 a −0.16, o sea el exceso es MAYOR EN EL AZUL. El cuaderno documenta que el
+patrón blanco era *"medio amarillento o gastado"*: un patrón degradado —y más degradado en
+el azul— infla `R = S/P` y **también infla la pendiente `s` medida**. Es la explicación
+candidata más simple y encaja con el perfil observado.
+
+Dato a favor de que el problema está en R y no en T: **la T predicha por el modelo coincide
+con la medida** (m1: 0.50 predicha vs 0.45–0.48 medida), mientras que la R no (0.49 vs 0.63).
+
+**P3 · El modelo subestima `s` en todas las muestras**, pero no por igual:
+déficit 0.13 / 0.14 / 0.17 en m1–3 (muy consistente entre sí) y **0.93 en m4**.
+Un error de calibración multiplicativo con dependencia espectral desplaza `s` por igual en
+todas las muestras, así que podría explicar el déficit de m1–3 pero **no el de m4**.
+
+**Estado de `check 5.2`: NO SE CORRE TODAVÍA.** Correrlo ahora daría FALLA (factores 2.8–3.2
+contra la tolerancia de 2), pero sería una falla no interpretable: falta el Monte Carlo (P1),
+falta aplicar el factor de estructura a la cadena, y la escala de `R` está en duda (P2).
+Declarar el resultado antes de cerrar esos tres sería exactamente lo que el proyecto dice
+que no hay que hacer.
+
+**Pendiente inmediato:** decidir qué hacer con la calibración de R (P2) — es una pregunta
+sobre la medición, no sobre el modelo — y construir el Monte Carlo (P1).
