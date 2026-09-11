@@ -1,0 +1,23 @@
+# entorno
+.venv/
+__pycache__/
+*.pyc
+.uv/
+
+# datos pesados: las 78 SEM no se versionan (67 MB). Ver data/sem/README.md
+data/sem/*.tif
+data/sem/**/*.tif
+
+# salidas regenerables
+figures/*.png
+figures/*.pdf
+!figures/.gitkeep
+
+# editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# informe compilado (se regenera; el fuente sí se versiona)
+informe/*.pdf
