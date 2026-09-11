@@ -26,6 +26,15 @@ from PIL import Image
 
 BANNER_PX = 60
 
+# --- perillas libres de la segmentación -------------------------------------
+# Estos cuatro valores NO salen de ninguna medición: se eligieron a ojo en la fase de
+# factibilidad. El diámetro medido depende de ellos, así que hasta que el conjunto de
+# anotación manual los calibre (Etapa 3), todo D que salga de acá es "D dado este umbral".
+FACTOR_OTSU = 0.92        # multiplica el umbral de Otsu: <1 agranda los poros
+CLIP_LIMIT = 0.02         # realce de contraste local (CLAHE)
+SIGMA_SUAVIZADO = 1.0     # px, gaussiana previa al umbralado
+D_MIN_UM_DEFECTO = 0.15   # µm, poros más chicos se descartan como ruido
+
 
 def pixel_size_m(path: str | Path) -> float | None:
     """Tamaño de píxel en metros, del tag Zeiss 34118 (primer float)."""
@@ -51,17 +60,19 @@ def cargar_gris(path: str | Path, recortar_banner: bool = True) -> np.ndarray:
     return a[y0:y1, x0:x1]
 
 
-def segmentar_poros(gris: np.ndarray, px_m: float, d_min_um: float = 0.15):
+def segmentar_poros(gris: np.ndarray, px_m: float, d_min_um: float = D_MIN_UM_DEFECTO):
     """Máscara booleana de poros (regiones oscuras) por Otsu + filtro de tamaño."""
     from skimage import exposure, filters
     from skimage.morphology import remove_small_holes, remove_small_objects
 
-    g = exposure.equalize_adapthist(gris, clip_limit=0.02)
-    gs = filters.gaussian(g, 1.0)
-    dark = gs < filters.threshold_otsu(gs) * 0.92
+    g = exposure.equalize_adapthist(gris, clip_limit=CLIP_LIMIT)
+    gs = filters.gaussian(g, SIGMA_SUAVIZADO)
+    dark = gs < filters.threshold_otsu(gs) * FACTOR_OTSU
     min_px = max(64, int((d_min_um * 1e-6 / px_m) ** 2))
-    dark = remove_small_objects(dark, min_px)
-    dark = remove_small_holes(dark, min_px // 2)
+    # skimage >= 0.26: max_size elimina objetos de area <= valor; el min_size viejo
+    # eliminaba area < valor. Se resta 1 para conservar el comportamiento.
+    dark = remove_small_objects(dark, max_size=min_px - 1)
+    dark = remove_small_holes(dark, max_size=min_px // 2 - 1)
     return dark
 
 
