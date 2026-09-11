@@ -47,11 +47,64 @@ def pixel_size_m(path: str | Path) -> float | None:
     return None
 
 
+def bloque_banner(a: np.ndarray) -> tuple[int, int]:
+    """Filas [y0, y1) que ocupa el banner Zeiss: el bloque contiguo de filas oscuras al pie.
+
+    Más preciso que restar BANNER_PX fijo: en estas imágenes el banner ocupa 41 px, no 60,
+    y el recorte fijo tiraba 19 filas de imagen útil.
+
+    Dos trampas, las dos encontradas a los golpes:
+      - la ÚLTIMA fila del archivo es clara (borde), así que no sirve recorrer desde abajo
+        parando en la primera fila no oscura: hay que buscar el bloque oscuro más largo;
+      - y por lo mismo el bloque tiene que devolver también su FIN, porque si se recorta
+        `a[y0:]` esa fila clara vuelve a entrar y arruina la medición de la barra.
+    """
+    h = a.shape[0]
+    ini = max(0, h - 90)
+    oscura = np.median(a[ini:], axis=1) < 0.25
+    mejor, blk = (0, h - BANNER_PX, h), None
+    for i, v in enumerate(oscura):
+        if v and blk is None:
+            blk = i
+        elif not v and blk is not None:
+            if i - blk > mejor[0]:
+                mejor = (i - blk, ini + blk, ini + i)
+            blk = None
+    if blk is not None and len(oscura) - blk > mejor[0]:
+        mejor = (len(oscura) - blk, ini + blk, h)
+    return (mejor[1], mejor[2]) if mejor[0] > 10 else (h - BANNER_PX, h)
+
+
+def detectar_banner(a: np.ndarray) -> int:
+    """Fila donde empieza el banner Zeiss."""
+    return bloque_banner(a)[0]
+
+
+def medir_barra_escala(path: str | Path, xmax: int = 220) -> int:
+    """Largo en píxeles de la barra de escala quemada (tercio izquierdo del banner).
+
+    Se mide como el run horizontal claro más largo dentro del banner. El resultado
+    sobreestima ~1 px porque va de borde externo a borde externo y no de centro a
+    centro (a 74 px eso es 1.35 %); ver check 3.2.
+    """
+    a = np.asarray(Image.open(path).convert("L"), float) / 255.0
+    y0, y1 = bloque_banner(a)
+    ban = a[y0:y1, :xmax]
+    mejor = 0
+    for thr in (0.30, 0.40, 0.50, 0.60):
+        for row in ban > thr:
+            d = np.diff(np.concatenate(([0], row.astype(np.int8), [0])))
+            ini, fin = np.where(d == 1)[0], np.where(d == -1)[0]
+            if len(ini):
+                mejor = max(mejor, int((fin - ini).max()))
+    return mejor
+
+
 def cargar_gris(path: str | Path, recortar_banner: bool = True) -> np.ndarray:
     """Imagen en gris [0,1], sin el banner Zeiss ni bordes casi constantes."""
     a = np.asarray(Image.open(path).convert("L"), float) / 255.0
     if recortar_banner:
-        a = a[: a.shape[0] - BANNER_PX]
+        a = a[: detectar_banner(a)]
     cs, rs = a.std(0), a.std(1)
     x0 = int(np.argmax(cs > 0.02))
     x1 = a.shape[1] - int(np.argmax(cs[::-1] > 0.02))

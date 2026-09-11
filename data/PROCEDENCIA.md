@@ -134,6 +134,59 @@ Parámetros: EHT 3 kV · WD ≈ 6.8–8.5 mm (varió) · detector SE2 · dwell 5
 
 ---
 
+## 4bis. DATASET 2b — Tablas de ImageJ (morfometría)  · PRIMARIO para P(D)
+
+Producidas por el pipeline de Fiji/ImageJ del Labo 6 sobre las mismas 78 imágenes.
+Copiadas a `data/imagej/`. **Son la medición primaria de P(D)**: separan poros
+individuales mucho mejor que la segmentación rápida de `src/dosregimenes/feret.py`
+(circularidad media 0.86, solidez 0.89, contra manchones fusionados), que queda como
+segunda implementación independiente para el check 3.1.
+
+| archivo en `data/imagej/` | origen | contenido |
+|---|---|---|
+| `poros_m1a3_limpios.csv` | `Results_limpios.csv` (21/06/2026) | 11 437 poros, 54 imágenes: m1–3 × 2 mitades × 3 zonas × 3 zooms |
+| `resumen_por_imagen_m1a3.csv` | `Resumen_por_imagen.csv` | una fila por imagen, con Muestra/Orientacion/Zona/Zoom |
+| `poros_m4_z4.csv` | `Resultados muestra 4 Z4.csv` (02/07/2026) | 9 365 poros, 6 imágenes de la muestra 4 a 50000× |
+| `resumen_por_imagen_m4_z4.csv` | `Resumen_Total muestra 4 Z4.csv` | resumen de esas 6 |
+| `v1_summary_z1_gcb.csv`, `v1_poros_z1_gcb.csv` | `Por escala/Resultados zoom 4000/` (18/06) | versión anterior, con los nombres `gcb####` originales |
+| `v1_summary_z2_gcb.csv`, `v1_poros_z2_gcb.csv` | `Por escala/Resultados zoom 8000/` (18/06) | ídem, 8000× |
+
+**Nomenclatura de las etiquetas:** `<muestra><mitad>-<zona>-Z<zoom>.tif`, con
+mitad `U`=arriba / `D`=abajo, zona `U`/`C`/`D` (las tres regiones), y
+`Z1`=3000×, `Z2`=8000×, `Z3`=20000×, `Z4`=50000×.
+
+**Erratum de rotulado:** el informe, la presentación y los nombres de carpeta dicen
+**4000×** para el aumento más bajo. La metadata del instrumento dice **3000×**
+(`MANIFEST.csv`, tag Zeiss). Manda la metadata. Los 18 archivos de `v1_summary_z1_gcb.csv`
+son exactamente las 18 imágenes a 3000× de las muestras 1–3, lo que cierra el mapeo
+`Z1 ↔ 3000× ↔ gcb####`.
+
+**Resultado (aumento nativo de cada muestra):**
+
+| muestra | aumento | n | media | mediana | moda | p10–p90 |
+|---|---|---|---|---|---|---|
+| 1 | 3000× | 2256 | 1.917 | **1.763** | 1.428 | 1.17–2.81 |
+| 2 | 3000× | 2613 | 1.949 | **1.741** | 1.437 | 1.16–2.96 |
+| 3 | 3000× | 2593 | 2.098 | **1.741** | 1.413 | 1.16–3.47 |
+| 4 | 50000× | 9365 | 0.109 | **0.100** | 0.075 | 0.060–0.170 |
+
+Todo en µm. Separación de tamaño m1–3 vs m4: **17.5×**, sin solapamiento entre las
+distribuciones.
+
+**Incertidumbre de D — la que manda no es la estadística.** La distribución tiene cola
+larga, así que media/mediana/moda difieren ~40 % entre sí (1.99 / 1.75 / 1.39 en m1–3).
+Y las dos versiones del propio análisis del Labo 6 difieren entre sí: `v1` da media
+1.54 ± 0.12 µm en Z1 contra 1.99 µm de `limpios`, un 29 %. Más el ~11 % contra el pipeline
+de Python. **Se adopta ±25–30 % como incertidumbre de D por elecciones de segmentación**,
+y se propaga a `x = πD/λ`. No compromete la conclusión: `x` vale ~10 en m1–3 y ~0.57 en m4,
+un factor 17, así que un 30 % no mueve a nadie de lado de la frontera.
+
+**Lo que estas tablas NO cierran.** Los dos pipelines (ImageJ y Python) son umbralado sobre
+las mismas imágenes: coincidir descarta errores de implementación, no un sesgo común. Eso
+sólo lo cerraría anotación manual de contornos, que queda como limitación declarada.
+
+---
+
 ## 5. DATASET 3 — Transmitancia T(λ)  · VÁLIDO (confirmado por el usuario)
 
 | tira | ruta | fecha | n |

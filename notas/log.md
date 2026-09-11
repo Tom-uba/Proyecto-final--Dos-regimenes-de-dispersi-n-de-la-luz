@@ -140,3 +140,71 @@ régimen. Esto es lo que la Etapa 5 tiene que reproducir sin parámetros de ajus
   `check_5_1_*`.
 
 **Próximo:** Etapa 3 (morfometría: P(D) desde las SEM, con el conjunto de anotación manual).
+
+---
+
+## 2026-09-11 (b) — Etapa 3 · COMPLETA
+
+**Cambio de plan: aparecieron las tablas de ImageJ del Labo 6.**
+
+El usuario tenía ya calculado el diámetro de Feret por poro para todas las imágenes.
+Se copiaron a `data/imagej/` (2.9 MB, 8 archivos) y **pasan a ser la medición primaria de
+P(D)**; `src/dosregimenes/feret.py` queda como segunda implementación independiente.
+Motivo: el pipeline de ImageJ separa poros individuales (circ. 0.86, solidez 0.89), el mío
+los fusiona en manchones e infla la cola. Detalle en `data/PROCEDENCIA.md` §4bis.
+
+**Hecho**
+
+- Las 78 `.tif` se versionaron en `data/sem/` (66.6 MB). Sin ellas la Etapa 3 no se
+  reproduce desde un clon, que era el punto del repositorio.
+- `src/dosregimenes/imagej.py`: loader de las tablas, decodificación de etiquetas
+  `<muestra><mitad>-<zona>-Z<zoom>`, `PD()` y `resumen()`.
+- `scripts/03_distribucion_poros.py` → `resultados/03_PD.csv` y
+  `figures/03_distribucion_poros.{pdf,png}` (eje log, las dos escalas en un panel).
+- `feret.py`: banner detectado dinámicamente (ocupa 41 px, no los 60 fijos que yo
+  restaba — se recuperaron 19 filas de imagen útil) y `medir_barra_escala()`.
+  Las cuatro perillas de segmentación ahora son constantes con nombre.
+
+**Resultado central — P(D) en el aumento nativo de cada muestra**
+
+| muestra | aumento | n | mediana | separación |
+|---|---|---|---|---|
+| 1 | 3000× | 2256 | 1.763 µm | |
+| 2 | 3000× | 2613 | 1.741 µm | |
+| 3 | 3000× | 2593 | 1.741 µm | |
+| 4 | 50000× | 9365 | **0.100 µm** | **17.5×** |
+
+Las tres micrométricas coinciden en la mediana al 1 %. Las distribuciones **no se solapan**.
+
+**Checks**
+
+- `check 3.1` PASA. m1–3 mediana 1.75 µm (+10 % vs. el 1.6 del informe); m4 0.100 µm (+0 %).
+  ImageJ vs Python sobre las mismas 3 imágenes: 1.75 vs 1.95 µm (+11 %).
+- `check 3.2` PASA. Escala del tag TIFF vs. barra quemada en 4 magnificaciones: peor
+  desvío **+1.9 %** (tolerancia 2 %). El sesgo es positivo y sistemático porque el largo se
+  mide de borde externo a borde externo; a 74 px, 1 px son 1.35 %.
+
+**Hallazgos**
+
+1. **La incertidumbre de D es ±25–30 %, y es de elección de análisis, no estadística.**
+   Media/mediana/moda difieren 40 % entre sí por la cola. Las dos versiones del propio
+   análisis del Labo 6 difieren 29 % entre ellas (v1: 1.54 µm; limpios: 1.99 µm en Z1).
+   El "1.6 µm" del informe cae en el medio de ese rango. No compromete nada: `x` ≈ 10 vs
+   0.57 es un factor 17, y un 30 % no cruza a nadie la frontera.
+2. **Erratum de rotulado:** informe, presentación y carpetas dicen 4000× para el aumento
+   más bajo; la metadata del instrumento dice **3000×**. Manda la metadata. Mapeo
+   `Z1 ↔ 3000× ↔ gcb####` cerrado vía `v1_summary_z1_gcb.csv`.
+3. **Las mitades `abajo` no sesgan el tamaño.** Descartarlas mueve la mediana
+   +4.1 / −0.6 / −3.8 / +1.0 % en m1/m2/m3/m4 — signo **no** consistente, o sea dispersión
+   entre regiones y no el daño de corte. Se usan las dos mitades por el n mayor.
+   (Mi docstring inicial decía "<3 %"; era falso, se corrigió.)
+4. **La anotación manual bajó de necesaria a opcional.** Dos pipelines independientes
+   coinciden al 11 % y el ±30 % no amenaza la conclusión. Queda como limitación declarada:
+   ambos son umbralado sobre las mismas imágenes, así que descartan errores de
+   implementación pero no un sesgo común.
+
+**Bug propio, encontrado y corregido:** al hacer el banner dinámico dejé el recorte abierto
+(`a[y0:]`), y como la última fila del archivo es clara volvía a entrar y rompía la medición
+de la barra (+133 % en vez de +1.9 %). `bloque_banner()` ahora devuelve inicio y fin.
+
+**Próximo:** Etapa 4 (mapa de regímenes: P(x, λ) por muestra sobre el eje x = πD/λ).
