@@ -208,3 +208,59 @@ Las tres micrométricas coinciden en la mediana al 1 %. Las distribuciones **no 
 de la barra (+133 % en vez de +1.9 %). `bloque_banner()` ahora devuelve inicio y fin.
 
 **Próximo:** Etapa 4 (mapa de regímenes: P(x, λ) por muestra sobre el eje x = πD/λ).
+
+---
+
+## 2026-09-11 (c) — Etapa 4 · COMPLETA
+
+**Hecho**
+
+- `src/dosregimenes/size_param.py` reescrito: `nube_x()` (la muestra de P(x) sobre todos
+  los pares D × λ), `banda_x()` (percentiles y fracción sobre la frontera) y `solape()`
+  (coeficiente ∫min(f,g) sobre log₁₀x, que es la métrica con la que se decide "disjuntas").
+- `scripts/04_mapa_regimenes.py` → `resultados/04_banda_x.csv` y
+  `figures/04_mapa_regimenes.{pdf,png}` — la figura de cabecera del informe.
+- λ recorre la **banda de análisis (470–750 nm)**, no el "visible" 400–700 convencional:
+  es donde efectivamente se midió R. Con 400–700 el cuadro no cambia.
+
+**Resultado central — las cuatro muestras en el eje x**
+
+| muestra | p5 | mediana | p95 | frac. con x > 1 |
+|---|---|---|---|---|
+| 1 | 5.35 | 9.11 | 17.93 | 100 % |
+| 2 | 5.34 | 9.08 | 19.26 | 100 % |
+| 3 | 5.31 | 9.18 | 22.93 | 100 % |
+| 4 | 0.27 | **0.52** | 1.05 | **6.2 %** |
+
+**Check**
+
+- `check 4.1` PASA. Solape entre las micrométricas: **0.92–0.98**. Solape de cualquiera de
+  ellas con la muestra 4: **0.000**. Hueco entre p95(m4)=1.05 y p5(m1–3)=5.31: **factor 5.1**.
+
+**Hallazgo: el mecanismo del cruce espectral**
+
+La cola superior de la muestra 4 cruza la frontera, y cuánto lo hace depende de λ:
+
+| muestra 4 | x mediana | x p95 | frac. x > 1 |
+|---|---|---|---|
+| en 470 nm | 0.67 | 1.28 | **16.7 %** |
+| en 750 nm | 0.42 | 0.80 | **1.5 %** |
+
+Un 17 % de sus poros alcanza el régimen eficiente en el azul y prácticamente ninguno en el
+rojo. Eso da un mecanismo concreto para lo medido en la Etapa 2: la muestra 4 es la **más**
+reflectante en el azul (R=0.92 a 450 nm, por encima de las tres micrométricas) y la **menos**
+en el rojo (R=0.46 a 750 nm), con cruce en ~586 nm. **Es una hipótesis, no una demostración**:
+convertirla en predicción cuantitativa es exactamente el trabajo de la Etapa 5.
+
+**Por qué la conclusión es robusta.** El hueco de factor 5.1 entre los dos grupos es mucho
+mayor que el ±25–30 % de incertidumbre en D (PROCEDENCIA §4bis), que además desplaza las
+nubes en bloque sin acercarlas. Y como F1 (x = 1) cae dentro de ese hueco vacío, mover la
+definición de frontera dentro de un factor ~5 no cambia de qué lado queda cada muestra.
+
+**Error propio:** corrí `Get-Content | Set-Content -Encoding utf8` sobre un archivo UTF-8
+para un reemplazo trivial y le rompí todos los acentos (mojibake). Se reescribió el archivo
+entero. Para editar archivos con acentos, usar la herramienta de edición, nunca un
+round-trip de texto por PowerShell.
+
+**Próximo:** Etapa 5 (predicción de s sin parámetros de ajuste: Mie + P(D) + factor de
+estructura → ℓ*(λ) → R de lámina → s predicha, contra la s medida de la Etapa 2).
