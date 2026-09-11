@@ -264,3 +264,65 @@ round-trip de texto por PowerShell.
 
 **Próximo:** Etapa 5 (predicción de s sin parámetros de ajuste: Mie + P(D) + factor de
 estructura → ℓ*(λ) → R de lámina → s predicha, contra la s medida de la Etapa 2).
+
+---
+
+## 2026-09-11 (d) — Revisión de anomalías de la Etapa 4
+
+Se revisó si los resultados salieron como se esperaba. Las medianas sí (9.1 y 0.52, contra
+7–13 y 0.45–0.8 predichos en `teoria.md`). Aparecieron tres desviaciones.
+
+### A1 · Error de documentación en `teoria.md` — CORREGIDO
+
+La tabla de §1 daba `x = 7–13` para las muestras 1–3. Ese rango sale de fijar `D` y variar
+sólo `λ` (ancho factor 1.6). El ancho real es factor **3.4–4.3**:
+
+| muestra | p5–p95 real | factor | con D fijo | factor |
+|---|---|---|---|---|
+| 1 | 5.35–17.93 | 3.4 | 7.38–11.78 | 1.6 |
+| 2 | 5.34–19.26 | 3.6 | 7.29–11.64 | 1.6 |
+| 3 | 5.31–22.93 | 4.3 | 7.29–11.64 | 1.6 |
+| 4 | 0.27–1.05 | 3.8 | 0.42–0.67 | 1.6 |
+
+**La polidispersión aporta más del doble de ancho que el recorrido de λ.** Tabla corregida
+y nota agregada en `teoria.md` §1.
+
+### A2 · La muestra 3 tiene el doble de cola — A VIGILAR EN ETAPA 5
+
+| muestra | mediana | p90 | p99 | frac(D>3 µm) |
+|---|---|---|---|---|
+| 1 | 1.763 | 2.808 | 4.75 | 7.9 % |
+| 2 | 1.741 | 2.955 | 5.01 | 9.4 % |
+| 3 | 1.741 | 3.472 | 6.55 | **15.0 %** |
+
+Misma mediana, casi el doble de poros grandes. Y la muestra 3 es la de **mayor reflectancia
+medida** (Etapa 2) y la de banda de dispersión más ancha entre las tres (±2.6 %). Con n=3 es
+anecdótico; la Etapa 5 lo confirma o lo rompe: si el modelo reproduce el orden m3 > m2 > m1
+a partir de las colas de `P(D)`, la correlación es real.
+
+### A3 · Hay estructura sub-micrométrica que `P(D)` no incluye — LIMITACIÓN REAL
+
+La tabla de ImageJ no tiene nada por debajo de ~0.66 µm en m1–3, ni siquiera a 20000×
+(resolución 0.041 µm). Podía ser ausencia o filtrado. Se corrió `feret.py` sobre las mismas
+imágenes con `d_min_um` bajado de 0.15 a 0.03:
+
+| | ImageJ a 20000× | `feret.py`, misma imagen |
+|---|---|---|
+| n | 54–126 | **186–323** |
+| D mínimo | 0.66–0.69 µm | **0.14–0.16 µm** |
+| mediana | 1.25–1.42 µm | 0.35–0.51 µm |
+
+**Hay estructura sub-micrométrica y el análisis de ImageJ la excluye.** Identidad más
+probable: la **telaraña intra-poro** que el informe del Labo 6 documenta en m1–3 y que mi
+umbralado fragmenta (ver la prueba de factibilidad). No es equivalente a la red nanoporosa
+de m4, que es la morfología del material y no una decoración dentro de un poro.
+
+**Consecuencia para la Etapa 5:** el `P(D)` que alimenta el modelo describe **sólo la
+población de macroporos** de m1–3. Si esa estructura sub-λ dispersa, el modelo la omite, y
+como sería dispersión tipo Rayleigh la firma esperada es que **el modelo subestime la
+dispersión de m1–3 preferentemente en el azul**. Es una predicción falsable: si el residuo
+de la Etapa 5 aparece justo ahí, es evidencia de que la telaraña contribuye ópticamente —
+que era la pregunta de la propuesta hermana archivada.
+
+Queda como **limitación declarada** del proyecto, con su firma esperada escrita de
+antemano para que no se pueda racionalizar después.

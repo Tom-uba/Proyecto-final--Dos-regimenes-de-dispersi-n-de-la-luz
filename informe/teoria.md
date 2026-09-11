@@ -27,15 +27,22 @@ el medio que lo rodea. La física de Mie no cambia por eso — las secciones efi
 de `|m − 1|`, no del signo — pero conviene tenerlo presente al comparar con la literatura
 de TiO₂.
 
-Con `λ` en el visible (400–700 nm) y los diámetros medidos en el Labo 6:
+Con `λ` en la banda de análisis (470–750 nm) y los diámetros medidos en el Labo 6:
 
-| muestra | `D` (Feret medio) | `x` en 400–700 nm |
-|---|---|---|
-| 1–3 | ≈ 1.6 µm | **7 – 13** |
-| 4 | ≈ 0.1 µm | **0.45 – 0.8** |
+| muestra | `D` (mediana) | `x` mediana | `x` p5–p95 |
+|---|---|---|---|
+| 1–3 | ≈ 1.75 µm | **9.1** | 5.3 – 22.9 |
+| 4 | ≈ 0.10 µm | **0.52** | 0.27 – 1.05 |
 
-Los dos grupos caen en zonas **disjuntas** del eje `x`. Esa es la observación que el
-proyecto cuantifica.
+Los dos grupos caen en zonas **disjuntas** del eje `x` (solape medido: 0.000; Etapa 4).
+Esa es la observación que el proyecto cuantifica.
+
+> **Cuidado con evaluar `x` en un solo `D`.** Una versión anterior de esta tabla daba
+> "7 – 13" para las muestras 1–3: ese rango sale de fijar `D` en su valor central y dejar
+> variar sólo `λ`, lo que da un ancho de apenas un factor 1.6. El ancho real es un factor
+> **3.4 – 4.3**, porque los poros son polidispersos y su distribución tiene cola larga.
+> **La polidispersión aporta más del doble de ancho que el recorrido de `λ`.** Por eso
+> todo el proyecto trabaja con la nube `P(x)` completa y no con un `x` por muestra.
 
 ---
 
