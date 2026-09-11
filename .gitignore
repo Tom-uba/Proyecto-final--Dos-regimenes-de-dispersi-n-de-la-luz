@@ -4,9 +4,8 @@ __pycache__/
 *.pyc
 .uv/
 
-# datos pesados: las 78 SEM no se versionan (67 MB). Ver data/sem/README.md
-data/sem/*.tif
-data/sem/**/*.tif
+# Las 78 SEM (67 MB) SÍ se versionan: sin ellas el repo no es reproducible.
+# Ver data/sem/README.md
 
 # salidas regenerables
 figures/*.png
