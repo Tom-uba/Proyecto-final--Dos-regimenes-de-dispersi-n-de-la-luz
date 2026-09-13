@@ -401,3 +401,60 @@ que no hay que hacer.
 
 **Pendiente inmediato:** decidir qué hacer con la calibración de R (P2) — es una pregunta
 sobre la medición, no sobre el modelo — y construir el Monte Carlo (P1).
+
+---
+
+## 2026-09-13 — Investigación de la calibración de R (P2)
+
+**Datos nuevos del usuario**
+
+1. El "patrón nuevo" medido el 02/06 es un **azulejo** hallado en el laboratorio (p. 30 del
+   cuaderno), no un patrón de reflectancia, y **no se usó** en las mediciones finales.
+2. No recuerda cuánto llevaba encendida la lámpara; es vieja, con fluctuaciones, y **pudo no
+   estar estabilizada**.
+
+**Intento descartado: corregir con el cociente patrón viejo / patrón nuevo**
+
+Antes de saber que el nuevo era un azulejo se probó R_corr = R_med · (I_viejo/I_nuevo) · 0.98.
+El cociente va de 0.92 (470 nm) a 1.12 (745 nm), pendiente +0.42. Resultado: no reduce el
+exceso de R+T (1.115 → 1.117 en m1), **invierte** su pendiente (−0.10 → +0.15) y deja a
+m1–3 con s_rojo **negativa** (−0.22 a −0.26). Se pasa de largo. Un cociente >1 en el rojo
+era imposible para PTFE impecable — ahora se sabe por qué: el "nuevo" es un azulejo
+esmaltado, ni lambertiano ni plano. **Descartado. Su espectro no se usa para nada.**
+
+**Test de deriva de lámpara — hecho con los datos existentes**
+
+Las 20 mediciones del 02/06 tienen hora en el encabezado; la sesión duró **72 min**.
+Residuo de s respecto de la media de su muestra, contra el tiempo:
+
+| | pendiente | significancia | cambio en 72 min |
+|---|---|---|---|
+| m1–3, s_azul | +0.0001 ± 0.0001 /min | 0.6σ | ≲ 0.01 |
+| m1–3, s_rojo | +0.0001 ± 0.0001 /min | 1.1σ | ≲ 0.01 |
+| m1–4, s_rojo | +0.0011 ± 0.0008 /min | 1.3σ | 0.08, arrastrado por un solo punto (m4 Aba, último) |
+
+La muestra 1 da s_rojo = 0.187 / 0.191 / 0.187 / 0.185 / 0.185 a lo largo de 57 min.
+**No hay deriva medible en m1–3.** La cota (≲0.02) es ~8× menor que el déficit del modelo
+(0.13–0.17), así que **la lámpara no explica la discrepancia**. Queda como `check_2_3_deriva.py`.
+
+**Lo que sigue abierto:** el patrón WS-1 amarillento. Es un sesgo fijado al calibrar, igual
+para toda la sesión: no deja tendencia temporal y no hay referencia limpia para medirlo.
+
+**Consecuencia metodológica — el observable inmune a la calibración**
+
+Un error de calibración multiplicativo `R_med(λ) = R(λ)·f(λ)` viene del blanco, no de la
+muestra, así que suma el mismo término `−d ln f/d ln λ` a la `s` de **todas** las muestras.
+Por lo tanto
+
+    Δs = s₄ − s₁₂₃   es inmune a ese sistemático, aunque s absoluta no lo sea.
+
+Medido (600–745 nm): **Δs = 1.23**. Modelo por difusión: 0.51 − 0.06 = **0.45**. Todavía un
+factor 2.7, pero ahora sin ambigüedad de calibración — y con la difusión fuera de rango
+para m1–3 (P1), que el Monte Carlo tiene que resolver antes de juzgar.
+
+Consistente con esto: los déficits de s en m1–3 son 0.13 / 0.14 / 0.17 — casi iguales entre
+sí, que es exactamente la firma de un desplazamiento común de calibración.
+
+**Propuesta para el resto de la Etapa 5:** Δs como observable primario de la comparación
+modelo–medición (check 5.2), s absoluta como secundario con el sistemático del patrón
+declarado, y `R + T ≤ 1` como restricción física. Monte Carlo antes de correr el check 5.2.

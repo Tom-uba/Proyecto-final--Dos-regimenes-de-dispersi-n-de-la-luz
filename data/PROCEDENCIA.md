@@ -76,8 +76,30 @@ Figura: `scratchpad\check01_fig6.png`.
 
 **Banda de análisis recomendada: 470–750 nm**, con máscara en 560–568 nm.
 
-**Referencias de intensidad cruda** (para reprocesar desde cero si hiciera falta, mismo día):
-`02_06\espectro_patron_nuevo.txt`, `02_06\espectro_patron_viejo_USB4F063981__0__1.txt`.
+**Espectros de intensidad cruda de los patrones** (mismo día, 12:29 y 12:32):
+`espectro_patron_viejo_USB4F063981__0__1.txt` y `espectro_patron_nuevo.txt`.
+
+- **El "patrón nuevo" NO es un patrón de reflectancia.** Es un **azulejo** encontrado en el
+  laboratorio (foto en la p. 30 del cuaderno), no diseñado para esto y **no usado en las
+  mediciones finales**. Un azulejo esmaltado no es lambertiano ni espectralmente plano.
+  **No usar** su espectro como referencia de nada. (Se intentó: el cociente viejo/nuevo va
+  de 0.92 en 470 nm a 1.12 en 745 nm, y "corregir" R con él invierte la pendiente de R+T y
+  deja a las muestras 1–3 con s negativa. Descartado.)
+- El patrón efectivamente usado es el **viejo (WS-1, PTFE)**, descrito en el cuaderno como
+  *"medio amarillento o gastado"*. Nominal de fábrica: >98 % casi plano entre 250 y 1500 nm.
+
+**Sistemáticos de calibración de R — estado**
+
+| candidato | ¿testeable con estos datos? | resultado |
+|---|---|---|
+| Deriva de la lámpara durante la sesión (lámpara vieja, quizá sin estabilizar) | Sí: cada .txt trae su hora | **Descartada para m1–3.** Pendiente del residuo de s vs tiempo +0.0001 ± 0.0001 /min en 72 min; cambio acumulado ≲ 0.02 en s. `check_2_3_deriva.py` |
+| Patrón WS-1 degradado (amarillento) | **No**: no hay una referencia limpia medida | **Sin cuantificar.** Sesgo fijado al calibrar, igual para toda la sesión; no deja tendencia temporal |
+| Exceso R + T > 1 (+0.115 a +0.182) | Parcialmente | Existe y es mayor en el azul; no se puede atribuir limpiamente a R o a T (T se midió en abril, con otra calibración y la misma lámpara) |
+
+**Consecuencia metodológica.** Un error de calibración multiplicativo R_med = R·f(λ) —como el
+de un patrón degradado— desplaza la pendiente `s` **en la misma cantidad para todas las
+muestras**, porque viene del blanco y no de la muestra. Por lo tanto la **diferencia
+Δs = s₄ − s₁₂₃ es inmune a ese sistemático**, aunque `s` absoluta no lo sea. Ver notas/log.md.
 
 ---
 
