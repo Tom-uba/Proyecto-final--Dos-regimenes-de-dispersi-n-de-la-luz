@@ -458,3 +458,106 @@ sí, que es exactamente la firma de un desplazamiento común de calibración.
 **Propuesta para el resto de la Etapa 5:** Δs como observable primario de la comparación
 modelo–medición (check 5.2), s absoluta como secundario con el sistemático del patrón
 declarado, y `R + T ≤ 1` como restricción física. Monte Carlo antes de correr el check 5.2.
+
+---
+
+## 2026-09-13 (b) — Etapa 5: Monte Carlo, contraste con T, porosidad por muestra
+
+**Monte Carlo — validado (`check_5_5_montecarlo.py`)**
+
+Lámina no absorbente, Fresnel en los bordes, fase Henyey–Greenstein, incidencia normal.
+Límite balístico: R = 0.0516 vs 0.0517 exacto, T = 0.9484 vs 0.9483. Régimen grueso
+(L/ℓ* = 15): T coincide con difusión a −4.2 %. Ningún fotón sin escapar.
+
+**Error propio en `estructura.factor_transporte` — corregido**
+
+Devolvía el cociente de (1−g) *normalizado*, que omite que S(q)<1 también reduce la
+dispersión total; ℓ* depende de la sección de transporte completa ∫ p·S·(1−cos θ) dΩ.
+Agravante: en el primer intento sólo se corrigió el docstring y no el cálculo; se detectó
+antes de usarlo. Test: el factor → 1 cuando η → 0. Magnitud: **despreciable para m1–3**
+(0.996–0.999 aun a η = 0.33, porque con poros de ~2 µm casi todo el rango angular está a q
+grande) y **enorme para m4** (0.10–0.15 a η = 0.33: con poros de ~0.1 µm todo el rango
+angular cae donde S(q) ≪ 1). Es un factor 7–10× que sale de tratar una red bicontinua como
+esferas duras de Percus–Yevick: dependiente del modelo.
+
+**Ruido estadístico del Monte Carlo sobre s** (5 semillas, escala como 1/√N):
+
+| | N = 40 000 | N = 160 000 |
+|---|---|---|
+| m1 s_azul / s_rojo | 0.063 ± 0.034 / 0.067 ± 0.025 | 0.075 ± 0.018 / 0.063 ± 0.013 |
+| m4 s_azul / s_rojo | 0.310 ± 0.014 / 0.518 ± 0.022 | 0.308 ± 0.007 / 0.523 ± 0.006 |
+
+La s predicha para m1–3 es **0.07 ± 0.02, plana en las dos bandas**. Diferencias de ~0.09
+entre corridas vistas antes eran ruido. Déficit contra lo medido: **0.13 ± 0.02 en el rojo,
+0.50 en el azul**.
+
+**Contraste independiente con la transmitancia medida** (T no entra en el modelo)
+
+| m | T med A (570) | T pred | rms del espectro | pendiente ln T med | pred |
+|---|---|---|---|---|---|
+| 1 | 0.464 | 0.495 | 0.029 | +0.18 | +0.05 |
+| 2 | 0.471 | 0.529 | 0.054 | +0.20 | +0.06 |
+| 3 | 0.449 | 0.572 | 0.117 | +0.22 | +0.04 |
+
+Dos lecturas:
+
+1. **La pendiente que falta no es sólo calibración.** T se mide con el haz directo como
+   referencia, sin el patrón WS-1, en abril y con otro montaje — y muestra el mismo déficit
+   de pendiente (~3×) que R. Dos calibraciones independientes coinciden: al modelo de
+   macroporos **le falta dispersión con dependencia espectral**, en la dirección que se
+   registró de antemano en la anomalía A3 (estructura sub-λ tipo Rayleigh). El exceso
+   *adicional* de R en el azul (0.50 contra 0.13 en el rojo) sí podría ser en parte el
+   patrón amarillento; con estos datos no se separan.
+2. **El modelo invierte el orden de transparencia entre 1–3**: predice m3 la más
+   transparente y lo medido la da la menos. Parte de la causa: φ se había estimado
+   promediando las tres muestras (ver abajo). Otra parte: el espesor, medido a ojo, pesa
+   mucho cuando L/ℓ* ≈ 2. En la tira A las diferencias medidas de T entre 1–3 son chicas
+   (±0.01); en la tira B, m3 da 0.306, pero la tira B son otras muestras físicas y no se
+   comparan con la morfología de la A.
+
+**Muestra 4 — la dispersión dependiente es imprescindible**
+
+| η (factor de estructura) | rms de T | s_rojo pred (med 1.44) | Δs rojo (med 1.23) | Δs azul (med 0.71) |
+|---|---|---|---|---|
+| 0 (sin estructura) | 0.327 | 0.54 | — | — |
+| 0.20 | 0.096 | 1.20 | 1.14 | 0.81 |
+| 0.25 | **0.022** | **1.45** | 1.38 | 0.98 |
+| 0.275 | **0.021** | 1.59 | 1.53 | 1.10 |
+| 0.33 (= φ medida) | 0.105 | 1.87 | 1.81 | 1.33 |
+
+(80 000 fotones; m1–3 corridas con la misma estadística para Δs.)
+
+- **Sin dispersión dependiente el modelo falla por completo para la muestra nanoporosa**
+  (rms de T 0.33); para las micrométricas la corrección es despreciable. Es un resultado
+  físico limpio y estándar: los scatterers sub-λ densos se apantallan entre sí.
+- **Predicción sin parámetros ajustados** (η = φ = 0.33): Δs rojo 1.81 (1.47×), Δs azul 1.33
+  (1.87×). Signo correcto y dentro de factor 2 → cumple el criterio registrado del check 5.2.
+- **η ≈ 0.25–0.275 reproduce el espectro de T y la pendiente roja de R** (1.45 vs 1.44).
+  Pero η se eligió barriendo contra T: **es un parámetro ajustado, no una predicción**, y se
+  reporta así. Que el η efectivo de esferas duras sea algo menor que la φ medida es
+  plausible para una red conectada (los poros no son esferas impenetrables), pero no se
+  afirma más que eso.
+- **Δs azul medido (0.71) queda por debajo de todas las predicciones.** No es m4: la s₁₂₃
+  medida en el azul carga el exceso de 0.50 de las micrométricas. Δs es inmune sólo a
+  errores de calibración *comunes*; si parte de ese exceso es física de m1–3 (A3), no se
+  cancela. **Consecuencia: la banda roja es el contraste más limpio.**
+
+**Porosidad por muestra — promediar las tres escondía una diferencia**
+
+| | v1 Z1 corregido | v1 Z2 | limpios Z1 corregido | limpios Z2 | adoptada |
+|---|---|---|---|---|---|
+| m1 | 0.171 | 0.199 | 0.185 | 0.199 | **0.19** |
+| m2 | 0.198 | 0.205 | 0.207 | 0.188 | **0.20** |
+| m3 | 0.207 | 0.233 | 0.220 | 0.224 | **0.22** |
+
+Todos los estimadores dan **m1 < m2 < m3**; la m3 tiene ~15–20 % más porosidad que la m1
+(consistente con A2: más cola de poros grandes y mayor R medida). La limpios-Z3 (campo
+dentro del núcleo) da 0.085–0.110 pero subestima, porque esa tabla excluye poros < 0.66 µm.
+
+**Pendientes de esta etapa**
+
+- Cadena m1–3 con φ por muestra y espesor ±15 % (corriendo).
+- **Remedir espesores desde las SEM** — era una tarea de la Etapa 3 que quedó sin hacer y
+  que el usuario pidió explícitamente. Con L/ℓ* ≈ 2 pasó a ser una incertidumbre dominante.
+- Encuadre del check 5.2: la prueba primaria es la predicción SIN parámetros ajustados;
+  la de η ajustado contra T va como refinamiento, rotulada como tal.
