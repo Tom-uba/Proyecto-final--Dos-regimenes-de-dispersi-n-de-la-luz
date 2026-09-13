@@ -11,9 +11,10 @@ Se agregan como `check_*.py` a medida que se completa cada etapa. Cada uno defin
 | `2.3` | sin deriva de lámpara en la sesión del 02/06 | pendiente del residuo de s vs tiempo < 3σ y cambio < 0.05 | 2 ✅ |
 | `3.1` | `P(D)` vs. informe, y ImageJ vs. Python | mediana ±10 % vs. informe; ±15 % entre pipelines | 3 ✅ |
 | `3.2` | escala del tag Zeiss vs. barra quemada | < 2 % | 3 ✅ |
+| `3.3` | espesor total SEM vs slide 13 | mediana a ±5 %, ≥ 2 imágenes válidas por muestra | 3 ✅ |
 | `4.1` | nubes `P(x)`: 1–3 se solapan, 4 disjunta | solape >0.80 entre 1–3, <0.05 vs 4 | 4 ✅ |
 | `5.1` | límites de Mie `x→0` (∝x⁴, con prefactor) y `x→∞` (→2) | potencia ±0.01, prefactor ±0.5 %, ⟨Q⟩ a 2 % de 2 | 5 ✅ |
-| `5.2` | `s` predicha vs. medida | signo correcto, factor < 2 | 5 |
+| `5.2` | predicción SIN ajuste: Δs = s₄ − s̄₁₂₃ en rojo (600–745 nm) | signo correcto y ×0.5–2 | 5 ✅ |
 | `5.3` | ancla externa (Syurik / beetle) | dentro del error citado | 5 |
 | `5.4` | límites exactos de S(q) de Percus–Yevick | S(0) a 2 %, \|S(∞)−1\| < 0.02 | 5 ✅ |
 | `5.5` | Monte Carlo: límite balístico exacto, difusión en régimen grueso, conteo | ±0.003; ±10 % vs difusión; sin escapar < 1e-3 | 5 ✅ |

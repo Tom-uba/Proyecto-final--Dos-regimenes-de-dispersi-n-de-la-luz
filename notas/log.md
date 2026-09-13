@@ -598,3 +598,90 @@ Espesor del núcleo — **la v1 no sirve**: 8–18 µm en m1 (contra 46), 5–78
 diagnóstico se ve por qué: con suavizado de 2 µm y umbral al 30 % del máximo el algoritmo se
 queda con la franja más densa del núcleo (la densidad de poros no es uniforme), y en m3 las
 sombras del relieve de fractura se segmentan como poros. Se hace una v2.
+
+**Espesores v2 y v3 — y la decisión**
+
+v2 (suavizado 8 µm, umbral relativo entre nivel de piel y meseta; fondo = intensidad
+extrema pegada al borde): el total se mantiene (82.5 / 79.3 / 78.1 / 79.8 µm) y las
+medianas de núcleo pasan a 44 / 48 / 37 µm, pero imagen por imagen siguen fallas evidentes
+(7, 8, 13, 17 µm).
+
+Para descartar esas fallas **no** se usó "no coincide con la slide 13" (sería circular).
+v3 agrega un criterio independiente del valor esperado: el núcleo debe capturar ≥ 70 % del
+área de poros de la lámina. Resultado:
+
+| | aceptados | núcleo (mediana) | slide 13 |
+|---|---|---|---|
+| m1 | 4 de 6 (rechaza fragmentos con 28 % y 19 %) | **48.4** [42–52] | 46 |
+| m2 | 4 de 6 | 49.5 [48–52] | 41 |
+| m3 | **1 de 6** | 61.2 | 40 |
+
+**En m3 el criterio se invierte.** Acepta sólo el núcleo sobreestimado de gcb8308 (61 µm,
+extendido hacia la zona fracturada, error que se había anticipado mirando el diagnóstico
+de la v2) y rechaza los tres que se veían bien ubicados (capturan 52–69 %). Misma causa: en
+m3 las sombras de fractura de las pieles cuentan como poros y contaminan el denominador.
+No se bajó el umbral hasta que m3 aceptara los "buenos": sería ajustar el criterio al
+resultado esperado.
+
+**Decisión:** el espesor de núcleo del modelo es el de la slide 13 con ±15 %. Motivo: las
+mediciones a ojo del Labo 6 quedaron validadas de forma independiente en el total (1–2 µm,
+cuatro muestras) y en el núcleo de m1 (5 %), el único donde la medición automática es
+confiable. El +21 % de m2 queda registrado. La sensibilidad ±15 % ya calculada no cambia
+conclusiones. Método pasado a la biblioteca (`feret.extension_lamina`,
+`feret.espesor_total_um`) con `check_3_3_espesores.py` sobre el total, que es robusto.
+
+`check 3.3` PASA: total SEM vs slide 13 = −0.6 / +0.4 / +0.2 / +2.3 % (m1–m4).
+
+---
+
+## 2026-09-13 (c) — check 5.2: la predicción sin parámetros ajustados
+
+**Diseño, fijado antes de mirar el resultado** (plan §J y entrada 2026-09-13 de este log):
+observable Δs = s₄ − s̄₁₂₃ en la banda roja (inmune a errores de calibración comunes);
+criterio: signo correcto y ×0.5–2. Modelo: P(D) de ImageJ → Mie promediado → ℓ* con φ por
+muestra (0.19 / 0.20 / 0.22 / 0.33) → factor de estructura PY con **η = φ medida** → Monte
+Carlo con espesor de núcleo de la slide 13. Ningún número sale de los espectros.
+
+**Resultado — PASA**
+
+| | predicho | medido | razón |
+|---|---|---|---|
+| **Δs rojo (600–745)** | **1.77** | **1.23** | **×1.43** |
+| Δs azul (470–590) [informativo] | 1.36 | 0.72 | ×1.90 |
+| s rojo m1 / m2 / m3 | 0.06 / 0.10 / 0.06 | 0.19 / 0.20 / 0.23 | |
+| s rojo m4 | 1.84 | 1.44 | |
+
+Factor de estructura en m1–3 ≥ 0.996 (despreciable, verificado dentro del check). 34 s.
+
+**Qué dice.** Un modelo de dispersión de un solo tipo de poro por muestra, sin ajustar nada
+a los espectros, reproduce el contraste espectral entre las micrométricas y la nanométrica
+con el signo correcto y dentro de un factor 1.43 en la observable robusta. **El cambio de
+régimen de dispersión explica la mayor parte del contraste.**
+
+**Qué no dice — y por eso la respuesta a "¿enteramente?" es no.** Quedan dos residuos
+identificados, con dirección conocida:
+
+1. **Muestra 4 sobrepredicha** (1.84 vs 1.44). El factor de estructura de esferas duras con
+   η = φ apantalla de más; con η ≈ 0.25 se reproducen T y s₄ (entrada anterior), pero ese η
+   se ajustó contra T y no cuenta como predicción.
+2. **Muestras 1–3 subpredichas en s absoluta** (déficit ~0.13 en rojo). Aparece también en la
+   transmitancia, que no usa el patrón blanco, así que no es sólo calibración: al modelo de
+   macroporos le falta dispersión dependiente de λ. Es la firma registrada de antemano para
+   la anomalía A3 (estructura sub-λ intra-poro).
+
+Descomposición del residuo (no es acuerdo, es contabilidad): los dos residuos empujan en la
+dirección de achicar la sobrepredicción de Δs. Si las s₁₂₃ fueran las medidas, Δs predicho
+bajaría a 1.63 (×1.33); si además s₄ fuera la de η = 0.25, a ~1.24. Lo segundo usa un
+parámetro ajustado y datos; sólo muestra que los dos residuos identificados alcanzan para
+dar cuenta del desvío, no que el modelo lo prediga.
+
+**Δs azul (×1.90)** entra en factor 2 pero no se gatea: en el azul el exceso de pendiente de
+m1–3 no es común a las cuatro muestras y Δs deja de ser inmune.
+
+**Respuesta provisoria a la pregunta del proyecto:** el contraste entre las muestras 1–3 y la
+4 se explica **mayoritariamente, no enteramente,** por el cambio de régimen de dispersión
+(Mie ↔ transición Rayleigh) — con dispersión dependiente imprescindible del lado
+nanométrico, y un faltante espectral en las micrométricas compatible con estructura sub-λ.
+
+**Pendiente:** check 5.3 (ancla externa), Etapa 6 (frontera acotada y controles —
+parcialmente hechos: espesor ±15 %, R+T), Etapa 7 (informe, verificación independiente).

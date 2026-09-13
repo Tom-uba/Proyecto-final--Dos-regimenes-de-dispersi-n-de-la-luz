@@ -150,9 +150,26 @@ Parámetros: EHT 3 kV · WD ≈ 6.8–8.5 mm (varió) · detector SE2 · dwell 5
   | 3 | 78 µm | 40 µm |
   | 4 | 78 µm | **32 µm** |
 
-  La capa porosa es la entrada del modelo de lámina (`d`). **Plan:** remedir la capa porosa
-  desde las SEM de bajo aumento en la Etapa 3 y verificar que dé del mismo orden que estos
-  valores. Estructura: 3 capas (dos pieles lisas + núcleo espumoso).
+  La capa porosa es la entrada del modelo de lámina (`d`). Estructura: 3 capas (dos pieles
+  + núcleo espumoso).
+
+  **Remedidos desde las SEM a 3000×** (`scripts/03b_espesores.py`, `check_3_3_espesores.py`):
+
+  | | total SEM (mediana) | slide 13 | núcleo SEM automático | slide 13 |
+  |---|---|---|---|---|
+  | m1 | 82.5 µm [82–83] | 83 | **48.4** [42–52], n = 4 | 46 |
+  | m2 | 79.3 [78–84] | 79 | 49.5 [48–52], n = 4 | 41 |
+  | m3 | 78.1 [77–84] | 78 | no confiable | 40 |
+  | m4 | 79.8 [78–81] | 78 | no medible a 3000× | 32 |
+
+  - **El total confirma la slide 13 a 1–2 µm** en las cuatro muestras.
+  - **El núcleo automático sólo es confiable con pieles limpias.** En m1 coincide con la
+    slide 13 al 5 %. En m2 da +21 %. En m3 las sombras del relieve de fractura se segmentan
+    como poros y rompen tanto la detección como el criterio de calidad (acepta un núcleo
+    sobreestimado y rechaza los bien ubicados). En m4 los poros no se resuelven a 3000×.
+  - **Decisión:** el modelo usa el núcleo de la **slide 13** (46 / 41 / 40 / 32 µm) con
+    **±15 %** de incertidumbre. Sensibilidad ya calculada: ±15 % mueve T en ~±0.03 y no
+    cambia ninguna conclusión. El desacuerdo de m2 (+21 %) queda registrado.
 
 ---
 

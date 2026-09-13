@@ -144,3 +144,59 @@ def PD_de_imagen(path: str | Path) -> np.ndarray:
         raise ValueError(f"sin escala en metadata: {path}")
     g = cargar_gris(path)
     return feret_poros(segmentar_poros(g, px), px)
+
+
+# --- espesores (Etapa 3, completado en la Etapa 5) ---------------------------------
+# Geometría de los cortes a 3000×: capas verticales piel | núcleo | piel; el espesor se
+# mide en x. Historia del método en notas/log.md (v1 → v3):
+#   - el ESPESOR TOTAL es robusto: confirma la slide 13 a 1–2 µm en las cuatro muestras;
+#   - el NÚCLEO automático sólo es confiable con pieles limpias (m1). En m3 las sombras del
+#     relieve de fractura se segmentan como poros y rompen tanto la detección como
+#     cualquier criterio de calidad basado en área de poros. Por eso el espesor de núcleo
+#     que usa el modelo es el de la slide 13, con ±15 % de incertidumbre.
+
+
+def run_mas_largo(b: np.ndarray) -> tuple[int, int]:
+    """Índices [ini, fin) del tramo contiguo True más largo de un vector booleano."""
+    mejor, ini = (0, 0, 0), None
+    for i, v in enumerate(np.append(b, False)):
+        if v and ini is None:
+            ini = i
+        elif not v and ini is not None:
+            if i - ini > mejor[0]:
+                mejor = (i - ini, ini, i)
+            ini = None
+    return mejor[1], mejor[2]
+
+
+def extension_lamina(a: np.ndarray) -> tuple[int, int]:
+    """Columnas [x0, x1) que ocupa la lámina en un corte a bajo aumento (sin banner).
+
+    Fondo = intensidad extrema (casi negro o casi blanco) o desenfoque fuerte, y SÓLO si
+    está pegado al borde del campo: se camina desde cada borde y se para en la primera
+    columna que no es fondo. (Un criterio sólo de textura cortaba las pieles lisas.)
+    Si x0 ≈ 0 o x1 ≈ ancho, la lámina toca el borde y el total no es medible.
+    """
+    from scipy.ndimage import gaussian_filter, uniform_filter1d
+
+    W = a.shape[1]
+    med = np.median(a, axis=0)
+    tex = uniform_filter1d(np.abs(a - gaussian_filter(a, 3.0)).mean(axis=0), 15)
+    ref = np.median(tex[W // 3: 2 * W // 3])
+    fondo = (med < 0.12) | (med > 0.90) | (tex < 0.15 * ref)
+    x0 = 0
+    while x0 < W and fondo[x0]:
+        x0 += 1
+    x1 = W
+    while x1 > x0 and fondo[x1 - 1]:
+        x1 -= 1
+    return x0, x1
+
+
+def espesor_total_um(path: str | Path) -> tuple[float, bool]:
+    """(espesor total en µm, válido). Válido = la lámina no toca el borde del campo."""
+    px = pixel_size_m(path)
+    a = np.asarray(Image.open(path).convert("L"), float) / 255.0
+    a = a[: detectar_banner(a)]
+    x0, x1 = extension_lamina(a)
+    return (x1 - x0) * px * 1e6, not (x0 <= 2 or x1 >= a.shape[1] - 2)
