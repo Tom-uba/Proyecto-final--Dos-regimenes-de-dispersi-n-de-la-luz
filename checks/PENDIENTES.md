@@ -21,7 +21,7 @@ Se agregan como `check_*.py` a medida que se completa cada etapa. Cada uno defin
 | `5.6` | aproximación de desacople: β = 1 con poros iguales, β(0) = ⟨D³⟩²/⟨D⁶⟩, 0 < β ≤ 1, S_ef → 1 | 2 % | 5 ✅ |
 | `5.7` | hipótesis de polidispersión, pre-registrada (commit 286b7f2): Syurik + s₄ + T de m4 + Δs | los cuatro | 5 ❌ falla: Syurik pasa por el borde, m4 sobrecorregida (s₄ 0.62, rms T 0.229, Δs ×0.46) |
 | `6.0` | absorción por peso de camino en el Monte Carlo | balístico con absorción ±0.003; μ_a no altera la corrida | 6 ✅ |
-| `6.1` | controles (pre-registrado): espesor y absorción | máx \|ΔΔs\| < 0.25·Δs_med; Q_med < Q_pred,mín − 3σ | 6 |
-| `6.2` | frontera acotada (pre-registrado) | F1–F3 y F_s dentro de las cotas de los datos; CSV reproducible | 6 |
-| `6.3` | atribución tamaño vs entorno (pre-registrado) | f_D ≥ 0.75 con los dos cierres | 6 |
-| `6.4` | telarañas vs residuos (pre-registrado) | gatea sólo la implementación (±15 %, orden); ρ reportado | 6 |
+| `6.1` | controles (pre-registrado): espesor y absorción | máx \|ΔΔs\| < 0.25·Δs_med; Q_med < Q_pred,mín − 3σ | 6 ❌ falla: (a) pasa (+0.16 < 0.31); (b) el criterio tenía el signo mal puesto: H_abs predice Q < 1 (0.85 / 0.59) y el medido es 0.952 ± 0.049 (ver log 2026-09-13 h) |
+| `6.2` | frontera acotada (pre-registrado) | F1–F3 y F_s dentro de las cotas de los datos; CSV reproducible | 6 ❌ falla: F1–F3 dentro de [0.87, 5.10]; F_s con desacople 0.38–0.41 y monodisperso 1–3 0.82 quedan fuera |
+| `6.3` | atribución tamaño vs entorno (pre-registrado) | f_D ≥ 0.75 con los dos cierres | 6 ✅ (0.81 / 0.99) |
+| `6.4` | telarañas vs residuos (pre-registrado) | gatea sólo la implementación (±15 %, orden); ρ reportado | 6 ✅ implementación; lectura: "no respaldado" (ρ_T +1, ρ_s +0.5) |

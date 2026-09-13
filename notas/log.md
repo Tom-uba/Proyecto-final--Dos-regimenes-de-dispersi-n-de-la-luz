@@ -877,3 +877,80 @@ con los datos; dos cúmulos separados ×5 no pueden ubicar la frontera más fino
 **Dato ya conocido al fijar 6.4** (entrada 2026-09-13 b): el faltante de T ordenaba
 m3 > m2 > m1 igual que la telaraña; en s rojo el orden del 5.2 era m3 > m1 > m2. La lectura de
 6.4 no se eligió para que dé "consistente".
+
+---
+
+## 2026-09-13 (h) — Etapa 6: resultados de los checks pre-registrados
+
+Commit del pre-registro: 07072ac. Resultados tal como salieron:
+
+| check | resultado | números |
+|---|---|---|
+| 6.0 | PASA | absorción del Monte Carlo: error 1e-4 contra el límite balístico |
+| 6.1 | **FALLA** | (a) espesor PASA: peor variante "todos ×0.85" +0.16 sobre Δs nominal 1.77 (tolerancia 0.31). (b) absorción FALLA: Q medido 0.952 ± 0.049 (tira B 0.929); H_abs predice 0.850 (monodisperso, κ* 36 cm⁻¹) y 0.593 (desacople, κ* 57 cm⁻¹) |
+| 6.2 | **FALLA** | cotas de los datos [0.87, 5.10]; F2 [1.58, 1.67], F3 [2.03, 2.18] dentro. F_s: entorno 1–3 monodisperso 0.82, entorno 4 monodisperso 1.19, desacople 0.41 y 0.38 → 3 de 4 fuera. CSV reproducido (3e-6) |
+| 6.3 | PASA | f_D = 0.81 (monodisperso), 0.99 (desacople) |
+| 6.4 | PASA (implementación) | índice 3.24 / 4.08 / 5.34 µm⁻¹ (−1 / +3 / +2 % de la factibilidad). Faltante T(550) ρ = +1; faltante s rojo 0.13 / 0.10 / 0.17, ρ = +0.5 → **"no respaldado por este control"** |
+
+### Diagnóstico de 6.1 (b): error de diseño del criterio
+
+El criterio suponía, sin calcularlo, que H_abs subiría Q por encima de 1 (m4 absorbiendo más
+que las demás). Es al revés: con la misma absorción del sólido, **m1–3 absorben más que m4**
+(más sólido, más espesor, y en m4 la dispersión fuerte mantiene cortos los caminos de los
+fotones reflejados), así que K cae y Q_pred < 1. El criterio unilateral quedó mal orientado y
+el check FALLA tal como se registró. No se reescribe.
+
+Lo que dicen los números sin reinterpretar el criterio:
+- Leído en las dos direcciones, el Q medido está a **2.1σ** de H_abs con el cierre
+  monodisperso y a 7.4σ con desacople. **Con el observable registrado, H_abs no queda
+  excluida a 3σ** en el cierre monodisperso.
+- Informativo del mismo check, no gateado: esa absorción subiría la pendiente de m1–3 en
+  **+2.05** (monodisperso) o +3.00 (desacople), cuando la medida es 0.21. Es el argumento más
+  fuerte contra H_abs, pero **no se pre-registró como criterio** y no se lo promueve ahora.
+- Q medido = 0.952 ± 0.049 es compatible con Q = 1 (sin absorción) a 1σ.
+
+### Diagnóstico de 6.2
+
+- La teoría de un poro (F1, F2, F3) cae dentro de lo que permiten los datos.
+- El cruce del punto medio del observable, F_s, **depende del cierre de factor de
+  estructura**: 0.82–1.19 con PY monodisperso y 0.38–0.41 con desacople. Con desacople la
+  muestra 4 (x̃ = 0.47 a 669 nm) quedaría del lado Mie del observable (s_pred 0.58), contra
+  s₄ = 1.44 medida: es la tercera vez que el desacople queda desfavorecido (5.7, 6.2).
+- Con monodisperso, F_s del entorno 1–3 (0.82) queda 6 % por debajo de la cota inferior
+  (0.87). Esa cota ya incluye +30 % sistemático de D; el paso del barrido es ×1.33.
+
+**Observación POST-HOC (no pre-registrada, no gateada).** En las cuatro curvas del barrido
+la pendiente llega al plateau Mie (s ≤ 0.25) entre x̃ = 1.12 y 1.50, con los dos cierres.
+Lo que cambia con el cierre es la amplitud del lado Rayleigh, no dónde empieza el plateau.
+Resolución limitada por la grilla (×1.33) y por el ruido del Monte Carlo (~0.04 en s).
+
+### Frontera reportada
+
+| qué | intervalo en x = πD/λ₀ | estatus |
+|---|---|---|
+| lo que permiten los datos | **[0.87, 5.10]** | medido (dos cúmulos, ±30 % de D) |
+| teoría de un poro (F1–F3) | [1.00, 2.18] | calculado; dentro de los datos |
+| inicio del plateau del observable | [1.12, 1.50] | post-hoc, robusto al cierre |
+| punto medio del observable (F_s) | [0.38, 1.19] | depende del cierre no resuelto; el check 6.2 falla |
+
+### Respuesta a la pregunta del proyecto (plan, §A)
+
+**Sí, en parte.** El contraste espectral entre las muestras 1–3 y la 4 lo produce
+mayoritariamente el cambio de régimen de dispersión:
+- una predicción sin parámetros ajustados reproduce Δs rojo con signo correcto y ×1.43 (5.2);
+- dentro del modelo, el tamaño de poro carga el 81–99 % del contraste; porosidad y espesor, el
+  resto (6.3);
+- el espesor, variado ±15 % o intercambiado entre grupos, mueve Δs como mucho 0.16, un 13 % del
+  medido (6.1 a);
+- los datos ubican la transición entre x = 0.87 y 5.1, y la teoría de un poro la pone en 1–2.2.
+
+**Falta:**
+1. un cierre de dispersión dependiente que funcione en espumas densas sub-λ (5.3, 5.7 y 6.2
+   fallan por esto): define la magnitud del lado Rayleigh y el punto medio de la frontera
+   observable;
+2. la exclusión cuantitativa de la absorción con un criterio registrado: el que se registró
+   estaba mal orientado, y con el observable Q la hipótesis queda a 2.1σ;
+3. explicar el faltante de pendiente de m1–3 (~0.13): las telarañas ordenan el faltante de T
+   pero no el de s (6.4, no respaldado).
+
+**Estado de la batería:** fallan 5.3, 5.7, 6.1 y 6.2, las cuatro registradas con diagnóstico.

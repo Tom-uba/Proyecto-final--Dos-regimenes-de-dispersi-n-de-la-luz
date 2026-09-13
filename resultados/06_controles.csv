@@ -1,0 +1,14 @@
+control,caso,valor,nota
+medido,Δs rojo,1.2346,"s4 - media(s1,s2,s3)"
+espesor,nominal,1.7695,Δs predicho rojo
+espesor,todos x1.15,1.6962,Δs predicho rojo
+espesor,todos x0.85,1.9303,Δs predicho rojo
+espesor,"m4 x1.15, m1-3 x0.85",1.7244,Δs predicho rojo
+espesor,"m4 x0.85, m1-3 x1.15",1.9022,Δs predicho rojo
+espesor,intercambio,1.6378,Δs predicho rojo
+absorcion,Q medido tira A,0.9522,sigma 0.0488
+absorcion,Q medido tira B,0.9288,
+absorcion,Q H_abs monodisperso,0.8499,"kappa 35.9 cm-1, A4(745) 0.202, ds123 inducido +2.048"
+absorcion,Q H_abs desacople,0.5929,"kappa 57.0 cm-1, A4(745) 0.317, ds123 inducido +2.996"
+atribucion,f_D monodisperso,0.8141,Δs total 1.766
+atribucion,f_D desacople,0.9924,Δs total 0.548
