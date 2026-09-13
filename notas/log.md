@@ -723,3 +723,54 @@ capas delgadas.
 en FALLA en la batería hasta que el diagnóstico diga qué es. Diagnóstico en la entrada
 siguiente. Sospechoso con antecedente: el factor de estructura de esferas duras con η = φ,
 que en el check 5.2 ya apantallaba de más en la muestra nanoporosa.
+
+---
+
+## 2026-09-13 (e) — Diagnóstico de la falla del check 5.3
+
+`scripts/05c_diagnostico_syurik.py` (80 000 fotones; no modifica el check):
+
+| factor de estructura | ℓ* | R 9 µm (pub 0.57) | R 16 µm (pub 0.70) | R 53 µm (pub 0.90) | l_t extraído, con ordenada / por origen (pub 3.5–4) |
+|---|---|---|---|---|---|
+| ninguno | 2.80 µm | **0.53** (−0.04) | **0.68** (−0.02) | **0.88** (−0.02) | **3.84** / 4.67 |
+| η = 0.25 | 3.46 | 0.47 (−0.10) | 0.63 (−0.07) | 0.85 (−0.05) | 4.24 / 5.35 |
+| η = φ = 0.39 (pre-registrado) | 3.78 | 0.45 (−0.12) | 0.61 (−0.09) | 0.84 (−0.06) | 4.38 / 5.62 |
+
+La capa sin poros de arriba suma ~+0.02 de especular (aire/PMMA 0.039 contra aire/espuma
+0.019): no alcanza para explicar −0.12. (A 16 µm y η = φ el diagnóstico da −0.09 y el check
+−0.10: diferencia de ruido con 80 000 contra 60 000 fotones; el check queda justo en el borde.)
+
+**Diagnóstico**
+
+1. **El resto de la cadena reproduce el ancla.** Sin factor de estructura los tres espesores
+   caen a ≤0.04 de lo publicado y, a la vez, el l_t extraído con el procedimiento del paper
+   (pendiente de 1 − R contra 1/L con ordenada libre) da 3.84 µm, dentro del rango publicado.
+   Mie promediado sobre P(D), la densidad a porosidad φ, el índice efectivo y el Monte Carlo
+   con el borde de vidrio funcionan en una película ajena.
+2. **La pieza que falla es la intensidad del factor de estructura de esferas duras a η = φ:
+   apantalla de más.** Explica el patrón: alarga ℓ*, y un ℓ* demasiado largo penaliza más a
+   las capas delgadas, por eso el déficit se achica con el espesor.
+3. **Corroboración en dos datasets independientes.** El mismo elemento falló en la misma
+   dirección en la muestra 4 del check 5.2 (s₄ predicha 1.84 contra 1.44; η ≈ 0.25 ajustaba).
+4. **No es "el factor de estructura sobra".** En la muestra 4 sin él el modelo era
+   catastrófico (rms de T 0.33). Lo que falla es la magnitud de la supresión.
+5. **Causa física más probable, identificable a priori:** se usó Percus–Yevick
+   **monodisperso** con σ = ⟨D⟩. Los poros son polidispersos (desvío relativo ~32 % en
+   Syurik, cola larga en nuestras muestras). La polidispersión sube S(q→0) y debilita la
+   supresión a q pequeño, que es donde este factor actúa. Es una hipótesis: no se probó.
+
+**Lo que NO se hace:** re-correr el 5.3 sin factor de estructura (o con η = 0.25) y
+declararlo aprobado. Sería ajustar el modelo al ancla. **El check 5.3, tal como se registró,
+FALLA**; lo que aporta es un diagnóstico corroborado.
+
+**Consecuencias para lo ya concluido**
+
+- Refuerza la lectura del check 5.2: el ×1.43 de sobrepredicción de Δs viene en parte de este
+  mismo exceso de apantallamiento en m4.
+- En m1–3 el factor de estructura vale ≥ 0.996, así que su déficit de pendiente (~0.13) **no**
+  se explica por esto y sigue apuntando a A3.
+
+**Decisión pendiente (del usuario):** implementar un factor de estructura polidisperso
+justificado de antemano (p. ej. aproximación de desacople, Kotlarchyk & Chen 1983, sin
+parámetros libres) y registrar un check nuevo que lo pruebe contra ambos datasets; o dejarlo
+como limitación declarada y seguir a la Etapa 6.
