@@ -54,13 +54,20 @@ def S_py_cero(eta: float) -> float:
 
 
 def factor_transporte(D_um, lam_nm, n_ef, eta: float, g_ef, n_theta: int = 400):
-    """Factor por el que la dispersión dependiente corrige (1−g) en el transporte.
+    """Factor por el que la dispersión dependiente corrige la sección de TRANSPORTE.
 
-    Pesa la sección diferencial por S(q), con q = 2k sin(θ/2) y k = 2π n_ef/λ₀. Se usa
-    Henyey–Greenstein con la g efectiva de Mie como fase, que es la aproximación estándar
-    y basta para estimar el tamaño de la corrección.
+    ℓ* = 1/(ρ σ_tr) con  σ_tr = ∫ (dσ/dΩ)(1 − cos θ) dΩ.  Con correlaciones:
 
-    Devuelve  [(1−g)]_corregido / [(1−g)]_libre , un número de orden 1 por cada λ.
+        σ_tr,S / σ_tr,libre  =  ∫ p(θ) S(q) (1−cos θ) dΩ  /  ∫ p(θ) (1−cos θ) dΩ
+
+    con q = 2k sin(θ/2), k = 2π n_ef/λ₀, y p(θ) Henyey–Greenstein con la g efectiva de Mie.
+
+    Corrección (2026-09-13): una versión anterior devolvía sólo el cociente de (1−g)
+    NORMALIZADO, [(1−⟨μ⟩_S)/(1−⟨μ⟩_libre)], que omite que S(q)<1 también reduce la
+    dispersión total. Eso no es el factor de ℓ*. Ahora se integra la sección de transporte
+    completa.
+
+    Devuelve el cociente por λ; ℓ*_corregido = ℓ*_libre / factor.
     """
     lam = np.atleast_1d(np.asarray(lam_nm, float))
     g = np.broadcast_to(np.atleast_1d(np.asarray(g_ef, float)), lam.shape)
@@ -76,9 +83,7 @@ def factor_transporte(D_um, lam_nm, n_ef, eta: float, g_ef, n_theta: int = 400):
         # Henyey-Greenstein normalizada
         p = (1 - gi ** 2) / (4 * np.pi * (1 + gi ** 2 - 2 * gi * mu) ** 1.5)
         w = 2 * np.pi * np.sin(th)
-        norm_l = np.trapezoid(p * w, th)
-        norm_S = np.trapezoid(p * S * w, th)
-        um_l = np.trapezoid(p * mu * w, th) / norm_l
-        um_S = np.trapezoid(p * S * mu * w, th) / norm_S
-        out[i] = (1 - um_S) / (1 - um_l)
+        tr_libre = np.trapezoid(p * (1 - mu) * w, th)
+        tr_S = np.trapezoid(p * S * (1 - mu) * w, th)
+        out[i] = tr_S / tr_libre
     return out
