@@ -69,5 +69,20 @@ acá. Ir al PDF original solo con `offset`/`limit` para un dato puntual que falt
 
 ## Syurik et al. (2017), *Sci. Rep.* 7:46637 (`…/Labo 6/SciRep7Syurik46637(2017).pdf`)
 
-- Películas porosas de PMMA por scCO₂; benchmark de "blanco sin pigmento" y ancla externa
-  para check 5.3. (Fichar §§ relevantes al llegar a la Etapa 5.)
+- Películas porosas de PMMA por scCO₂ (grupo KIT). Ancla externa del **check 5.3**.
+- **Material:** PMMA, **n = 1.49 a 600 nm** (dispersión tomada de su ref. 42).
+- **Morfología óptima** (50 MPa, 80 °C, 2 h; Fig. 4): diámetro de poro **339 ± 109 nm**,
+  fracción de poros **39 %**; capa de 11 µm con R ≈ 60 % a 600 nm. A 60 °C (poros más chicos,
+  menor fracción) R es alta a 400 nm y cae ~40 % hacia el rojo.
+- **Serie de espesores** (Fig. 5a; 50 MPa, 80 °C; se supone la misma microestructura en toda
+  la serie): capas porosas de 9 a 79 µm, sobre vidrio. R_total a 600 nm: **57 % a 9 ± 1 µm**,
+  **~70 % a 16 µm**, **90 % a 53 ± 2 µm**. R(800) queda 13 y 7 puntos por debajo de R(400) a 9
+  y 53 µm. Capa sin poros de 1–2 µm arriba, restada del espesor.
+- **Camino libre de transporte:** l_t = **3.5–4 µm** (400–800 nm), extraído como pendiente de
+  T contra 1/L ("ley de Ohm para la luz", siguiendo a Burresi et al. 2014), con T = 1 − R
+  suponiendo absorción nula. Advierten que es menos preciso para L < 8 l_t. Ojo: esa pendiente
+  incluye la longitud de extrapolación de los bordes y **no es exactamente ℓ***.
+- **Medición:** PerkinElmer Lambda 1050, esfera integradora, R total (especular + difusa) a
+  8°, referencia Spectralon, 3 posiciones por muestra; cara trasera del vidrio con absorbente
+  negro.
+- **Cyphochilus** (citado): escamas de 7 ± 1.5 µm con R 65–70 %.

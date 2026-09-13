@@ -21,8 +21,15 @@ que su `x` es el del medio. Acá:
 
 Que la frontera "x = 1" dependa de la convención NO afecta la conclusión del proyecto: los
 dos grupos escalan por el mismo factor, así que el solape (0.000) y el hueco (×5.1) no
-cambian. Lo que cambia es dónde cae la línea, y por eso F2/F3 —que se calculan acá con Mie
-y no dependen de ninguna convención— son el desempate. Ver `teoria.md` §6.
+cambian. Lo que cambia es dónde cae la línea, y por eso F2/F3 —que se calculan con Mie y
+no dependen de ninguna convención— son el desempate. Ver `teoria.md` §6.
+
+## Índice de la matriz
+
+Por defecto la matriz es acetato de celulosa, n_sol(λ) de `nref.py`. El argumento
+`n_matriz` (un número) reemplaza esa curva por un índice constante; se agregó para el ancla
+externa del check 5.3, que usa la morfología publicada de películas de PMMA (n = 1.49).
+Con `n_matriz=None` todo da exactamente lo mismo que antes.
 
 ## Verificación
 
@@ -42,6 +49,14 @@ from .nref import n_sol
 N_BINES_D = 160
 
 
+def _indice(lam_nm, bias: float = 0.0, n_matriz: float | None = None) -> np.ndarray:
+    """Índice de la matriz en cada λ: curva de nref.py, o constante si se da n_matriz."""
+    lam = np.atleast_1d(np.asarray(lam_nm, float))
+    if n_matriz is None:
+        return np.atleast_1d(n_sol(lam, bias=bias))
+    return np.full(lam.shape, float(n_matriz))
+
+
 def qsca_g_mie(x_mie, m_rel):
     """Q_sca y g crudos de la serie de Mie. `x_mie` ya debe estar en el medio."""
     import miepython as mp
@@ -52,17 +67,17 @@ def qsca_g_mie(x_mie, m_rel):
     return np.asarray(qsca, float), np.asarray(g, float)
 
 
-def x_mie_de(D_um, lam_nm, bias: float = 0.0):
-    """x_Mie = π D n_sol(λ) / λ₀, a partir de cantidades físicas."""
+def x_mie_de(D_um, lam_nm, bias: float = 0.0, n_matriz: float | None = None):
+    """x_Mie = π D n_matriz(λ) / λ₀, a partir de cantidades físicas."""
     D = np.asarray(D_um, float)[..., None] * 1e-6
-    lam = np.asarray(lam_nm, float) * 1e-9
-    return np.pi * D * n_sol(lam_nm, bias=bias) / lam
+    lam = np.atleast_1d(np.asarray(lam_nm, float)) * 1e-9
+    return np.pi * D * _indice(lam_nm, bias, n_matriz) / lam
 
 
-def qsca_g_de(D_um, lam_nm, bias: float = 0.0):
-    """Q_sca(D, λ) y g(D, λ) para poros de aire en el sólido. Devuelve arrays (nD, nλ)."""
-    xm = x_mie_de(D_um, lam_nm, bias=bias)
-    m = np.broadcast_to(1.0 / n_sol(lam_nm, bias=bias), xm.shape)
+def qsca_g_de(D_um, lam_nm, bias: float = 0.0, n_matriz: float | None = None):
+    """Q_sca(D, λ) y g(D, λ) para poros de aire en la matriz. Devuelve arrays (nD, nλ)."""
+    xm = x_mie_de(D_um, lam_nm, bias=bias, n_matriz=n_matriz)
+    m = np.broadcast_to(1.0 / _indice(lam_nm, bias, n_matriz), xm.shape)
     q, g = qsca_g_mie(xm.ravel(), m.ravel())
     return q.reshape(xm.shape), g.reshape(xm.shape)
 
@@ -78,7 +93,8 @@ def _histograma(D_um, n_bines: int = N_BINES_D):
     return centros[ok], w / w.sum()
 
 
-def promedios_PD(D_um, lam_nm, bias: float = 0.0, n_bines: int = N_BINES_D):
+def promedios_PD(D_um, lam_nm, bias: float = 0.0, n_bines: int = N_BINES_D,
+                 n_matriz: float | None = None):
     """Promedios sobre P(D) que hacen falta para ℓ*.
 
     Devuelve un dict con, para cada λ:
@@ -90,8 +106,8 @@ def promedios_PD(D_um, lam_nm, bias: float = 0.0, n_bines: int = N_BINES_D):
         D3          ⟨D³⟩ [µm³]   (fija la densidad numérica a porosidad dada)
     """
     Dc, w = _histograma(D_um, n_bines)
-    q, g = qsca_g_de(Dc, lam_nm, bias=bias)          # (nD, nλ)
-    area = np.pi * Dc**2 / 4.0                        # µm²
+    q, g = qsca_g_de(Dc, lam_nm, bias=bias, n_matriz=n_matriz)   # (nD, nλ)
+    area = np.pi * Dc**2 / 4.0                                    # µm²
     wa = (w * 1.0)[:, None]
 
     sigma_sca = np.sum(wa * q * area[:, None], axis=0)
@@ -100,13 +116,14 @@ def promedios_PD(D_um, lam_nm, bias: float = 0.0, n_bines: int = N_BINES_D):
     g_ef = np.sum(wa * q * g * (Dc**2)[:, None], axis=0) / qd2
     qsca_ef = qd2 / np.sum(w * Dc**2)
 
-    return dict(lam_nm=np.asarray(lam_nm, float),
+    return dict(lam_nm=np.atleast_1d(np.asarray(lam_nm, float)),
                 sigma_sca=sigma_sca, sigma_tr=sigma_tr,
                 g_ef=g_ef, qsca_ef=qsca_ef,
                 D3=float(np.sum(w * Dc**3)), D2=float(np.sum(w * Dc**2)))
 
 
-def ell_star_diluido(D_um, lam_nm, phi: float, bias: float = 0.0):
+def ell_star_diluido(D_um, lam_nm, phi: float, bias: float = 0.0,
+                     n_matriz: float | None = None):
     """ℓ*(λ) en µm suponiendo poros independientes (sin factor de estructura).
 
         ρ = φ / ⟨πD³/6⟩          (densidad numérica a porosidad φ)
@@ -114,6 +131,6 @@ def ell_star_diluido(D_um, lam_nm, phi: float, bias: float = 0.0):
 
     La corrección por dispersión dependiente va en `estructura.py`.
     """
-    pr = promedios_PD(D_um, lam_nm, bias=bias)
+    pr = promedios_PD(D_um, lam_nm, bias=bias, n_matriz=n_matriz)
     rho = phi / (np.pi * pr["D3"] / 6.0)      # poros por µm³
     return 1.0 / (rho * pr["sigma_tr"]), pr

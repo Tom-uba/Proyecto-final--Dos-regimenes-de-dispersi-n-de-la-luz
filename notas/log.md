@@ -685,3 +685,41 @@ nanométrico, y un faltante espectral en las micrométricas compatible con estru
 
 **Pendiente:** check 5.3 (ancla externa), Etapa 6 (frontera acotada y controles —
 parcialmente hechos: espesor ±15 %, R+T), Etapa 7 (informe, verificación independiente).
+
+---
+
+## 2026-09-13 (d) — check 5.3: FALLA su criterio registrado
+
+**Diseño** (fijado en el docstring antes de correrlo): la misma cadena del check 5.2,
+alimentada con la morfología publicada por Syurik et al. 2017 para películas de PMMA
+(poros 339 ± 109 nm, fracción 39 %, n = 1.49; P(D) lognormal por elección nuestra; capa
+porosa sobre vidrio con absorbente negro detrás). Observable: R_total a 600 nm contra la
+serie publicada de espesores. Criterio: ±0.10 absoluto en los tres. Se eligió R(L) y no l_t
+como observable primario porque el paper extrae l_t como pendiente de T contra 1/L, que no
+es exactamente ℓ*. Ficha completa en `notas/fichas.md`.
+
+Cambios de biblioteca que requirió, con valores por defecto que no alteran nada anterior:
+`montecarlo.correr(..., n_abajo)` (medio debajo de la lámina) y `mie.*(..., n_matriz)`
+(índice de matriz constante). Verificado: en la batería el 5.2 vuelve a dar Δs 1.77 y el
+5.5 R = 0.0516, idénticos.
+
+**Resultado — FALLA**
+
+| espesor de capa porosa | R(600) predicho | publicado | desvío |
+|---|---|---|---|
+| 9 µm | 0.45 | 0.57 | **−0.12** |
+| 16 µm | 0.60 | 0.70 | **−0.10** (en el borde; no pasa) |
+| 53 µm | 0.84 | 0.90 | −0.06 |
+
+Informativo: ℓ*(400 / 600 / 800 nm) = 2.9 / 3.8 / 5.1 µm contra l_t publicado 3.5–4 µm (a
+600 nm cae dentro); R(400) − R(800) = +16 y +8 puntos a 9 y 53 µm contra 13 y 7 publicados;
+factor de estructura 0.74.
+
+**Patrón:** el modelo subestima R y **el déficit se achica con el espesor** (−0.12 → −0.06).
+Un error de calibración daría un corrimiento constante; esto apunta a algo que pesa más en
+capas delgadas.
+
+**Compromiso:** no se cambia el criterio ni se retocan entradas para que pase. El check queda
+en FALLA en la batería hasta que el diagnóstico diga qué es. Diagnóstico en la entrada
+siguiente. Sospechoso con antecedente: el factor de estructura de esferas duras con η = φ,
+que en el check 5.2 ya apantallaba de más en la muestra nanoporosa.

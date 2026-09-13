@@ -5,15 +5,17 @@ para las muestras 1–3 da L/ℓ* ≈ 1.3–2.0. Ahí manda este módulo.
 
 ## Modelo
 
-Lámina infinita lateralmente, espesor L, NO absorbente, índice efectivo n_ef rodeada de
-aire. Incidencia normal.
+Lámina infinita lateralmente, espesor L, NO absorbente, índice efectivo n_ef. Arriba hay
+aire; abajo, un medio de índice `n_abajo` (aire por defecto; vidrio en el ancla externa del
+check 5.3). Incidencia normal desde arriba.
 
 - Entrada: reflexión especular de Fresnel a incidencia normal, R₀ = ((n_ef−1)/(n_ef+1))².
 - Paso libre: exponencial con coeficiente de dispersión μ_s = 1/[ℓ*(1−g)].
   (ℓ* = 1/[μ_s(1−g)] es el camino de transporte de mie.py; se despeja μ_s.)
 - Fase: Henyey–Greenstein con la g efectiva de Mie.
-- Bordes: reflexión de Fresnel (no polarizada) desde n_ef hacia el aire en el ángulo
-  real de incidencia, con reflexión total interna; se decide por sorteo.
+- Bordes: reflexión de Fresnel no polarizada hacia el medio de afuera correspondiente, en el
+  ángulo real de incidencia, con reflexión total interna; se decide por sorteo. Lo que sale
+  por abajo cuenta como T y no vuelve.
 
 Al llegar a un borde el fotón se detiene ahí y se re-sortea el siguiente paso. Es
 insesgado porque la distribución exponencial no tiene memoria.
@@ -24,21 +26,25 @@ Sin absorción, todo fotón termina en R o en T: R_especular + R_difusa + T = 1 
 
   (a) límite balístico, ℓ* → ∞:  R = 2R₀/(1+R₀),  T = (1−R₀)/(1+R₀)   (exacto)
   (b) régimen grueso, L ≫ ℓ*:    T coincide con difusión de `lamina.py`
+
+`n_abajo` se agregó para el check 5.3 (2026-09-13). Con su valor por defecto (1.0) el
+generador consume los mismos números aleatorios que antes, así que los checks 5.2 y 5.5 dan
+exactamente lo mismo.
 """
 from __future__ import annotations
 
 import numpy as np
 
 
-def _fresnel(cos_i, n1: float):
-    """Reflectancia no polarizada del medio n1 hacia aire (n2 = 1)."""
+def _fresnel(cos_i, n1: float, n2: float = 1.0):
+    """Reflectancia no polarizada desde el medio n1 hacia el medio n2."""
     cos_i = np.clip(np.abs(cos_i), 0.0, 1.0)
-    sin_t = n1 * np.sqrt(1.0 - cos_i**2)
+    sin_t = (n1 / n2) * np.sqrt(1.0 - cos_i**2)
     R = np.ones_like(cos_i)                    # reflexión total interna por defecto
     ok = sin_t < 1.0
     ci, ct = cos_i[ok], np.sqrt(1.0 - sin_t[ok] ** 2)
-    rs = (n1 * ci - ct) / (n1 * ci + ct)
-    rp = (ci - n1 * ct) / (ci + n1 * ct)
+    rs = (n1 * ci - n2 * ct) / (n1 * ci + n2 * ct)
+    rp = (n2 * ci - n1 * ct) / (n2 * ci + n1 * ct)
     R[ok] = 0.5 * (rs**2 + rp**2)
     return R
 
@@ -52,7 +58,8 @@ def _hg(g: float, xi):
 
 
 def correr(ell_star_um: float, g: float, n_ef: float, d_um: float,
-           n_fotones: int = 20000, seed: int = 0, max_pasos: int = 200000) -> dict:
+           n_fotones: int = 20000, seed: int = 0, max_pasos: int = 200000,
+           n_abajo: float = 1.0) -> dict:
     """Devuelve fracciones R_especular, R_difusa, R_total, T y sin_escapar."""
     rng = np.random.default_rng(seed)
     L = float(d_um)
@@ -76,11 +83,13 @@ def correr(ell_star_um: float, g: float, n_ef: float, d_um: float,
         arriba, abajo = zn < 0.0, zn > L
         borde = arriba | abajo
 
-        # --- los que llegan a un borde: Fresnel ---
+        # --- los que llegan a un borde: Fresnel hacia el medio de afuera ---
         if borde.any():
             b = idx[borde]
-            z[b] = np.where(arriba[borde], 0.0, L)
-            refleja = rng.random(b.size) < _fresnel(uz[b], n_ef)
+            es_arriba = arriba[borde]
+            z[b] = np.where(es_arriba, 0.0, L)
+            Rf = np.where(es_arriba, _fresnel(uz[b], n_ef, 1.0), _fresnel(uz[b], n_ef, n_abajo))
+            refleja = rng.random(b.size) < Rf
             uz[b[refleja]] *= -1.0
             sale = b[~refleja]
             sale_arriba = z[sale] == 0.0
