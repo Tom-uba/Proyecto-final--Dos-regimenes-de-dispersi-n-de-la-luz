@@ -18,4 +18,6 @@ Se agregan como `check_*.py` a medida que se completa cada etapa. Cada uno defin
 | `5.3` | ancla externa Syurik 2017: R_total(600) a 9 / 16 / 53 µm con su morfología publicada | ±0.10 absoluto en los tres | 5 ❌ falla (−0.12, −0.10, −0.06); diagnosticada: factor de estructura PY monodisperso a η = φ apantalla de más (ver log 2026-09-13 e) |
 | `5.4` | límites exactos de S(q) de Percus–Yevick | S(0) a 2 %, \|S(∞)−1\| < 0.02 | 5 ✅ |
 | `5.5` | Monte Carlo: límite balístico exacto, difusión en régimen grueso, conteo | ±0.003; ±10 % vs difusión; sin escapar < 1e-3 | 5 ✅ |
+| `5.6` | aproximación de desacople: β = 1 con poros iguales, β(0) = ⟨D³⟩²/⟨D⁶⟩, 0 < β ≤ 1, S_ef → 1 | 2 % | 5 ✅ |
+| `5.7` | hipótesis de polidispersión, pre-registrada (commit 286b7f2): Syurik + s₄ + T de m4 + Δs | los cuatro | 5 ❌ falla: Syurik pasa por el borde, m4 sobrecorregida (s₄ 0.62, rms T 0.229, Δs ×0.46) |
 | `6.1` | controles de absorción y espesor | cuantitativos (un número) | 6 |

@@ -774,3 +774,76 @@ FALLA**; lo que aporta es un diagnóstico corroborado.
 justificado de antemano (p. ej. aproximación de desacople, Kotlarchyk & Chen 1983, sin
 parámetros libres) y registrar un check nuevo que lo pruebe contra ambos datasets; o dejarlo
 como limitación declarada y seguir a la Etapa 6.
+
+---
+
+## 2026-09-13 (f) — Factor de estructura polidisperso: la hipótesis queda refutada
+
+El usuario eligió implementar la corrección polidispersa.
+
+**Implementación.** `estructura.py`: aproximación de desacople,
+S_ef(q) = 1 + β(q)[S_PY(q⟨D⟩) − 1], β = |⟨F⟩|²/⟨|F|²⟩ con amplitud de esfera homogénea sobre la
+P(D) medida. Sin parámetros libres; `polidisperso=False` por defecto. `check_5_6_desacople.py`
+PASA: con poros iguales β = 1 y S_ef = S_PY (error 3e-15); β(0) = ⟨D³⟩²/⟨D⁶⟩ exacto;
+0 < β ≤ 1; S_ef → 1 a q grande. `check_5_4` sin cambios.
+
+**Pre-registro.** `check_5_7_polidisperso.py` se commiteó (286b7f2) ANTES de su primera
+ejecución, con cuatro criterios contra dos datasets a la vez. Checks 5.2 y 5.3 intactos.
+
+**Resultado — FALLA**
+
+| criterio | desacople | PY monodisperso (antes) |
+|---|---|---|
+| (A) Syurik R(600) a 9 / 16 / 53 µm, ±0.10 | 0.47 / 0.62 / 0.85 → **pasa por el borde** (−0.10) | 0.45 / 0.60 / 0.84 (falla) |
+| (B) s₄ rojo dentro de las 5 regiones [1.28, 1.72] | **0.62 → falla** | 1.84 (falla) |
+| (C) rms de T de m4 < 0.05 | **0.229 → falla** | 0.105 |
+| (D) Δs rojo dentro de ×0.5–2 | **0.57 vs 1.23 (×0.46) → falla** | ×1.43 (pasa) |
+
+Factor de estructura en Syurik: 0.74 → 0.80. En m4 la supresión casi desaparece: la muestra
+queda como sin factor de estructura (s₄ sin S era 0.54; rms de T 0.33).
+
+**La hipótesis "la polidispersión, tratada con desacople, corrige el exceso de
+apantallamiento" queda refutada.** Los dos datasets responden en direcciones opuestas: en
+Syurik la corrección mejora poco; en m4 se pasa de largo.
+
+**Mecanismo — y corrección de una explicación dada en la conversación.** Antes de mirar los
+números se sugirió que β sería muy chico en m4 por la cola larga de P(D). Es falso:
+
+| | β(0) | desvío relativo de D | mediana | p99 | máx |
+|---|---|---|---|---|---|
+| m4 | 0.32 | 0.41 | 0.100 µm | 0.247 | 0.474 |
+| Syurik (lognormal) | 0.45 | 0.32 | 0.339 µm (media) | — | — |
+| m1 / m2 / m3 | 0.25 / 0.23 / 0.13 | 0.40 / 0.43 / 0.53 | ~1.75 µm | 4.7–6.6 | 7.8–9.8 |
+
+(En m1–3 β es irrelevante: S ≈ 1 en todo su rango angular.)
+
+Lo que realmente pasa: S_ef = 1 − β(1 − S_PY). En m4 la supresión de PY es muy profunda
+(S_PY(0) = 0.07 a η = 0.33) y todo el rango angular cae en q chico, así que el resultado queda
+controlado por β y no por S: con β ≈ 0.32 la supresión baja de ~0.93 a ~0.30 y el factor de
+transporte sube de ~0.1 a ~0.7. El η ajustado contra T (0.25) indicaba que hacía falta un
+factor de ~0.2–0.3: el desacople sobrecorrige por un factor ~3. En Syurik la supresión
+promedio era menos profunda (factor 0.74) y la misma corrección casi no se nota.
+
+**Por qué puede fallar el desacople acá (no probado).** Supone que el tamaño de un poro no
+está correlacionado con la posición de sus vecinos. En un empaquetamiento denso eso es falso
+—un poro grande desplaza a sus vecinos—, y la supresión real queda más fuerte que la que
+predice el desacople. Además m4 no es un conjunto de esferas sino una red bicontinua.
+
+**Lo que sí queda — una banda sistemática, no un ajuste.** Los dos cierres simples de
+factor de estructura, ninguno ajustado a los datos, **acotan las observables de m4 y de Δs**:
+
+| | desacople | medido | PY monodisperso |
+|---|---|---|---|
+| s₄ rojo | 0.62 | **1.44** | 1.84 |
+| Δs rojo (razón pred/med) | ×0.46 | **×1** | ×1.43 |
+
+La medición queda dentro de la banda. Esto se puede reportar como incertidumbre sistemática
+del modelo por el tratamiento de la dispersión dependiente, sin elegir un η. **Para Syurik la
+banda no contiene los datos** (los dos cierres quedan por debajo; sólo "sin factor de
+estructura" llega): la asimetría entre datasets queda sin explicar.
+
+**Estado del modelo de dispersión dependiente:** es el eslabón débil para espumas densas de
+poros sub-λ. No se encontró un cierre sin parámetros que ajuste los dos datasets.
+
+**Estado de checks:** 5.2 PASA (monodisperso), 5.3 FALLA (monodisperso), 5.6 PASA, 5.7 FALLA.
+Las fallas quedan en la batería tal como se registraron.
