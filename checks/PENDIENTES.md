@@ -20,4 +20,8 @@ Se agregan como `check_*.py` a medida que se completa cada etapa. Cada uno defin
 | `5.5` | Monte Carlo: límite balístico exacto, difusión en régimen grueso, conteo | ±0.003; ±10 % vs difusión; sin escapar < 1e-3 | 5 ✅ |
 | `5.6` | aproximación de desacople: β = 1 con poros iguales, β(0) = ⟨D³⟩²/⟨D⁶⟩, 0 < β ≤ 1, S_ef → 1 | 2 % | 5 ✅ |
 | `5.7` | hipótesis de polidispersión, pre-registrada (commit 286b7f2): Syurik + s₄ + T de m4 + Δs | los cuatro | 5 ❌ falla: Syurik pasa por el borde, m4 sobrecorregida (s₄ 0.62, rms T 0.229, Δs ×0.46) |
-| `6.1` | controles de absorción y espesor | cuantitativos (un número) | 6 |
+| `6.0` | absorción por peso de camino en el Monte Carlo | balístico con absorción ±0.003; μ_a no altera la corrida | 6 ✅ |
+| `6.1` | controles (pre-registrado): espesor y absorción | máx \|ΔΔs\| < 0.25·Δs_med; Q_med < Q_pred,mín − 3σ | 6 |
+| `6.2` | frontera acotada (pre-registrado) | F1–F3 y F_s dentro de las cotas de los datos; CSV reproducible | 6 |
+| `6.3` | atribución tamaño vs entorno (pre-registrado) | f_D ≥ 0.75 con los dos cierres | 6 |
+| `6.4` | telarañas vs residuos (pre-registrado) | gatea sólo la implementación (±15 %, orden); ρ reportado | 6 |

@@ -30,6 +30,15 @@ Sin absorción, todo fotón termina en R o en T: R_especular + R_difusa + T = 1 
 `n_abajo` se agregó para el check 5.3 (2026-09-13). Con su valor por defecto (1.0) el
 generador consume los mismos números aleatorios que antes, así que los checks 5.2 y 5.5 dan
 exactamente lo mismo.
+
+## Absorción (Etapa 6, control de absorción)
+
+`mu_a` (µm⁻¹, un número o un array) activa la absorción por PESO DE CAMINO: se registra el
+camino total recorrido dentro de la lámina por cada fotón que sale, y la fracción que
+escapa con absorción μ_a es  Σ exp(−μ_a · camino) / N.  Es exacto para un medio de absorción
+homogénea (Beer–Lambert microscópico) y una sola corrida sirve para muchos μ_a. No consume
+números aleatorios: con o sin `mu_a` las fracciones sin absorción son idénticas.
+Validado en `checks/check_6_0_mc_absorcion.py` contra el límite balístico con absorción.
 """
 from __future__ import annotations
 
@@ -59,8 +68,11 @@ def _hg(g: float, xi):
 
 def correr(ell_star_um: float, g: float, n_ef: float, d_um: float,
            n_fotones: int = 20000, seed: int = 0, max_pasos: int = 200000,
-           n_abajo: float = 1.0) -> dict:
-    """Devuelve fracciones R_especular, R_difusa, R_total, T y sin_escapar."""
+           n_abajo: float = 1.0, mu_a=None) -> dict:
+    """Devuelve fracciones R_especular, R_difusa, R_total, T y sin_escapar.
+
+    Con `mu_a` agrega R_total_abs y T_abs: arrays del largo de `mu_a`.
+    """
     rng = np.random.default_rng(seed)
     L = float(d_um)
     mus = 1.0 / (float(ell_star_um) * (1.0 - g))
@@ -73,6 +85,8 @@ def correr(ell_star_um: float, g: float, n_ef: float, d_um: float,
     ux, uy, uz = np.zeros(n), np.zeros(n), np.ones(n)
     vivo = np.ones(n, bool)
     nR = nT = 0
+    camino = np.zeros(n)
+    caminos_R, caminos_T = [], []
 
     for _ in range(max_pasos):
         idx = np.flatnonzero(vivo)
@@ -87,6 +101,7 @@ def correr(ell_star_um: float, g: float, n_ef: float, d_um: float,
         if borde.any():
             b = idx[borde]
             es_arriba = arriba[borde]
+            camino[b] += np.where(es_arriba, -z[b], L - z[b]) / uz[b]
             z[b] = np.where(es_arriba, 0.0, L)
             Rf = np.where(es_arriba, _fresnel(uz[b], n_ef, 1.0), _fresnel(uz[b], n_ef, n_abajo))
             refleja = rng.random(b.size) < Rf
@@ -95,12 +110,16 @@ def correr(ell_star_um: float, g: float, n_ef: float, d_um: float,
             sale_arriba = z[sale] == 0.0
             nR += int(sale_arriba.sum())
             nT += int((~sale_arriba).sum())
+            if mu_a is not None:
+                caminos_R.append(camino[sale[sale_arriba]])
+                caminos_T.append(camino[sale[~sale_arriba]])
             vivo[sale] = False
 
         # --- los que siguen adentro: mover y dispersar ---
         interior = idx[~borde]
         if interior.size:
             z[interior] = zn[~borde]
+            camino[interior] += paso[~borde]
             ct = _hg(g, rng.random(interior.size))
             st = np.sqrt(1.0 - ct**2)
             phi = 2.0 * np.pi * rng.random(interior.size)
@@ -115,5 +134,12 @@ def correr(ell_star_um: float, g: float, n_ef: float, d_um: float,
 
     sin_escapar = int(vivo.sum())
     N = float(n_fotones)
-    return dict(R_especular=n_esp / N, R_difusa=nR / N, R_total=(n_esp + nR) / N,
-                T=nT / N, sin_escapar=sin_escapar / N, R0=R0)
+    out = dict(R_especular=n_esp / N, R_difusa=nR / N, R_total=(n_esp + nR) / N,
+               T=nT / N, sin_escapar=sin_escapar / N, R0=R0)
+    if mu_a is not None:
+        mu = np.atleast_1d(np.asarray(mu_a, float))
+        cR = np.concatenate(caminos_R) if caminos_R else np.zeros(0)
+        cT = np.concatenate(caminos_T) if caminos_T else np.zeros(0)
+        out["R_total_abs"] = np.array([n_esp + np.exp(-u * cR).sum() for u in mu]) / N
+        out["T_abs"] = np.array([np.exp(-u * cT).sum() for u in mu]) / N
+    return out

@@ -847,3 +847,33 @@ poros sub-λ. No se encontró un cierre sin parámetros que ajuste los dos datas
 
 **Estado de checks:** 5.2 PASA (monodisperso), 5.3 FALLA (monodisperso), 5.6 PASA, 5.7 FALLA.
 Las fallas quedan en la batería tal como se registraron.
+
+---
+
+## 2026-09-13 (g) — Etapa 6: pre-registro de los controles y de la frontera
+
+El usuario pidió avanzar a la Etapa 6. Los criterios se escriben y commitean ANTES de correr
+los checks 6.1–6.4; el detalle completo está en el docstring de cada check.
+
+**Código nuevo.** `montecarlo.correr(..., mu_a)`: absorción por peso de camino, sin consumir
+números aleatorios. `modelo.py`: la cadena de los checks 5.2/5.7 extraída (los checks 5.x no
+se tocan). `controles.py`, `frontera.py`, `telarana.py` (índice de telaraña portado de la
+prueba de factibilidad). `check 6.0` (implementación de la absorción) ya corrió y PASA:
+error 1e-4 contra el límite balístico con absorción; μ_a = 0 da diferencia 0.
+
+**Criterios**
+
+| check | pregunta | criterio |
+|---|---|---|
+| 6.1 (a) | ¿el espesor genera el contraste? | 5 variantes (±15 % en fase y en contrafase, intercambio de espesores entre grupos): máx \|ΔΔs\| < 0.25·Δs_med |
+| 6.1 (b) | ¿la absorción del sólido genera la pendiente de m4? | H_abs: dispersión de m4 congelada en 600 nm + μ_a,sol lineal desde 0 en 600; κ* da s₄ medida. Observable independiente de la calibración: Q = K(745)/K(600), K = X₄/⟨X⟩₁₂₃, X = (1−T)/R. Excluida si Q_med < Q_pred,mín − 3σ_Q (σ con tira B como sistemático) |
+| 6.2 | ¿dónde está la frontera? | F1, F2, F3 (n en 470/750 nm, sesgo 0/+2 %) y F_s (cruce de s* en un barrido de x̃ con 2 entornos × 2 cierres, ≥ 2 cruces) dentro de [x̃₄(470)·1.3, mín x̃₁₂₃(750)·0.7]; CSV reproducible |
+| 6.3 | ¿el contraste es tamaño o entorno (φ, L)? | factorial 2×2, reparto de Shapley: f_D ≥ 0.75 con los dos cierres |
+| 6.4 | ¿las telarañas explican los residuos de m1–3? | gatea sólo la implementación (orden y ±15 % de la factibilidad). Con n = 3 ningún ρ es significativo (p = 1/6); lectura fijada: ρ = 1 en los dos residuos → "consistente, no demostrado"; otra cosa → "no respaldado" |
+
+**Advertencia registrada de antemano (6.2):** pasar sólo dice que la teoría es compatible
+con los datos; dos cúmulos separados ×5 no pueden ubicar la frontera más fino que sus cotas.
+
+**Dato ya conocido al fijar 6.4** (entrada 2026-09-13 b): el faltante de T ordenaba
+m3 > m2 > m1 igual que la telaraña; en s rojo el orden del 5.2 era m3 > m1 > m2. La lectura de
+6.4 no se eligió para que dé "consistente".
