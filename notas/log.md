@@ -561,3 +561,40 @@ dentro del núcleo) da 0.085–0.110 pero subestima, porque esa tabla excluye po
   que el usuario pidió explícitamente. Con L/ℓ* ≈ 2 pasó a ser una incertidumbre dominante.
 - Encuadre del check 5.2: la prueba primaria es la predicción SIN parámetros ajustados;
   la de η ajustado contra T va como refinamiento, rotulada como tal.
+
+**Cadena m1–3 con φ por muestra y espesor ±15 %** (60 000 fotones)
+
+| m | φ | L (µm) | L/ℓ* | T(550) pred | T(550) med |
+|---|---|---|---|---|---|
+| 1 | 0.19 | 39.1 / 46.0 / 52.9 | 1.62 / 1.90 / 2.19 | 0.533 / 0.502 / 0.481 | 0.459 |
+| 2 | 0.20 | 34.9 / 41.0 / 47.1 | 1.44 / 1.69 / 1.94 | 0.554 / 0.528 / 0.503 | 0.467 |
+| 3 | 0.22 | 34.0 / 40.0 / 46.0 | 1.22 / 1.44 / 1.66 | 0.582 / 0.556 / 0.530 | 0.444 |
+
+Ni con φ por muestra ni con +15 % de espesor cierra: el modelo sigue demasiado transparente
+y sigue invirtiendo el orden entre 1–3. s predicha sigue plana (0.04–0.12, dentro del ruido).
+**A m3 le falta dispersión que ni porosidad ni espesor explican.**
+
+Observación, no demostración: el faltante de T a espesor nominal ordena
+**m3 (0.112) > m2 (0.061) > m1 (0.043)**, el mismo orden que la densidad de telaraña de la
+prueba de factibilidad del eslabón A (5.24 > 3.98 > 3.26 µm⁻¹). Consistente con A3. Aquella
+prueba era de 6 imágenes por muestra y sin calibrar, así que no se afirma más.
+
+**Espesores remedidos desde las SEM a 3000× (v1)**
+
+Espesor total — **confirma la slide 13 a 1–2 µm**:
+
+| | remedido (mediana, n = 6) | slide 13 |
+|---|---|---|
+| m1 | 83.8 [83–84] | 83 |
+| m2 | 80.4 [79–81] | 79 |
+| m3 | 79.0 | 78 |
+| m4 | 79.2 | 78 |
+
+Dos imágenes marcadas válidas dan totales falsos (m3 gcb8347 = 67.6, m4 gcb8350 = 64.3): la
+imagen de diagnóstico muestra que el criterio de textura confundió **pieles lisas** con fondo.
+La mediana no se ve afectada.
+
+Espesor del núcleo — **la v1 no sirve**: 8–18 µm en m1 (contra 46), 5–78 en m2–3. En el
+diagnóstico se ve por qué: con suavizado de 2 µm y umbral al 30 % del máximo el algoritmo se
+queda con la franja más densa del núcleo (la densidad de poros no es uniforme), y en m3 las
+sombras del relieve de fractura se segmentan como poros. Se hace una v2.
