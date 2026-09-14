@@ -49,6 +49,7 @@ encabezado entrada, cálculo, elecciones y el check que lo verifica.
 | 5 | `scripts/05c_diagnostico_syurik.py` | tabla por stdout (diagnóstico de la falla 5.3) | 5.3 |
 | 6 | `scripts/06_frontera.py` (~10 min) | `resultados/06_frontera*.csv`, `figures/06_frontera_acotada.*` | 6.2 |
 | 6 | `scripts/06_controles.py` (~5 min) | `resultados/06_controles.csv`, `figures/06_controles.*` | 6.1, 6.3 |
+| 7 | `scripts/07_informe.py` (después de 02–06) | `informe/informe.html` (autocontenido) + `informe/informe.pdf` | — |
 
 Los checks de la Etapa 5 (5.1, 5.2, 5.4–5.7) y 6.0, 6.4 calculan directamente, sin script.
 

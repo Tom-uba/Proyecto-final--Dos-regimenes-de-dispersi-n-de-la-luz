@@ -18,5 +18,5 @@ figures/*.pdf
 .DS_Store
 Thumbs.db
 
-# informe compilado (se regenera; el fuente sí se versiona)
-informe/*.pdf
+# informe: el fuente, el HTML autocontenido y el PDF se versionan (son la entrega);
+# se regeneran con scripts/07_informe.py
