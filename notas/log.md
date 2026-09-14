@@ -954,3 +954,42 @@ mayoritariamente el cambio de régimen de dispersión:
    pero no el de s (6.4, no respaldado).
 
 **Estado de la batería:** fallan 5.3, 5.7, 6.1 y 6.2, las cuatro registradas con diagnóstico.
+
+---
+
+## 2026-09-14 (i) — Etapa 7: segunda opinión y prueba de reproducción con Codex
+
+**Qué se hizo.** El usuario lanzó Codex CLI 0.150.1 (sesión sin historial) en una carpeta
+fuera del repo con el pedido `notas/segunda_opinion_codex_pedido.md`: clonar el repo público,
+reproducir siguiendo sólo el README y hacer una revisión de referee. Informe copiado tal cual
+en `notas/segunda_opinion_codex.md`.
+
+**Reproducción.** Clonó `c97f371`; `uv sync` sin intervención; mapa de regímenes y
+`04_banda_x.csv` idénticos; los 20 checks con los mismos números que `run.log` y las mismas 4
+fallas. Única intervención: `PYTHONUTF8=1`, porque la batería abortaba con UnicodeEncodeError
+bajo CP1252.
+
+**Hallazgos verificados acá antes de aceptarlos**
+
+1. *Codificación.* Real. No se vio antes porque el entorno del agente trae
+   `PYTHONIOENCODING=utf-8`. Arreglo: `dosregimenes/__init__.py` reconfigura stdout/stderr a
+   UTF-8 al importarse.
+2. *Pre-registro de 5.2 no auditable.* Real, y más de lo que dice Codex. El criterio (signo,
+   ×0.5–2) está en el plan del 2026-09-10 y el observable Δs se commiteó antes (`bc6cc06`),
+   pero la cadena se iteró con Δs a la vista: la primera corrida daba ×2.8–3.2 (entrada
+   2026-09-11 e), y la η = φ con Monte Carlo daba ×1.47 antes de escribir el check. Los
+   cambios (Monte Carlo, factor de estructura, φ por muestra) estaban anunciados como
+   necesarios antes de re-correr, pero **la prueba no fue ciega**. Se declara en el informe.
+3. *Atribución 81–99 % interna del modelo; geometría de esferas frágil para m4; error del
+   control de absorción optimista (T tratada como exacta); [0.87, 5.1] es una brecha sin
+   muestras; incertidumbres morfológicas no propagadas.* Todos correctos.
+
+**Qué cambió.** No se tocó ningún número ni criterio. Cambió la formulación de la respuesta:
+de "lo produce mayoritariamente" a "explicación física consistente, predicha en dirección y
+orden de magnitud, no cuantitativa cerrada". La atribución de 6.3 se presenta como
+sensibilidad del modelo, y la frontera como una brecha. Informe (resumen, §4.4, §4.6, §4.7,
+§5, §6, §7, §8) y README actualizados.
+
+**Lección de proceso.** La verificación interna (checks, log, pre-registro) no atrapó
+sobreventa en la redacción ni la falta de auditabilidad de un pre-registro propio; una sesión
+externa sin contexto lo encontró en una pasada.

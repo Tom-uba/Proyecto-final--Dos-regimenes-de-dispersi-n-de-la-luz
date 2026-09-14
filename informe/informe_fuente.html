@@ -179,8 +179,9 @@
   <div class="label">Resumen</div>
   <p class="verdict">Sí, en parte.</p>
   <p>Cuatro láminas porosas de acetato de celulosa de una misma tira caen en dos grupos morfológicos disjuntos: poros de ~1.75 µm (muestras 1–3, <var>x</var> ≈ 9) y una red de ~0.10 µm (muestra 4, <var>x</var> ≈ 0.52). En la banda roja, las primeras reflejan de forma casi plana (pendiente espectral <var>s</var> = 0.21) y la última cae con fuerza (<var>s</var> = 1.44).</p>
-  <p>Una predicción sin parámetros ajustados —Mie sobre la distribución de poros medida, factor de estructura, Monte Carlo de la lámina— reproduce la diferencia de pendientes con el signo correcto y dentro de un factor 1.43 <span class="chk pass">5.2</span>. Dentro del modelo, el tamaño de poro carga el 81–99 % del contraste <span class="chk pass">6.3</span>, y variar el espesor no lo genera <span class="chk pass">6.1a</span>. Los datos ubican la transición entre <var>x</var> = 0.87 y 5.1; la teoría de un poro, entre 1.0 y 2.2.</p>
-  <p>Queda sin cerrar: el tratamiento de la dispersión dependiente en espumas densas de poros más chicos que <var>λ</var> <span class="chk fail">5.3</span> <span class="chk fail">5.7</span> <span class="chk fail">6.2</span>, la exclusión cuantitativa de la absorción <span class="chk fail">6.1b</span>, y un faltante de pendiente en las muestras 1–3.</p>
+  <p>Una predicción sin parámetros ajustados —Mie sobre la distribución de poros medida, factor de estructura, Monte Carlo de la lámina— reproduce la diferencia de pendientes con el signo correcto y dentro de un factor 1.43, contra un criterio amplio de signo y factor 2 <span class="chk pass">5.2</span>. Dentro del modelo —como sensibilidad, no como fracción medida— el tamaño de poro carga el 81–99 % del contraste predicho <span class="chk pass">6.3</span>, y variar el espesor no lo genera <span class="chk pass">6.1a</span>. Los datos sólo acotan una brecha entre <var>x</var> = 0.87 y 5.1, compatible con la teoría de un poro (1.0–2.2).</p>
+  <p>Queda sin cerrar: el tratamiento de la dispersión dependiente en espumas densas de poros más chicos que <var>λ</var> <span class="chk fail">5.3</span> <span class="chk fail">5.7</span> <span class="chk fail">6.2</span>, la exclusión cuantitativa de la absorción <span class="chk fail">6.1b</span>, y un faltante de pendiente en las muestras 1–3. El cambio de régimen queda como la explicación física consistente y predicha en dirección y orden de magnitud, no como una explicación cuantitativa cerrada.</p>
+  <p>Una verificación independiente con Codex, sin historial del proyecto, reprodujo desde el repositorio público los 20 checks con los mismos números y llegó a esa misma lectura prudente (§7).</p>
 </section>
 
 <main class="col">
@@ -259,7 +260,7 @@
 </figure>
 
 <h3>4.4 Predicción sin parámetros ajustados</h3>
-<p>El diseño se fijó antes de mirar el resultado: observable Δ<var>s</var> en la banda roja, criterio signo correcto y razón entre ×0.5 y ×2. Cadena: <var>P</var>(<var>D</var>) medida → Mie → ℓ* a φ medida → Percus–Yevick a η = φ → Monte Carlo con el espesor de núcleo. Ningún número sale de los espectros.</p>
+<p>Criterio, fijado en el plan de trabajo del 10/09: signo correcto y razón entre ×0.5 y ×2. Observable, commiteado antes del check (<code>bc6cc06</code>): Δ<var>s</var> en la banda roja. Cadena: <var>P</var>(<var>D</var>) medida → Mie → ℓ* a φ medida → Percus–Yevick a η = φ → Monte Carlo con el espesor de núcleo. Ningún número sale de los espectros.</p>
 <div class="tbl"><table>
   <thead><tr><th>pendiente roja</th><th class="num">m1</th><th class="num">m2</th><th class="num">m3</th><th class="num">m4</th><th class="num">Δ<var>s</var></th></tr></thead>
   <tbody>
@@ -270,6 +271,7 @@
   <caption>check 5.2 <span class="chk pass">pasa</span> · en el azul (informativo) ×1.90.</caption>
 </table></div>
 <p>Dos residuos con dirección conocida: la muestra 4 queda <strong>sobrepredicha</strong> (el factor de estructura apantalla de más, § 4.5), y a las muestras 1–3 les falta ~0.13 de pendiente. Ese faltante aparece también en la transmitancia, que no usa el patrón blanco, así que no es sólo calibración.</p>
+<p class="note"><strong>Qué tan fuerte es esta prueba.</strong> Es una prueba de dirección y orden de magnitud, no una validación cuantitativa: el criterio tolera un factor 2, pasa con +43 % de error en Δ<var>s</var>, y el signo es esperable al comparar <var>x</var> ≈ 9 con <var>x</var> ≈ 0.5. Tampoco fue ciega: la primera corrida de la cadena (difusión, sin factor de estructura) daba ×2.8–3.2, y el modelo pasó a Monte Carlo, factor de estructura y porosidad por muestra con esos números a la vista. Los tres cambios estaban anunciados como necesarios antes de volver a correr (<code>notas/log.md</code>, 2026-09-11 e), pero el check se commiteó junto con su resultado; a diferencia de 5.7 y 6.x, su pre-registro no es auditable en git. Las incertidumbres de <var>D</var>, φ y <var>L</var> no se propagaron a Δ<var>s</var> predicho.</p>
 
 <h3>4.5 El eslabón débil: dispersión dependiente</h3>
 <p>Como ancla externa se alimentó la misma cadena con la morfología publicada por Syurik et al. (2017) para películas de PMMA. Con Percus–Yevick monodisperso el modelo subestima la reflectancia <span class="chk fail">5.3</span>; sin factor de estructura la reproduce a ≤ 0.04 y el camino de transporte extraído (3.84 µm) cae en el rango publicado. La hipótesis de que la polidispersión corrige el exceso de apantallamiento se pre-registró (commit <code>286b7f2</code>) y quedó <strong>refutada</strong> <span class="chk fail">5.7</span>: mejora poco a Syurik y sobrecorrige la muestra 4.</p>
@@ -288,8 +290,8 @@
 <p>Los criterios de los checks 6.1–6.4 se commitearon antes de su primera ejecución (commit <code>07072ac</code>).</p>
 <ul>
   <li><strong>Espesor</strong> <span class="chk pass">6.1a</span>: con ±15 % en fase y en contrafase, o intercambiando espesores entre grupos, Δ<var>s</var> predicho se mueve como mucho +0.16, contra una tolerancia de 0.31.</li>
-  <li><strong>Absorción</strong> <span class="chk fail">6.1b</span>: se planteó que la caída roja de la muestra 4 fuera absorción del sólido sobre una dispersión plana, y se predijo un observable independiente de la calibración, <var>Q</var> = <var>K</var>(745)/<var>K</var>(600) con <var>K</var> = [(1−<var>T</var>)/<var>R</var>]₄ / ⟨(1−<var>T</var>)/<var>R</var>⟩₁₂₃. El criterio registrado suponía que esa hipótesis subiría <var>Q</var>; la hace bajar (0.85 y 0.59), porque con la misma absorción las muestras 1–3 absorben más. Medido: 0.952 ± 0.049. Leído en las dos direcciones, la hipótesis queda a 2.1 σ con el cierre monodisperso: <strong>no se excluye con el criterio registrado</strong>. Como dato no gateado, esa absorción subiría la pendiente de las muestras 1–3 en +2.05, cuando la medida es 0.21.</li>
-  <li><strong>Atribución</strong> <span class="chk pass">6.3</span>: en un diseño 2×2 que intercambia <var>P</var>(<var>D</var>) y entorno (φ, <var>L</var>) entre grupos, el tamaño de poro carga el 81 % (monodisperso) y el 99 % (desacople) del contraste predicho.</li>
+  <li><strong>Absorción</strong> <span class="chk fail">6.1b</span>: se planteó que la caída roja de la muestra 4 fuera absorción del sólido sobre una dispersión plana, y se predijo un observable independiente de la calibración, <var>Q</var> = <var>K</var>(745)/<var>K</var>(600) con <var>K</var> = [(1−<var>T</var>)/<var>R</var>]₄ / ⟨(1−<var>T</var>)/<var>R</var>⟩₁₂₃. El criterio registrado suponía que esa hipótesis subiría <var>Q</var>; la hace bajar (0.85 y 0.59), porque con la misma absorción las muestras 1–3 absorben más. Medido: 0.952 ± 0.049. Leído en las dos direcciones, la hipótesis queda a 2.1 σ con el cierre monodisperso: <strong>no se excluye con el criterio registrado</strong>. Como dato no gateado, esa absorción subiría la pendiente de las muestras 1–3 en +2.05, cuando la medida es 0.21. Además, el error de <var>Q</var> es optimista: propaga sólo la dispersión entre regiones de <var>R</var>, trata <var>T</var> como exacta y usa la diferencia entre tiras como único sistemático, aunque <var>R</var> y <var>T</var> se midieron en campañas distintas.</li>
+  <li><strong>Atribución</strong> <span class="chk pass">6.3</span>: en un diseño 2×2 que intercambia <var>P</var>(<var>D</var>) y entorno (φ, <var>L</var>) entre grupos, el tamaño de poro carga el 81 % (monodisperso) y el 99 % (desacople) del contraste predicho. Es una atribución <em>interna</em> de modelos que no reproducen por sí solos la muestra 4 (el 99 % sale del cierre que falla 5.7), y las muestras reales no cambian sólo <var>D</var>: cambian también porosidad, espesor y topología.</li>
   <li><strong>Estructura interna</strong> <span class="chk pass">6.4</span>: un índice de "telaraña" dentro de los poros (3.24 / 4.08 / 5.34 µm⁻¹) ordena el faltante de transmitancia de las muestras 1–3 (ρ = +1) pero no el de pendiente (ρ = +0.5). Con tres muestras ningún ρ es significativo; la lectura fijada de antemano es "no respaldado por este control".</li>
 </ul>
 <figure>
@@ -303,7 +305,7 @@
 <div class="tbl"><table>
   <thead><tr><th>definición</th><th class="num">intervalo en <var>x</var></th><th>estatus</th></tr></thead>
   <tbody>
-    <tr class="key"><td>lo que permiten los datos</td><td class="num">0.87 – 5.10</td><td>medido: dos grupos, ±30 % de <var>D</var></td></tr>
+    <tr class="key"><td>brecha entre los dos grupos</td><td class="num">0.87 – 5.10</td><td>sin muestras adentro; ±30 % de <var>D</var> elegido</td></tr>
     <tr><td>F1 · F2 · F3 (un poro)</td><td class="num">1.00 · 1.58–1.67 · 2.03–2.18</td><td>dentro de los datos</td></tr>
     <tr><td>inicio de la meseta de <var>s</var></td><td class="num">1.12 – 1.50</td><td>robusto al cierre; observado a posteriori</td></tr>
     <tr><td>punto medio F<sub><var>s</var></sub></td><td class="num">0.38 – 1.19</td><td>depende del cierre <span class="chk fail">6.2</span></td></tr>
@@ -316,13 +318,15 @@
 </figure>
 
 <h2><span class="sec">5</span>Respuesta</h2>
-<p><strong>Sí, en parte.</strong> El contraste espectral entre las muestras 1–3 y la 4 lo produce mayoritariamente el cambio de régimen de dispersión:</p>
+<p><strong>Sí, en parte.</strong> El cambio de régimen de dispersión es la explicación física consistente del contraste espectral entre las muestras 1–3 y la 4, predicha en dirección y orden de magnitud:</p>
 <ul>
-  <li>una predicción sin ajustar nada reproduce Δ<var>s</var> rojo con el signo correcto y ×1.43;</li>
-  <li>el tamaño de poro explica al menos el 81 % del contraste predicho, y el espesor no lo genera;</li>
+  <li>los datos muestran sin ambigüedad dos escalas de estructura (<var>x</var> ≈ 9 y 0.52, sin solape) y dos respuestas espectrales (Δ<var>s</var> rojo = 1.23);</li>
+  <li>una predicción sin parámetros ajustados reproduce Δ<var>s</var> rojo con el signo correcto y ×1.43, con un criterio amplio y no ciego (§4.4);</li>
+  <li>dentro del modelo el contraste lo carga el tamaño de poro y no el espesor, pero esa atribución no es una fracción medida;</li>
   <li>cada régimen tiene una firma espectral distinta: meseta casi acromática (<var>s</var> ≈ 0.2) del lado Mie y caída cromática comprimida (<var>s</var> ≈ 1.4, no 4) del lado de transición;</li>
-  <li>los datos ubican la frontera entre <var>x</var> = 0.87 y 5.1, compatible con la teoría de un poro (1.0–2.2).</li>
+  <li>la frontera cae en la brecha entre <var>x</var> = 0.87 y 5.1, donde también la ubica la teoría de un poro (1.0–2.2); no hay muestras adentro para medirla.</li>
 </ul>
+<p><strong>No es una explicación cuantitativa cerrada.</strong> El eslabón que domina la muestra 4, la dispersión dependiente, no está validado, y la geometría de esferas es discutible para una red bicontinua.</p>
 <p><strong>No enteramente,</strong> y falta:</p>
 <ol>
   <li>un cierre de dispersión dependiente que funcione en espumas densas de poros más chicos que <var>λ</var>: fija la amplitud del lado Rayleigh y el punto medio de la frontera observable;</li>
@@ -336,6 +340,8 @@
   <li>La calibración absoluta de <var>R</var> no está resuelta (R + T &gt; 1); por eso el resultado central es una diferencia de pendientes.</li>
   <li>Poros tratados como esferas; la muestra 4 es una red bicontinua. <var>D</var> tiene ±25–30 % por decisiones de análisis.</li>
   <li>El índice de telaraña no está calibrado contra anotación manual y usa 6 imágenes por muestra.</li>
+  <li>Las incertidumbres de <var>D</var>, φ y <var>L</var> no se propagan a Δ<var>s</var> predicho ni a la atribución; un análisis global de sensibilidad daría intervalos en vez de valores nominales.</li>
+  <li>Para una explicación cuantitativa harían falta: muestras con <var>x</var> intermedio y factores controlados, <var>R</var> y <var>T</var> absolutas medidas a la vez sobre las mismas regiones, caracterización estructural de la red de la muestra 4 y un cierre de dispersión dependiente validado externamente.</li>
 </ul>
 
 <h2><span class="sec">7</span>Verificación y reproducibilidad</h2>
@@ -351,7 +357,26 @@
   </tbody>
 </table></div>
 <p>Para reproducir: <code>git clone</code>, <code>uv sync</code>, <code>uv run python checks/run_checks.py</code> (README). Cada script declara en su encabezado qué datos usa, qué función calcula, qué elecciones hace y qué check lo verifica.</p>
-<div class="pending"><strong>Verificación independiente (Codex).</strong> Un agente de otro proveedor, sin historial del proyecto, clona el repositorio público, lo reproduce siguiendo sólo el README y hace una revisión crítica de referee. Resultado pendiente al momento de esta versión; se incorpora cuando termine.</div>
+<h3>Verificación independiente con Codex</h3>
+<p>Un agente de otro proveedor (Codex CLI 0.150.1), sin historial del proyecto, recibió sólo la URL del repositorio público y un pedido de reproducción y revisión crítica (<code>notas/segunda_opinion_codex_pedido.md</code>). Clonó el commit <code>c97f371</code>, instaló el entorno con <code>uv sync</code>, regeneró las figuras 4 y 6 y corrió la batería completa.</p>
+<ul>
+  <li><strong>Reproducción:</strong> los 20 checks dieron los mismos números que <code>run.log</code>, con las mismas 4 fallas, y el CSV del mapa de regímenes salió idéntico al versionado. Lo único que tuvo que adivinar fue activar UTF-8 en la consola de Windows.</li>
+  <li><strong>Sin errores de unidades ni de normalización:</strong> confirmó que <var>x</var> y <var>x</var><sub>Mie</sub> están bien distinguidos y que los checks de límites exactos son pertinentes.</li>
+  <li><strong>Veredicto:</strong> acepta "sí, en parte" como hipótesis física consistente, no como explicación cuantitativa cerrada; no acepta "lo produce mayoritariamente" ni el 81–99 % como conclusiones experimentales.</li>
+</ul>
+<div class="tbl"><table>
+  <thead><tr><th>hallazgo de Codex</th><th>qué se cambió</th></tr></thead>
+  <tbody>
+    <tr><td>la atribución 81–99 % es interna del modelo, y el 99 % sale de un cierre que falla</td><td>se presenta como sensibilidad del modelo (resumen, §4.6, §5)</td></tr>
+    <tr><td>la geometría de esferas es frágil para la red bicontinua de la muestra 4</td><td>se declara como razón de que la explicación no esté cerrada (§5, §6)</td></tr>
+    <tr><td>el check 5.2 es permisivo y su pre-registro no es auditable en git</td><td>verificado; además la prueba no fue ciega (§4.4)</td></tr>
+    <tr><td>el error del control de absorción es optimista</td><td>se declara en §4.6</td></tr>
+    <tr><td>[0.87, 5.1] es una brecha sin muestras, no una ubicación</td><td>reformulado (resumen, §4.7, §5)</td></tr>
+    <tr><td>incertidumbres morfológicas no propagadas</td><td>agregado a limitaciones (§6)</td></tr>
+    <tr><td>los checks abortan en consolas Windows con CP1252</td><td>corregido en el código: el paquete fuerza UTF-8 al importarse</td></tr>
+  </tbody>
+</table></div>
+<p>El informe completo de Codex está en <code>notas/segunda_opinion_codex.md</code>.</p>
 
 <h2><span class="sec">8</span>Cómo se usó la IA</h2>
 <p>El análisis se hizo con un agente (Claude, en Claude Code) trabajando sobre el repositorio, con el autor decidiendo en cada bifurcación. La disciplina que lo sostuvo: un log append-only como fuente de verdad, procedencia declarada en cada script, un check por resultado y criterios pre-registrados en git antes de correr las pruebas de hipótesis.</p>
@@ -364,6 +389,7 @@
   <li>la confusión de convenciones <var>x</var> vs <var>x</var><sub>Mie</sub> (factor 1.47), detectada y documentada;</li>
   <li>un criterio pre-registrado con el signo mal puesto (6.1b), que quedó en falla en lugar de reescribirse.</li>
 </ul>
+<p><strong>Lo que la verificación interna no atrapó y sí la externa:</strong> formulaciones de la conclusión más fuertes que la evidencia, un check central que se presentaba como pre-registrado sin serlo de forma auditable, y un error de codificación invisible en el entorno del agente, que tenía UTF-8 configurado. Una segunda sesión sin contexto encontró en una pasada lo que el mismo agente, con todo el historial, no veía.</p>
 
 <h2><span class="sec"></span>Referencias</h2>
 <ul class="refs">

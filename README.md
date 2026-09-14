@@ -9,14 +9,17 @@ de una tira de acetato de celulosa poroso se explica enteramente por un cambio d
 de dispersión —de Mie a la transición Rayleigh— al cruzar `x = πD/λ ~ 1`, y cómo se
 caracteriza espectralmente cada régimen a cada lado de esa frontera?
 
-**Respuesta (Etapa 6, `notas/log.md` entrada 2026-09-13 h).** *Sí, en parte.* Una predicción
-sin parámetros ajustados (Mie + P(D) medida + factor de estructura + Monte Carlo) reproduce
-la diferencia de pendiente espectral roja entre grupos con signo correcto y ×1.43 (check 5.2);
-el tamaño de poro carga el 81–99 % del contraste predicho (6.3); el espesor no lo genera
-(6.1 a). Los datos ubican la transición en `x ∈ [0.87, 5.1]`; la teoría de un poro, en
-`[1.0, 2.2]`. Falta: un cierre de dispersión dependiente que funcione en espumas densas
-sub-λ (5.3, 5.7, 6.2 fallan), una exclusión de la absorción con criterio registrado (6.1 b
-falla) y explicar el faltante de pendiente de las muestras 1–3.
+**Respuesta (`informe/informe.html`, § 5).** *Sí, en parte:* el cambio de régimen es la
+explicación física consistente, predicha en dirección y orden de magnitud, pero no una
+explicación cuantitativa cerrada. Los datos muestran dos escalas de estructura (x ≈ 9 y
+0.52, sin solape) y dos respuestas espectrales (Δs rojo = 1.23). Una predicción sin
+parámetros ajustados (Mie + P(D) medida + factor de estructura + Monte Carlo) da Δs con signo
+correcto y ×1.43, con un criterio amplio y no ciego (check 5.2). Dentro del modelo el
+contraste lo carga el tamaño de poro (6.3) y no el espesor (6.1 a). La frontera cae en la
+brecha `x ∈ [0.87, 5.1]`, sin muestras adentro. Falta: un cierre de dispersión dependiente
+validado para espumas densas sub-λ (5.3, 5.7, 6.2 fallan), excluir la absorción con un
+criterio registrado (6.1 b falla) y explicar el faltante de pendiente de las muestras 1–3.
+Verificado de forma independiente con Codex: `notas/segunda_opinion_codex.md`.
 
 ## Reproducir desde cero
 
@@ -77,5 +80,6 @@ CLAUDE.md          instrucciones para agentes: notación, reglas de procedencia
 
 ## Estado
 
-Etapas 0–6 completas; Etapa 7 (informe y verificación independiente) en curso.
+Etapas 0–7 completas: informe en `informe/informe.html` e `informe/informe.pdf`; segunda
+opinión y prueba de reproducción con Codex en `notas/segunda_opinion_codex.md`.
 Plan de trabajo: <https://claude.ai/code/artifact/3f4f2e60-2fa2-4f45-93db-d200e06b2599>

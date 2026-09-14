@@ -12,7 +12,15 @@ Cadena de módulos (ver plan de trabajo):
     lamina      R(λ) de lámina por difusión       [Etapa 5]
     montecarlo  transporte radiativo de lámina    [Etapa 5, opcional]
 """
+import sys
 from pathlib import Path
+
+# Los checks y scripts imprimen µ, σ, ×, subíndices. En una consola de Windows con CP1252
+# eso aborta con UnicodeEncodeError (lo encontró la verificación independiente con Codex,
+# notas/segunda_opinion_codex.md, hallazgo 7). Se fuerza UTF-8 al importar el paquete.
+for _flujo in (sys.stdout, sys.stderr):
+    if hasattr(_flujo, "reconfigure") and (_flujo.encoding or "").lower().replace("-", "") != "utf8":
+        _flujo.reconfigure(encoding="utf-8")
 
 RAIZ = Path(__file__).resolve().parents[2]
 DATA = RAIZ / "data"
