@@ -1,0 +1,54 @@
+run.log — batería completa de checks
+=====================================
+
+Comando:  uv run python checks/run_checks.py
+Fecha:    2026-09-13, tras cerrar la Etapa 6 (código en el commit 03a2bb0)
+Salida:   exit code 4 (= número de checks en FALLA)
+
+[PASA] check 0.1 — promedio vs Fig. 6  —  1-3 decrec=True; orden 3>2>1=True; banda_min=m2:True; m4 R450=92% R750=46%; caída m4/(1-3)=2.9×
+[PASA] check 2.1 — robustez de s (método y banda)  —  métodos coinciden=True (peor discrepancia rel. 5% en m1 600-745nm); m4 > m1,m2,m3 en ambas sub-bandas=True
+[PASA] check 2.2 — separación m4 vs m1–3  —  470-590nm: s₁₂₃=0.58, s₄=1.30, Δ=0.71 → 61σ_entre / 1.3σ_ajuste; 600-745nm: s₁₂₃=0.21, s₄=1.44, Δ=1.23 → 59σ_entre / 4.9σ_ajuste
+[PASA] check 2.3 — sin deriva de lámpara en la sesión  —  m1–3, azul: +0.00005±0.00010/min (0.6σ), cambio en 68 min = 0.004; rojo: +0.00012±0.00011/min (1.1σ), cambio en 68 min = 0.008
+[PASA] check 3.1 — P(D) vs trabajo previo y entre pipelines  —  vs informe: m1-3 mediana 1.75 µm (+10%), m4 0.100 µm (+0%) | media/mediana/moda m1-3 = 1.99/1.75/1.39 | ImageJ vs Python (n=3 img): 1.75 vs 1.95 µm (+11%)
+[PASA] check 3.2 — escala: tag TIFF vs barra quemada  —  5 magnificaciones, peor desvío +1.9% en gcb8286 (1 µm) (tolerancia ±2%)
+[PASA] check 3.3 — espesor total SEM vs slide 13  —  m1 82.5 vs 83 µm (-0.6%, n=5); m2 79.3 vs 79 µm (+0.4%, n=5); m3 78.1 vs 78 µm (+0.2%, n=6); m4 79.8 vs 78 µm (+2.3%, n=2)
+[PASA] check 4.1 — dos grupos disjuntos en el eje x  —  solape m1-3 entre sí: 0.92–0.98 (>0.8); vs m4: 0.000 (<0.05) | x mediana: m1-3 ≈ 9.1, m4 = 0.52 | hueco p95(m4)=1.05 → p5(m1-3)=5.31, factor 5.1
+[PASA] check 5.1 — límites analíticos de Mie  —  Rayleigh: pendiente 4 con error 1.3e-03, prefactor 0.127065 vs 0.127067 teórico (+0.002%) | difracción: ⟨Q_sca⟩ = 2.0196 en x∈[300,1200] (+0.98% de 2)
+[PASA] check 5.2 — predicción sin ajuste: Δs rojo  —  Δs rojo: pred 1.77 vs med 1.23 (×1.43, criterio 0.5–2) | Δs azul [info]: pred 1.36 vs med 0.72 (×1.90) | s rojo pred/med: m1 0.06/0.19, m2 0.10/0.20, m3 0.06/0.23, m4 1.84/1.44 | factor de estructura m1–3 ≥ 0.996
+[FALLA] check 5.3 — ancla externa: Syurik 2017 (PMMA)  —  R(600): 9 µm 0.45 vs 0.57 (-0.12), 16 µm 0.60 vs 0.70 (-0.10), 53 µm 0.84 vs 0.90 (-0.06) (tol ±0.1) | [info] ℓ* 400/600/800 nm = 2.9/3.8/5.1 µm vs l_t 3.5–4 publicado; factor de estructura 0.74 | [info] R(400)−R(800): 9 µm +16 pts (pub 13), 53 µm +8 pts (pub 7)
+[PASA] check 5.4 — límites exactos de S(q) (Percus–Yevick)  —  η ∈ (0.15, 0.2, 0.25, 0.33, 0.4): S(0) coincide con (1−η)⁴/(1+2η)² dentro de 0.00%; |S(q→∞)−1| ≤ 0.009
+[PASA] check 5.5 — Monte Carlo vs límite exacto y difusión  —  balístico: R=0.0516 vs 0.0517, T=0.9484 vs 0.9483 | L/ℓ*=15: T_MC=0.1512 vs difusión 0.1578 (-4.2%) | sin escapar 0.0e+00
+[PASA] check 5.6 — límites de la aproximación de desacople  —  iguales: |β−1|,|S_ef−S_PY| ≤ 3.1e-15 | β(0) = 0.4524 vs ⟨D³⟩²/⟨D⁶⟩ = 0.4524 (+0.00%) | 0<β≤1: True (mín 0.000) | |S_ef(q→∞)−1| ≤ 0.000
+[FALLA] check 5.7 — hipótesis de polidispersión (Syurik + muestra 4)  —  (A) Syurik R(600): 9 µm 0.47 vs 0.57, 16 µm 0.62 vs 0.70, 53 µm 0.85 vs 0.90, factor 0.80 → True | (B) s₄ rojo 0.62 en [1.28, 1.72] → False | (C) rms T m4 0.229 (<0.05) → False | (D) Δs rojo 0.57 vs 1.23 (×0.46) → False
+[PASA] check 6.0 — absorción en el Monte Carlo  —  balístico con absorción (μL = 0, 0.4, 1.2): máx error 0.0001 (<0.003) | μ_a = 0 y misma corrida: diferencia 0.0e+00 | informativo: A = 0.248 con μ_a = 0.002 µm⁻¹, L/ℓ* = 5
+[FALLA] check 6.1 — controles de espesor y absorción  —  (a) Δs nominal 1.77; peor variante 'todos x0.85' +0.16 (|·| < 0.31) → True | (b) Q medido 0.952 ± 0.049 (tira B 0.929) vs H_abs: monodisperso Q 0.850 (κ* 36 cm⁻¹, A₄(745) 0.20, Δs̄₁₂₃ +2.05), desacople Q 0.593 (κ* 57 cm⁻¹, A₄(745) 0.32, Δs̄₁₂₃ +3.00); separación -7.4σ → False
+[FALLA] check 6.2 — frontera acotada  —  cotas de los datos [0.87, 5.10] | F2 [1.58, 1.67], F3 [2.03, 2.18] → True | s* 0.82: F_s 1-3/monodisperso 0.82, F_s 1-3/desacople 0.41, F_s 4/monodisperso 1.19, F_s 4/desacople 0.38 → False | CSV reproducido |Δs| 3.2e-06 → True | FRONTERA x ∈ [0.38, 2.18]
+[PASA] check 6.3 — atribución del contraste: tamaño vs entorno  —  monodisperso: Δs total 1.77, f_D 0.81, f_env 0.19 | desacople: Δs total 0.55, f_D 0.99, f_env 0.01 (criterio f_D ≥ 0.75)
+[PASA] check 6.4 — estructura interna (telarañas)  —  índice m1/m2/m3 3.24/4.08/5.34 µm⁻¹ vs factibilidad (-1%, +3%, +2%; orden True) → True | faltante T(550) 0.045/0.061/0.112 ρ +1.0 | faltante s rojo 0.13/0.10/0.17 ρ +0.5 | n = 3, p(ρ=1 al azar) = 1/6 → no respaldado por este control
+
+4 falla(s).
+
+
+Tratamiento de cada falla (ninguna se silenció ni se cambió su criterio después de correrla)
+-----------------------------------------------------------------------------------------
+
+5.3  Ancla externa (Syurik 2017). Diagnóstico: sin factor de estructura el modelo cae a
+     ≤ 0.04 de lo publicado y el l_t extraído (3.84 µm) está dentro del rango publicado; lo
+     que falla es la supresión del factor de estructura Percus–Yevick monodisperso a η = φ.
+     notas/log.md 2026-09-13 (d) y (e); scripts/05c_diagnostico_syurik.py.
+
+5.7  Hipótesis pre-registrada (commit 286b7f2): la polidispersión (desacople) corrige el
+     exceso de apantallamiento. Refutada: mejora poco a Syurik y sobrecorrige la muestra 4.
+     Los dos cierres encierran s₄ y Δs medidos → se reporta como banda sistemática.
+     notas/log.md 2026-09-13 (f).
+
+6.1  (a) espesor PASA. (b) absorción: el criterio pre-registrado (commit 07072ac) suponía
+     Q_pred > 1; la hipótesis de absorción da Q_pred < 1. Error de diseño del criterio,
+     registrado sin reescribirlo. Leído en ambas direcciones, el Q medido está a 2.1σ de la
+     hipótesis con el cierre monodisperso: no queda excluida con este observable.
+     notas/log.md 2026-09-13 (h). Por decisión del autor queda como pendiente declarada.
+
+6.2  F1–F3 caen dentro de las cotas de los datos; el cruce del observable F_s depende del
+     cierre de factor de estructura (0.38–1.19) y 3 de 4 quedan fuera. Resultado: la
+     frontera del observable no está determinada mientras el cierre no se resuelva.
+     notas/log.md 2026-09-13 (h).
