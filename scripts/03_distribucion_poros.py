@@ -73,7 +73,7 @@ def main() -> None:
     ax.annotate("", xy=(np.median(datos[4]) * 1.25, ax.get_ylim()[1] * 0.5),
                 xytext=(med13 * 0.8, ax.get_ylim()[1] * 0.5),
                 arrowprops=dict(arrowstyle="<->", color="0.45", lw=1.0))
-    ax.set_title("Distribución de tamaño de poro — tabla de ImageJ del Labo 6", fontsize=10)
+    ax.set_title("Distribución de tamaño de poro por muestra", fontsize=10)
     fig.tight_layout()
 
     FIGURES.mkdir(exist_ok=True)

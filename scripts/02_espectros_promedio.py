@@ -58,7 +58,7 @@ def main() -> None:
     ax.set_ylim(0.35, 1.05)
     ax.grid(alpha=0.25, lw=0.6)
     ax.legend(fontsize=8.5, ncol=2, loc="upper right", framealpha=0.9)
-    ax.set_title("Reflectancia media por muestra — tira A, 5 regiones c/u (02/06/2026)",
+    ax.set_title("Reflectancia difusa media por muestra (5 regiones cada una)",
                  fontsize=10)
     fig.tight_layout()
 
