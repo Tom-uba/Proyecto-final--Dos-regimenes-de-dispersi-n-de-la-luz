@@ -59,7 +59,7 @@ La sección eficaz es `σ_sca = Q_sca · πD²/4`, de modo que
 
 $$\sigma_\text{sca} \;\propto\; \frac{D^6}{\lambda^4} \tag{4}$$
 
-Ésta es la dependencia espectral fuerte: la luz azul se dispersa ~7 veces más que la roja
+Ésta es la dependencia espectral fuerte: la luz azul se dispersa ~9 veces más que la roja
 entre 400 y 700 nm. **Verificación (check 5.1a):** la rutina de Mie debe reproducir
 `Q_sca ∝ x⁴` cuando `x → 0`.
 
