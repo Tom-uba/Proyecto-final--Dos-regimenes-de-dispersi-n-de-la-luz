@@ -20,3 +20,7 @@ Thumbs.db
 
 # informe: el fuente, el HTML autocontenido y el PDF se versionan (son la entrega);
 # se regeneran con scripts/07_informe.py
+
+# PDFs sueltos que no son parte de la entrega (siguen en el disco, fuera del repo)
+/Dos regímenes de reflectancia.pdf
+informe/informe1.pdf
