@@ -35,8 +35,7 @@ from dosregimenes.espectros import _leer_txt  # noqa: E402
 
 RESULTADOS = RAIZ / "resultados"
 COLOR = {1: "#3b6ea5", 2: "#4a9b5c", 3: "#c0504d", 4: "#7b52a1"}
-ESTILO = {("1-3", "monodisperso"): ("#8a3a38", "-"), ("1-3", "desacople"): ("#8a3a38", ":"),
-          ("4", "monodisperso"): ("#7b52a1", "-"), ("4", "desacople"): ("#7b52a1", ":")}
+AZUL = "#33518f"
 
 
 def s_regiones(m: int) -> np.ndarray:
@@ -48,15 +47,29 @@ def s_regiones(m: int) -> np.ndarray:
     return np.array(out)
 
 
+def cargar_barrido(ruta: Path) -> list[dict]:
+    """El barrido guardado, para poder rehacer la figura sin repetir el Monte Carlo."""
+    with open(ruta, encoding="utf-8") as f:
+        return [{**r, "x_mediana": float(r["x_mediana"]), "s_rojo": float(r["s_rojo"]),
+                 "R600": float(r["R600"])} for r in csv.DictReader(f)]
+
+
 def main() -> None:
     poros = ij.cargar_poros()
-    filas = fr.barrido(poros)
     RESULTADOS.mkdir(exist_ok=True)
-    with open(RESULTADOS / "06_frontera_s.csv", "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(filas[0].keys()))
-        w.writeheader()
-        for r in filas:
-            w.writerow({k: (round(v, 5) if isinstance(v, float) else v) for k, v in r.items()})
+    csv_barrido = RESULTADOS / "06_frontera_s.csv"
+    # El barrido son ~340 corridas de Monte Carlo (unos 10 min). Si ya está calculado se
+    # reusa, para que retocar la figura no cueste eso; --recalcular lo fuerza de nuevo.
+    if csv_barrido.exists() and "--recalcular" not in sys.argv:
+        filas = cargar_barrido(csv_barrido)
+        print(f"06_frontera: barrido reusado de {csv_barrido.name} (--recalcular lo rehace)")
+    else:
+        filas = fr.barrido(poros)
+        with open(csv_barrido, "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=list(filas[0].keys()))
+            w.writeheader()
+            for r in filas:
+                w.writerow({k: (round(v, 5) if isinstance(v, float) else v) for k, v in r.items()})
 
     F = fr.fronteras_mie()
     cot = fr.cota_datos(poros)
@@ -79,40 +92,51 @@ def main() -> None:
             w.writerow([f"F_s entorno {ent} {cierre}", round(v, 3), round(v, 3), f"s* = {s_star:.3f}"])
 
     # ---- figura ----
-    fig, ax = plt.subplots(figsize=(8.6, 5.0), constrained_layout=True)
-    ax.axvspan(cot["inf"], cot["sup"], color="0.85", alpha=0.6, lw=0, zorder=0,
-               label="permitido por los datos")
-    for k, c in (("F2", "#33518f"), ("F3", "#a1552f")):
-        ax.axvspan(*F[k], color=c, alpha=0.25, lw=0, zorder=1)
-        ax.text(np.sqrt(F[k][0] * F[k][1]), 2.05, k, ha="center", fontsize=8.5, color=c)
-    ax.axvline(1.0, color="0.25", ls="--", lw=1.1, zorder=2)
-    ax.text(0.97, 2.05, "F1", ha="right", fontsize=8.5, color="0.25")
-    ax.axhline(s_star, color="0.5", lw=0.8, ls="-.", zorder=2)
-    ax.text(0.16, s_star + 0.04, f"s* = {s_star:.2f}", fontsize=8, color="0.4")
+    # Un solo mensaje: cómo cambia la pendiente de la lámina al cruzar el eje de tamaños,
+    # y dónde caen las muestras. Los intervalos F1/F2/F3 y F_s van en la tabla del informe,
+    # no acá: cuatro curvas + cuatro bandas verticales hacían la figura ilegible.
+    fig, ax = plt.subplots(figsize=(8.6, 4.8), constrained_layout=True)
+    ax.axvspan(cot["inf"], cot["sup"], color="0.90", lw=0, zorder=0,
+               label="brecha entre los dos grupos medidos")
 
-    for (ent, cierre), (col, ls) in ESTILO.items():
-        sel = [r for r in filas if r["entorno"] == ent and r["cierre"] == cierre]
-        ax.plot([r["x_mediana"] for r in sel], [r["s_rojo"] for r in sel], ls=ls, color=col,
-                lw=1.6, label=f"modelo: entorno {ent}, {cierre}")
-        if np.isfinite(Fs[(ent, cierre)]):
-            ax.plot([Fs[(ent, cierre)]], [s_star], "v", color=col, ms=6)
+    xs = sorted({r["x_mediana"] for r in filas})
+    curvas = {}
+    for ent in fr.ENTORNOS:
+        for cierre in ("monodisperso", "desacople"):
+            sel = sorted([r for r in filas if r["entorno"] == ent and r["cierre"] == cierre],
+                         key=lambda r: r["x_mediana"])
+            curvas[(ent, cierre)] = np.array([r["s_rojo"] for r in sel])
+    todas = np.vstack(list(curvas.values()))
+    ax.fill_between(xs, todas.min(0), todas.max(0), color=AZUL, alpha=0.16, lw=0, zorder=1,
+                    label="rango del modelo según cómo se trate la dispersión dependiente")
+    ax.plot(xs, curvas[("4", "monodisperso")], color=AZUL, lw=2.2, zorder=3,
+            label="modelo, cierre de referencia")
+    ax.axvline(1.0, color="0.35", ls="--", lw=1.2, zorder=2)
+    ax.annotate("x = 1", (1.0, 2.08), xytext=(-4, 0), textcoords="offset points",
+                ha="right", fontsize=9, color="0.35")
 
+    # Las tres micrométricas están una encima de la otra: se rotulan como grupo.
     for m in (1, 2, 3, 4):
         xm = fr.x_mediana(ij.PD(m, poros=poros), fr.LAM_C)
         sr = s_regiones(m)
         ax.errorbar([xm], [s_med[m]], xerr=[[xm * 0.3], [xm * 0.3]], yerr=[sr.std()],
-                    fmt="o", color=COLOR[m], ms=6, capsize=3, zorder=6)
-        ax.annotate(f"m{m}", (xm, s_med[m]), xytext=(6, 6), textcoords="offset points",
-                    fontsize=8.5, color=COLOR[m])
+                    fmt="o", color=COLOR[m], ms=7, capsize=3, zorder=6,
+                    label="muestras medidas" if m == 1 else None)
+        if m == 4:
+            ax.annotate("muestra 4", (xm, s_med[m]), xytext=(-10, -26),
+                        textcoords="offset points", ha="center", fontsize=9.5, color=COLOR[m])
+        elif m == 2:
+            ax.annotate("muestras 1–3", (xm, s_med[m]), xytext=(0, -28),
+                        textcoords="offset points", ha="center", fontsize=9.5, color="#8a3a38")
 
     ax.set_xscale("log")
     ax.set_xlim(0.14, 16)
     ax.set_ylim(-0.2, 2.2)
-    ax.set_xlabel(r"x mediana $= \pi \tilde D/\lambda$   (λ = 669 nm)")
-    ax.set_ylabel("pendiente espectral roja  s  (600–745 nm)")
-    ax.grid(alpha=0.22, lw=0.6, which="both")
-    ax.legend(fontsize=7.5, loc="upper right", frameon=False)
-    ax.set_title("Frontera acotada: teoría de un poro, observable de lámina y datos", fontsize=10)
+    ax.set_xlabel("parámetro de tamaño típico   $x = \\pi \\tilde D/\\lambda$")
+    ax.set_ylabel("pendiente espectral roja  s")
+    ax.grid(alpha=0.18, lw=0.6, which="both")
+    ax.legend(fontsize=8.5, loc="lower left", frameon=False)
+    ax.set_title("Al achicar los poros, la reflectancia pasa de plana a cromática", fontsize=10.5)
     FIGURES.mkdir(exist_ok=True)
     for ext in ("pdf", "png"):
         fig.savefig(FIGURES / f"06_frontera_acotada.{ext}", dpi=150)

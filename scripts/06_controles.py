@@ -55,46 +55,49 @@ def main() -> None:
         for k, v in at.items():
             w.writerow(["atribucion", f"f_D {k}", round(v["f_D"], 4), f"Δs total {v['total']:.3f}"])
 
-    fig, axs = plt.subplots(1, 3, figsize=(12.0, 4.2), constrained_layout=True)
+    # Dos paneles, UN mensaje por panel, los dos sobre una recta numérica: lo que se
+    # compara siempre es "dónde cae lo medido respecto de lo que exigiría la hipótesis".
+    # La atribución (f_D) son dos números y va al texto del informe, no a un tercer panel.
+    fig, axs = plt.subplots(2, 1, figsize=(8.4, 4.2), constrained_layout=True)
 
-    # (a) espesor
+    # (a) espesor: todo lo que el espesor puede mover, contra lo medido
     ax = axs[0]
-    nombres = list(esp)
-    vals = [esp[k]["ds"] for k in nombres]
-    ax.barh(range(len(nombres)), vals, color=[GRIS] + [AZUL] * (len(nombres) - 1), height=0.6)
     ds0 = esp["nominal"]["ds"]
-    ax.axvspan(ds0 - 0.25 * ds_med, ds0 + 0.25 * ds_med, color=AZUL, alpha=0.10, lw=0)
-    ax.axvline(ds_med, color="k", lw=1.4)
-    ax.text(ds_med, len(nombres) - 0.35, " medido", fontsize=8.5, va="bottom")
-    ax.set_yticks(range(len(nombres)), nombres, fontsize=8.5)
-    ax.invert_yaxis()
-    ax.set_xlabel("Δs rojo predicho")
-    ax.set_title("(a) Espesor: la banda es la tolerancia\npre-registrada (±0.25·Δs medido)", fontsize=9.5)
+    var = [esp[k]["ds"] for k in esp if k != "nominal"]
+    ax.hlines(0, min(var), max(var), color=AZUL, lw=8, alpha=0.30)
+    ax.plot([ds0], [0], "o", color=AZUL, ms=8, zorder=3)
+    ax.plot([ds_med], [0], "D", color="k", ms=8, zorder=3)
+    ax.annotate("predicho: nominal y 5 variantes de espesor", (ds0, 0), xytext=(0, 15),
+                textcoords="offset points", ha="center", fontsize=9, color=AZUL)
+    ax.annotate("medido", (ds_med, 0), xytext=(0, -24), textcoords="offset points",
+                ha="center", fontsize=9)
+    ax.set_xlim(min(ds_med, min(var)) - 0.3, max(var) + 0.3)
+    ax.set_xlabel("contraste Δs en la banda roja")
+    ax.set_title("(a) El espesor no genera el contraste", fontsize=10.5, loc="left")
 
-    # (b) absorción
+    # (b) absorción: Γ vale 1 sin absorción; la hipótesis lo corre y la medición no
     ax = axs[1]
-    etiquetas = ["sin\nabsorción", "medido\n(tira A)"] + [f"H_abs\n{k}" for k in ab]
-    y = [1.0, QA] + [v["Q_pred"] for v in ab.values()]
-    col = [GRIS, "k"] + [ROJO] * len(ab)
-    ax.bar(range(len(y)), y, color=col, width=0.6)
-    ax.errorbar([1], [QA], yerr=[3 * sQ], fmt="none", ecolor=AZUL, capsize=5, lw=1.4)
-    ax.set_xticks(range(len(y)), etiquetas, fontsize=8.5)
-    ax.set_ylim(min(0.8, min(y) - 0.1), max(y) + 0.15)
-    ax.set_ylabel("Q = K(745)/K(600)")
-    ax.set_title("(b) Absorción: lo que exigiría producir s₄\n(barra azul: ±3σ del medido)", fontsize=9.5)
+    ax.axvline(1.0, color=GRIS, ls="--", lw=1.2)
+    ax.annotate("sin absorción", (1.0, 0), xytext=(0, 15), textcoords="offset points",
+                ha="center", fontsize=9, color=GRIS)
+    ax.errorbar([QA], [0], xerr=[3 * sQ], fmt="D", color="k", ms=8, capsize=4, lw=1.3, zorder=3)
+    ax.annotate("medido (±3σ)", (QA, 0), xytext=(0, -24), textcoords="offset points",
+                ha="center", fontsize=9)
+    for i, (k, v) in enumerate(ab.items()):
+        ax.plot([v["Q_pred"]], [0], "o", color=ROJO, ms=8, zorder=3)
+        ax.annotate(k, (v["Q_pred"], 0), xytext=(0, 15 if i == 0 else -24),
+                    textcoords="offset points", ha="center", fontsize=9, color=ROJO)
+    ax.set_xlim(min(v["Q_pred"] for v in ab.values()) - 0.12, 1.12)
+    ax.set_xlabel("Γ = K(745) / K(600)")
+    ax.set_title("(b) Si la muestra 4 cayera por absorción y no por dispersión, Γ estaría acá",
+                 fontsize=10.5, loc="left")
 
-    # (c) atribución
-    ax = axs[2]
-    ks = list(at)
-    fD = [at[k]["f_D"] for k in ks]
-    fE = [at[k]["f_env"] for k in ks]
-    ax.bar(range(len(ks)), fD, color=AZUL, width=0.55, label="tamaño de poro (régimen)")
-    ax.bar(range(len(ks)), fE, bottom=fD, color=ROJO, width=0.55, label="entorno (φ, L)")
-    ax.axhline(0.75, color="k", ls="--", lw=1)
-    ax.set_xticks(range(len(ks)), ks, fontsize=9)
-    ax.set_ylabel("fracción del Δs predicho")
-    ax.legend(fontsize=8, frameon=False, loc="lower right")
-    ax.set_title("(c) Atribución del contraste\n(línea: criterio f_D ≥ 0.75)", fontsize=9.5)
+    for ax in axs:
+        ax.set_ylim(-0.75, 0.75)
+        ax.set_yticks([])
+        for lado in ("left", "right", "top"):
+            ax.spines[lado].set_visible(False)
+        ax.grid(alpha=0.20, axis="x", lw=0.6)
 
     FIGURES.mkdir(exist_ok=True)
     for ext in ("pdf", "png"):
