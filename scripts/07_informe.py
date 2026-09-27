@@ -13,6 +13,7 @@ from __future__ import annotations
 import base64
 import re
 import subprocess
+import tempfile
 import sys
 from pathlib import Path
 
@@ -49,13 +50,29 @@ def main() -> None:
     HTML.write_text(doc, encoding="utf-8")
 
     nav = next((p for p in NAVEGADORES if p.exists()), None)
-    estado_pdf = "sin navegador: PDF no generado"
-    if nav is not None:
+    if nav is None:
+        raise SystemExit("07_informe: no hay Edge ni Chrome para imprimir el PDF")
+
+    # El PDF viejo se borra ANTES de imprimir. Si no, un fallo silencioso del navegador
+    # (pasa cuando ya hay otra instancia abierta) deja el archivo anterior en su lugar y
+    # parece que salió bien: fue exactamente el error del 24/09/2026, que dejó el PDF
+    # desactualizado en el repositorio mientras el HTML sí tenía las figuras nuevas.
+    try:
+        PDF.unlink(missing_ok=True)
+    except PermissionError:
+        raise SystemExit("07_informe: informe.pdf está abierto en un visor y no se puede "
+                         "reemplazar. Cerralo y volvé a correr el script.") from None
+    with tempfile.TemporaryDirectory() as perfil:
         subprocess.run([str(nav), "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
-                        f"--print-to-pdf={PDF}", "--virtual-time-budget=15000", HTML.as_uri()],
+                        f"--user-data-dir={perfil}", f"--print-to-pdf={PDF}",
+                        "--virtual-time-budget=15000", HTML.as_uri()],
                        check=False, capture_output=True, timeout=180)
-        estado_pdf = f"PDF {PDF.stat().st_size / 1e6:.1f} MB" if PDF.exists() else "PDF falló"
-    print(f"07_informe: {len(usadas)} figuras, HTML {HTML.stat().st_size / 1e6:.1f} MB, {estado_pdf}")
+    if not PDF.exists():
+        raise SystemExit("07_informe: el navegador no escribió el PDF (¿otra instancia abierta?)")
+    if PDF.stat().st_mtime < HTML.stat().st_mtime:
+        raise SystemExit("07_informe: el PDF es más viejo que el HTML: no se regeneró")
+    print(f"07_informe: {len(usadas)} figuras, HTML {HTML.stat().st_size / 1e6:.1f} MB, "
+          f"PDF {PDF.stat().st_size / 1e6:.1f} MB")
 
 
 if __name__ == "__main__":
