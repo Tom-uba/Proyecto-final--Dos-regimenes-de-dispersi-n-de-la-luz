@@ -87,10 +87,10 @@
 <h2><span class="sec">4</span>Resultados</h2>
 
 <h3>4.1 Los espectros: el contraste a explicar</h3>
-<p>En la figura 1, el eje horizontal es la longitud de onda y el vertical la fracción de luz reflejada; la franja alrededor de cada curva es la dispersión entre las cinco regiones medidas de esa muestra.</p>
+<p>La <strong>figura 1</strong> muestra los espectros que hay que explicar.</p>
 <figure>
  <div class="plate"><img src="fig:02_espectros_promedio" alt="Reflectancia difusa media de las cuatro muestras entre 400 y 800 nm, con la banda de análisis y la máscara instrumental marcadas"></div>
- <figcaption><span class="n">Figura 1.</span> Reflectancia media por muestra. Gris: banda de análisis. Franja naranja: zona excluida por un pico instrumental. Punteada vertical: cruce de curvas.
+ <figcaption><span class="n">Figura 1.</span> Reflectancia difusa <var>R</var> (fracción, 0–1) contra longitud de onda en nm, promediada sobre las cinco regiones medidas de cada muestra; la franja alrededor de cada curva es el desvío entre esas regiones. Azul, verde y roja: muestras 1, 2 y 3; violeta: muestra 4. Fondo gris: banda de análisis, 470–750 nm. Franja naranja: 560–568 nm, excluida por un pico instrumental. Punteada vertical: cruce de curvas, 586 nm.
  <span class="src">scripts/02_espectros_promedio.py · data/reflectancia/</span></figcaption>
  <div class="lectura"><ul>
  <li><strong>Las muestras 1–3 son casi paralelas y casi horizontales</strong> (bajan de ~0.77 a ~0.61); <strong>la muestra 4 es la más inclinada</strong> (de 0.92 a 0.46).</li>
@@ -102,7 +102,7 @@
 <p>Para convertir eso en un número se usa la pendiente espectral <var>s</var> = −d ln <var>R</var>/d ln <var>λ</var>: un material acromático da <var>s</var> ≈ 0 y, cuanto más cae la reflectancia hacia el rojo, mayor es <var>s</var>. Se la mide de dos maneras que fallan distinto. La primera es una <strong>regresión lineal de ln <var>R</var> contra ln <var>λ</var></strong>: ajusta una recta a toda la sub-banda y devuelve una pendiente única, robusta al ruido pero ciega a cualquier curvatura del espectro. La segunda ajusta un <strong>spline suavizado</strong> —una curva flexible que sigue al espectro sin imponerle forma— y promedia su derivada en la misma sub-banda: sigue las variaciones locales, pero es más sensible al ruido y a cuánto se suavice. Que las dos den lo mismo indica que la pendiente está en el dato y no en el procedimiento; por eso la figura 2 muestra las dos.</p>
 <figure>
  <div class="plate"><img src="fig:02_pendiente_por_muestra" alt="Pendiente espectral por muestra en las sub-bandas azul y roja, medida por regresión y por spline"></div>
- <figcaption><span class="n">Figura 2.</span> Pendiente por muestra. Círculos: regresión log–log. Cuadrados: derivada de un spline. Barras: incertidumbre del ajuste. Fondo gris: las micrométricas.
+ <figcaption><span class="n">Figura 2.</span> Pendiente espectral <var>s</var> (ordenada, adimensional) de cada muestra (abscisa), en las dos sub-bandas. Círculos llenos: regresión log–log. Cuadrados vacíos: derivada de un spline suavizado. Barras: incertidumbre estadística del ajuste de <var>s</var> en esa muestra, no la dispersión entre regiones. Fondo gris: las tres micrométricas.
  <span class="src">scripts/02_pendiente_por_muestra.py · resultados/02_pendiente.csv</span></figcaption>
  <div class="lectura"><ul>
  <li><strong>Los dos métodos coinciden</strong> en cada muestra: la pendiente no es un artefacto del cálculo.</li>
@@ -119,14 +119,14 @@
 </table></div>
 
 <h3>4.3 Las dos poblaciones de poros</h3>
-<p>La <strong>figura 3</strong> da la distribución de tamaños de poro medida sobre las imágenes. El eje vertical es densidad de probabilidad por década de diámetro, normalizada: lo comparable entre muestras es la posición y el ancho de cada curva, no su altura.</p>
+<p>La <strong>figura 3</strong> da la distribución de tamaños de poro medida sobre las imágenes.</p>
 <figure>
  <div class="plate"><img src="fig:03_distribucion_poros" alt="Densidad de probabilidad del diámetro de Feret en escala logarítmica para las cuatro muestras"></div>
- <figcaption><span class="n">Figura 3.</span> Distribución de tamaño de poro por muestra, en escala logarítmica; <var>n</var> es la cantidad de poros medidos y las punteadas marcan las medianas.
+ <figcaption><span class="n">Figura 3.</span> Distribución de diámetro de Feret <var>D</var> (abscisa, µm, escala logarítmica) por muestra. La ordenada es densidad de probabilidad por década de <var>D</var>, normalizada a área unidad en cada muestra: por eso se comparan posición y ancho, no altura, entre muestras con distinto <var>n</var> (cantidad de poros medidos). Punteadas: medianas.
  <span class="src">scripts/03_distribucion_poros.py · data/imagej/ · resultados/03_PD.csv</span></figcaption>
  <div class="lectura"><ul>
  <li><strong>Hay dos grupos, no cuatro:</strong> las muestras 1–3 están superpuestas (medianas 1.76, 1.74 y 1.74 µm) y la 4 está sola (0.100 µm), un factor ~18 sin que las curvas se toquen.</li>
- <li><strong>Las distribuciones son anchas y asimétricas</strong> —media 1.99, mediana 1.75, moda 1.39 µm—, y por eso el análisis usa la distribución completa y no un valor típico.</li>
+ <li><strong>Son anchas y asimétricas</strong> —media 1.99, mediana 1.75, moda 1.39 µm—: el análisis usa la distribución completa, no un valor típico.</li>
  </ul></div>
 </figure>
 <p>La porosidad medida es 0.19 / 0.20 / 0.22 / 0.33 y los espesores de capa porosa 46 / 41 / 40 / 32 µm con ±15 %. La incertidumbre dominante de <var>D</var> no es estadística sino de método: dos segmentaciones de las mismas imágenes difieren hasta 29 %, de donde sale el ±25–30 % que se arrastra. La muestra 4 no es un conjunto de poros cerrados sino una red continua: su "diámetro" es la escala característica de esa red.</p>
@@ -135,7 +135,7 @@
 <p>La <strong>figura 4</strong> cruza esa distribución con la banda de longitudes de onda: da la distribución completa de <var>x</var> de cada muestra y, con ella, de qué lado de la frontera cae.</p>
 <figure class="ancha">
  <div class="plate"><img src="fig:04_mapa_regimenes" alt="Distribuciones del parámetro de tamaño x de las cuatro muestras sobre un eje logarítmico con la frontera x igual a 1, y fracción de poros de la muestra 4 con x mayor que 1 en función de la longitud de onda"></div>
- <figcaption><span class="n">Figura 4.</span> Izquierda: distribución de <var>x</var> por muestra; las barras inferiores contienen al 90 % de los poros y la punteada marca <var>x</var> = 1. Derecha: fracción de poros de la muestra 4 que supera esa frontera según la longitud de onda.
+ <figcaption><span class="n">Figura 4.</span> Izquierda: densidad de <var>x</var> = π<var>D</var>/<var>λ</var> por muestra (abscisa logarítmica, adimensional), evaluada sobre todos los poros y todas las <var>λ</var> de la banda 470–750 nm; las barras inferiores van del percentil 5 al 95 de esa nube y la punteada marca <var>x</var> = 1. El solape entre dos muestras es la integral del mínimo de sus dos densidades: 0 significa que no comparten ningún valor de <var>x</var>. Derecha: porcentaje de poros de la muestra 4 con <var>x</var> &gt; 1 (ordenada) contra longitud de onda en nm (abscisa).
  <span class="src">scripts/04_mapa_regimenes.py · resultados/04_banda_x.csv</span></figcaption>
  <div class="lectura"><ul>
  <li><strong>Las muestras 1–3 quedan del lado Mie</strong> (mediana 9.1, con el 90 % de sus poros dentro de la barra) y <strong>la 4 del lado de la transición</strong> (0.52): solape 0.000 y un hueco de factor 5.1. Como ninguna muestra está cerca de la frontera, la clasificación no depende de dónde se trace la línea.</li>
@@ -176,27 +176,27 @@
 </ul>
 
 <h3>4.7 Controles: ¿podría ser otra cosa?</h3>
-<p>Las muestras no difieren sólo en tamaño de poro: también en porosidad y espesor, y podrían diferir en absorción. Los criterios de aceptación se registraron en el control de versiones antes de correr los cálculos. La <strong>figura 5</strong> resume los dos primeros controles, cada uno sobre una recta numérica: a la izquierda el contraste Δ<var>s</var> y a la derecha el cociente Γ que se define abajo.</p>
+<p>Las muestras no difieren sólo en tamaño de poro: también en porosidad y espesor, y podrían diferir en absorción. Los criterios de aceptación se registraron en el control de versiones antes de correr los cálculos. La <strong>figura 5</strong> resume los dos primeros controles.</p>
 <figure class="ancha">
  <div class="plate"><img src="fig:06_controles" alt="Dos rectas numéricas: el contraste predicho bajo variaciones de espesor frente al medido, y el observable Gamma medido frente a lo que exigiría la hipótesis de absorción"></div>
- <figcaption><span class="n">Figura 5.</span> Los dos controles, cada uno sobre una recta numérica. En ambos paneles el rombo negro es lo medido y lo demás es lo que predicen las hipótesis.
+ <figcaption><span class="n">Figura 5.</span> Los dos controles, cada uno sobre una recta numérica. (a) Abscisa: contraste Δ<var>s</var> en la banda roja; barra azul: rango que cubren las cinco variantes de espesor; punto azul: caso nominal; rombo negro: valor medido. (b) Abscisa: Γ (adimensional); punteada gris: Γ = 1, sin absorción; rombo negro con barra: medido ±3σ; puntos naranjas: lo que exigiría la hipótesis de absorción con cada uno de los dos cierres.
  <span class="src">scripts/06_controles.py · resultados/06_controles.csv</span></figcaption>
  <div class="lectura"><ul>
- <li><strong>(a) Espesor.</strong> La barra azul cubre todo lo que se mueve el contraste predicho al cambiar los espesores ±15 %, en contrafase o intercambiados entre grupos: a lo sumo 0.16, y no llega al rombo. <strong>El espesor no genera el contraste.</strong></li>
+ <li><strong>(a) Espesor.</strong> Con los espesores cambiados ±15 %, en contrafase o intercambiados entre grupos, el contraste predicho se mueve a lo sumo 0.16 y la barra no llega al rombo: <strong>el espesor no genera el contraste.</strong></li>
  <li><strong>(b) Absorción.</strong> Γ = <var>K</var>(745)/<var>K</var>(600), con <var>K</var> = [(1−<var>T</var>)/<var>R</var>]₄ / ⟨(1−<var>T</var>)/<var>R</var>⟩₁₂₃, vale exactamente 1 si ninguna muestra absorbe y cancela un error multiplicativo común de calibración. Lo medido es compatible con 1 y descarta la versión polidispersa, pero queda a sólo 2.1 σ de la monodispersa: <strong>la absorción no quedó excluida con el criterio registrado</strong>. Dato no gateado: esa absorción le daría a las muestras 1–3 una pendiente de ~2, contra 0.21 medida.</li>
  </ul></div>
 </figure>
 <p><strong>Tercer control, tamaño contra entorno:</strong> intercambiando dentro del modelo la distribución de poros y el entorno (porosidad y espesor) entre grupos, el tamaño de poro se queda con el <strong>81 %</strong> del contraste predicho con el cierre monodisperso y el <strong>99 %</strong> con el polidisperso, contra un criterio de 75 % fijado de antemano. Es una atribución <em>interna del modelo</em>, no una fracción medida.</p>
 
 <h3>4.8 La frontera, como intervalo</h3>
-<p>La <strong>figura 6</strong> reúne lo que puede decirse sobre dónde está la frontera. En la abscisa va el parámetro de tamaño <var>x</var> = π<var>D̃</var>/<var>λ</var> de una muestra hipotética, con <var>D̃</var> su diámetro mediano y <var>λ</var> = 669 nm, el centro de la banda roja; en la ordenada, la pendiente espectral que tendría esa muestra.</p>
+<p>La <strong>figura 6</strong> reúne lo que puede decirse sobre dónde está la frontera.</p>
 <figure class="ancha">
  <div class="plate"><img src="fig:06_frontera_acotada" alt="Pendiente roja predicha en función del tamaño típico de poro, con la banda de incertidumbre del modelo, las cuatro muestras y la brecha permitida por los datos"></div>
- <figcaption><span class="n">Figura 6.</span> Pendiente roja en función del tamaño típico de poro. Curva: predicción para una muestra hipotética cuya distribución se reescala a lo largo del eje. Banda azul: cuánto cambia según se trate la dispersión dependiente. Puntos: las cuatro muestras. Gris: la brecha que dejan los datos.
+ <figcaption><span class="n">Figura 6.</span> Pendiente roja <var>s</var> (ordenada) contra <var>x</var> = π<var>D̃</var>/<var>λ</var> (abscisa logarítmica), con <var>D̃</var> la mediana de la distribución y <var>λ</var> = 669 nm. Curva: predicción para una muestra hipotética cuya distribución se reescala a lo largo del eje, con el cierre monodisperso. Banda azul: entre esa curva y la del cierre polidisperso, que es el borde inferior del lado nanoporoso. Puntos: las cuatro muestras medidas, con barras de ±30 % en <var>x</var> y de dispersión entre regiones en <var>s</var>. Gris: la brecha de tamaños que dejan los datos.
  <span class="src">scripts/06_frontera.py · resultados/06_frontera_s.csv</span></figcaption>
  <div class="lectura"><ul>
  <li><strong>El escalón de la curva <em>es</em> el cambio de régimen</strong> visto en la cantidad que se mide, y las muestras caen en sus dos extremos, donde el modelo las ubica. <strong>El escalón termina siempre entre <var>x</var> ≈ 1.1 y 1.5</strong>, sin importar el tratamiento de la dispersión dependiente: ésa es la parte robusta.</li>
- <li><strong>La banda azul se ensancha hacia la izquierda</strong> (el eslabón no validado del § 4.6) y <strong>la zona gris es lo que los datos no resuelven</strong>: sin muestras de tamaño intermedio, la frontera se acota pero no se mide.</li>
+ <li><strong>La banda se ensancha hacia la izquierda</strong> —el eslabón no validado del § 4.6— y <strong>la zona gris es lo que los datos no resuelven</strong>: sin muestras de tamaño intermedio, la frontera se acota pero no se mide.</li>
  </ul></div>
 </figure>
 <div class="tbl"><table>
@@ -242,7 +242,7 @@
   <li>Zhu, J. X.; Pine, D. J.; Weitz, D. A. <em>Phys. Rev. A</em> 44, 3948 (1991).</li>
 </ul>
 
-<footer>Tomás Chamorro · <em>Ondas Gravitacionales e Investigación Asistida por IA</em>. Datos, código y verificaciones en el repositorio del proyecto.</footer>
+<footer>Tomás Chamorro · datos, código y verificaciones en el repositorio del proyecto.</footer>
 
 </main>
 </div>
