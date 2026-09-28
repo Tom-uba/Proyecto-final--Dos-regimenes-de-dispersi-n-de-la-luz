@@ -99,7 +99,7 @@
 </figure>
 
 <h3>4.2 La firma espectral de cada grupo</h3>
-<p>Para convertir eso en un número se usa la pendiente espectral <var>s</var> = −d ln <var>R</var>/d ln <var>λ</var>: un material acromático da <var>s</var> ≈ 0 y, cuanto más cae la reflectancia hacia el rojo, mayor es <var>s</var>.</p>
+<p>Para convertir eso en un número se usa la pendiente espectral <var>s</var> = −d ln <var>R</var>/d ln <var>λ</var>: un material acromático da <var>s</var> ≈ 0 y, cuanto más cae la reflectancia hacia el rojo, mayor es <var>s</var>. Se la mide de dos maneras que fallan distinto. La primera es una <strong>regresión lineal de ln <var>R</var> contra ln <var>λ</var></strong>: ajusta una recta a toda la sub-banda y devuelve una pendiente única, robusta al ruido pero ciega a cualquier curvatura del espectro. La segunda ajusta un <strong>spline suavizado</strong> —una curva flexible que sigue al espectro sin imponerle forma— y promedia su derivada en la misma sub-banda: sigue las variaciones locales, pero es más sensible al ruido y a cuánto se suavice. Que las dos den lo mismo indica que la pendiente está en el dato y no en el procedimiento; por eso la figura 2 muestra las dos.</p>
 <figure>
  <div class="plate"><img src="fig:02_pendiente_por_muestra" alt="Pendiente espectral por muestra en las sub-bandas azul y roja, medida por regresión y por spline"></div>
  <figcaption><span class="n">Figura 2.</span> Pendiente por muestra. Círculos: regresión log–log. Cuadrados: derivada de un spline. Barras: incertidumbre del ajuste. Fondo gris: las micrométricas.
