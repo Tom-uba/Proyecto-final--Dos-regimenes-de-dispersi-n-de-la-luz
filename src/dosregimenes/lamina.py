@@ -14,10 +14,24 @@ Para una lámina NO absorbente de espesor L, difusión con bordes extrapolados d
     z₀ ≈ ℓ*        (profundidad de la primera dispersión)
     z_e = (2/3) ℓ* (1 + R_ef)/(1 − R_ef)     (longitud de extrapolación)
 
-Es el resultado estándar de óptica mesoscópica. `R_ef` es la reflectancia interna efectiva
-por el salto de índice entre el medio poroso y el aire, con la aproximación usual
+Es el resultado estándar de óptica mesoscópica: la condición de borde extrapolado que
+incorpora la reflexión interna por el salto de índice está formulada en Zhu, Pine y Weitz,
+Phys. Rev. A 44, 3948 (1991). `R_ef` es esa reflectancia interna efectiva, con la
+aproximación polinómica habitual en la literatura de medios difusores,
 
     R_ef ≈ −1.440/n² + 0.710/n + 0.668 + 0.0636 n
+
+que aparece con esa forma, por ejemplo, en Durduran, Choe, Baker y Yodh, Rep. Prog. Phys.
+73, 076701 (2010) §2. Procedencia rastreada el 28/09/2026: el polinomio circula como
+"parámetro de reflexión interna" sin que se haya podido confirmar su publicación original
+(se lo suele remontar a ajustes sobre datos tabulados de reflectancia interna difusa).
+
+CUIDADO con el último coeficiente: se lo encuentra escrito como 0.0636 n y también como
+0.00636 n. Acá se usa 0.0636, que es la forma más difundida. La diferencia no es inocua
+—con n = 1.389 da R_ef 0.521 contra 0.442, o sea z_e 2.12 ℓ* contra 1.72 ℓ*— pero cambia
+la reflectancia de difusión sólo en ~0.015 (0.662 vs 0.678 con L = 40 µm y ℓ* = 8 µm), y los
+resultados del proyecto salen del Monte Carlo, no de esta fórmula: la difusión se usa como
+contraste en el check 5.5, con tolerancia del 10 %.
 
 No absorbente es una hipótesis, no un hecho: se contrasta contra T(λ) medida en la Etapa 6.
 

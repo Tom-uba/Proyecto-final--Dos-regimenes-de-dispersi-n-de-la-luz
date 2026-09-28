@@ -993,3 +993,29 @@ sensibilidad del modelo, y la frontera como una brecha. Informe (resumen, §4.4,
 **Lección de proceso.** La verificación interna (checks, log, pre-registro) no atrapó
 sobreventa en la redacción ni la falta de auditabilidad de un pre-registro propio; una sesión
 externa sin contexto lo encontró en una pasada.
+
+---
+
+## 2026-09-28 (a) — Procedencia del polinomio de reflexión interna
+
+Al agregar citas al informe apareció un hueco: `lamina.py` usaba la fórmula de difusión con
+bordes extrapolados y el polinomio
+
+    R_ef ≈ −1.440/n² + 0.710/n + 0.668 + 0.0636 n
+
+declarándolos "resultado estándar de óptica mesoscópica", **sin fuente**. Rastreo:
+
+1. **La condición de borde extrapolado con reflexión interna** está formulada en Zhu, Pine y
+   Weitz, *Phys. Rev. A* **44**, 3948 (1991). Verificado. Es la cita que lleva el informe.
+2. **El polinomio** aparece con esa forma en la literatura de óptica difusa, por ejemplo en
+   Durduran, Choe, Baker y Yodh, *Rep. Prog. Phys.* **73**, 076701 (2010), como "parámetro de
+   reflexión interna". **No se pudo confirmar su publicación original**; se lo suele remontar a
+   ajustes sobre datos tabulados de reflectancia interna difusa. Queda anotado como tal en el
+   docstring, sin atribuirlo a un autor que no se haya verificado.
+3. **Discrepancia encontrada:** el último coeficiente circula como `0.0636 n` y también como
+   `0.00636 n`. El proyecto usa 0.0636, la forma más difundida. Con n = 1.389 eso da
+   R_ef 0.521 contra 0.442 (z_e 2.12 ℓ* contra 1.72 ℓ*), pero mueve la reflectancia de difusión
+   sólo ~0.015. **No afecta ningún resultado**: la cadena usa Monte Carlo, y la difusión sólo
+   interviene como contraste en el check 5.5, cuya tolerancia es 10 %.
+
+Sin cambios de código ni de números; sólo procedencia.
