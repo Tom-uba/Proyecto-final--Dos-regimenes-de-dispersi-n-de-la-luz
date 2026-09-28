@@ -221,3 +221,11 @@
     footer { margin-top: 4pt; padding-top: 3pt; font-size: 6.8pt; }
     a { color: inherit; }
   }
+
+/* Aclaraciones editoriales: títulos de tablas y figuras algo mayores, sin reducir el cuerpo. */
+.table-title { font-size: 0.85em; font-weight: 600; margin-bottom: 0.35em; text-indent: 0; }
+@media print {
+  .table-title { font-size: 7.2pt; margin-bottom: 2pt; text-align: left; }
+  .comparacion th, .comparacion td { padding-inline: 2pt; }
+  figure.ancha .plate img { max-height: 43mm; }
+}

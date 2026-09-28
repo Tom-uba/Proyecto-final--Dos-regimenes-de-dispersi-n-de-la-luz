@@ -55,6 +55,16 @@ def main() -> None:
         for k, v in at.items():
             w.writerow(["atribucion", f"f_D {k}", round(v["f_D"], 4), f"Δs total {v['total']:.3f}"])
 
+    graficar(ds_med, esp, ab, QA, sQ)
+    ds0 = esp["nominal"]["ds"]
+    print(f"06_controles: Δs medido {ds_med:.2f} | espesor peor "
+          f"{max((esp[k]['ds'] - ds0 for k in esp), key=abs):+.2f} | Q medido {QA:.3f}±{sQ:.3f}, "
+          f"H_abs " + ", ".join(f"{k} {v['Q_pred']:.3f}" for k, v in ab.items()) +
+          " | f_D " + ", ".join(f"{k} {v['f_D']:.2f}" for k, v in at.items()))
+
+
+def graficar(ds_med, esp, ab, QA, sQ) -> None:
+    """Dibuja los controles; permite revisar rótulos usando resultados ya calculados."""
     # Dos paneles, UN mensaje por panel, los dos sobre una recta numérica: lo que se
     # compara siempre es "dónde cae lo medido respecto de lo que exigiría la hipótesis".
     # La atribución (f_D) son dos números y va al texto del informe, no a un tercer panel.
@@ -73,7 +83,7 @@ def main() -> None:
                 ha="center", fontsize=9)
     ax.set_xlim(min(ds_med, min(var)) - 0.3, max(var) + 0.3)
     ax.set_xlabel("contraste Δs en la banda roja")
-    ax.set_title("(a) El espesor no genera el contraste", fontsize=10.5, loc="left")
+    ax.set_title("(a) Sensibilidad del contraste al espesor", fontsize=10.5, loc="left")
 
     # (b) absorción: Γ vale 1 sin absorción; la hipótesis lo corre y la medición no
     ax = axs[1]
@@ -85,7 +95,8 @@ def main() -> None:
                 ha="center", fontsize=9)
     for i, (k, v) in enumerate(ab.items()):
         ax.plot([v["Q_pred"]], [0], "o", color=ROJO, ms=8, zorder=3)
-        ax.annotate(k, (v["Q_pred"], 0), xytext=(0, 15 if i == 0 else -24),
+        etiqueta = "polidisperso" if k == "desacople" else k
+        ax.annotate(etiqueta, (v["Q_pred"], 0), xytext=(0, 15 if i == 0 else -24),
                     textcoords="offset points", ha="center", fontsize=9, color=ROJO)
     ax.set_xlim(min(v["Q_pred"] for v in ab.values()) - 0.12, 1.12)
     ax.set_xlabel("Γ = K(745) / K(600)")
@@ -102,10 +113,6 @@ def main() -> None:
     FIGURES.mkdir(exist_ok=True)
     for ext in ("pdf", "png"):
         fig.savefig(FIGURES / f"06_controles.{ext}", dpi=150)
-    print(f"06_controles: Δs medido {ds_med:.2f} | espesor peor "
-          f"{max((esp[k]['ds'] - ds0 for k in esp), key=abs):+.2f} | Q medido {QA:.3f}±{sQ:.3f}, "
-          f"H_abs " + ", ".join(f"{k} {v['Q_pred']:.3f}" for k, v in ab.items()) +
-          " | f_D " + ", ".join(f"{k} {v['f_D']:.2f}" for k, v in at.items()))
 
 
 if __name__ == "__main__":

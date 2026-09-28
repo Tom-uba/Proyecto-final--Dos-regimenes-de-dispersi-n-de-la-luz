@@ -1019,3 +1019,29 @@ declarándolos "resultado estándar de óptica mesoscópica", **sin fuente**. Ra
    interviene como contraste en el check 5.5, cuya tolerancia es 10 %.
 
 Sin cambios de código ni de números; sólo procedencia.
+
+
+## 2026-09-28 — Claridad del informe y límite de cinco páginas
+
+Revisión editorial autorizada por el autor. Se condensaron resumen, tabla de etapas y
+cierre para incorporar aclaraciones sin reducir el cuerpo tipográfico. Se numeraron las
+cinco tablas y se separaron referencia externa y datos propios. Se aclararon calibración,
+prueba no ciega, sensibilidad al espesor, definición del hueco entre percentiles y diferencia
+entre brecha de tamaños típicos y frontera del observable. Figuras 4–6: altura máxima de
+36 a 43 mm. Figura 5: rótulos consistentes y título de sensibilidad al espesor. Figura 6:
+dos cierres identificados y rango de dos cierres por dos entornos, no intervalo de confianza.
+
+Al consultar src/dosregimenes/pendiente.py y checks/check_2_2_separacion.py se detectaron
+descripciones inexactas: el ajuste es cuadrático, el error nominal omite covarianza cruzada
+y las barras del spline son dispersión de derivadas en la sub-banda. Se documentó la
+implementación en A.1 y se rotularon 1.3 y 4.9 como cocientes nominales, no significancias
+calibradas. No se modificaron estimadores ni resultados numéricos. El apéndice incorpora
+comando de reproducción, nombres de verificaciones y enlace a la revisión independiente.
+
+Validación editorial: regeneración de HTML/PDF, inspección visual de las páginas y figuras,
+recuento con PyMuPDF (informe: 5 páginas, 6 figuras, 5 tablas; apéndice: 2 páginas, 2 tablas),
+HTML sincronizado con fuentes e imágenes, texto dentro de página y git diff --check sin
+errores. Los CSV de resultados no tienen cambios. Figura 5 redibujada con los valores del
+CSV guardado; figura 6 reutiliza el barrido guardado. No se repitió la batería científica:
+esta revisión no altera cálculos ni criterios; las 16 pruebas que pasan y 4 que fallan
+siguen citándose como resultados de la ejecución registrada, no de una corrida nueva.

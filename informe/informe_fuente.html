@@ -37,9 +37,9 @@
 
 <h2><span class="sec">1</span>Resumen</h2>
 <div class="abstract" style="margin-top:0.4rem">
- <p>Se estudiaron cuatro láminas porosas de acetato de celulosa de la misma tira, con reflectancia difusa medida con esfera integradora y estructura interna fotografiada con microscopio electrónico. De las imágenes se midió la distribución de tamaño de poro de cada muestra y, sin ajustar ningún parámetro contra los espectros, se calculó su respuesta espectral encadenando teoría de Mie, un factor de estructura y un Monte Carlo del transporte de luz en la lámina; la predicción se comparó con lo medido, se contrastó contra un resultado publicado por otro grupo, se acotó el efecto del espesor y se ensayó —sin poder excluirla— una hipótesis de absorción.</p>
- <p>Las muestras se separan en dos grupos disjuntos: poros de ~1.75 µm (muestras 1–3) y una red de ~0.10 µm (muestra 4), es decir <var>x</var> ≈ 9 contra 0.52, con un hueco de un factor 5. Ópticamente, el primer grupo refleja casi plano en el rojo (pendiente <var>s</var> = 0.21) y el segundo cae con fuerza (<var>s</var> = 1.44). El modelo sin parámetros ajustados reproduce esa diferencia con el signo correcto y dentro de un factor 1.43 —un valor nominal, y de una prueba que no fue ciega (§ 4.5)—, y dentro del modelo el contraste lo carga el tamaño de poro y no la porosidad ni el espesor. La frontera cae en la brecha 0.87 &lt; <var>x</var> &lt; 5.1, compatible con la teoría de un poro aislado (1.0–2.2).</p>
- <p>El contraste queda así explicado sólo en parte por el cambio de régimen: es la explicación física consistente y predice su dirección y su orden de magnitud, pero no cierra cuantitativamente, porque la dispersión dependiente en la muestra nanoporosa no está validada, la absorción no quedó excluida con el criterio registrado y a las micrométricas les falta pendiente respecto del modelo.</p>
+ <p>Se estudiaron cuatro láminas porosas de acetato de celulosa mediante reflectancia difusa e imágenes de microscopía electrónica. Las muestras 1–3 tienen poros de ~1.75 µm y la muestra 4, una red de ~0.10 µm. En el rojo, las primeras reflejan casi sin depender del color (pendiente espectral <var>s</var> = 0.21), mientras la cuarta cae con fuerza (<var>s</var> = 1.44).</p>
+ <p>Para explicar esa diferencia se predijo la respuesta óptica desde la morfología, encadenando teoría de Mie, factor de estructura y transporte Monte Carlo, sin ajustar parámetros a los espectros. El modelo reproduce el signo y el orden de magnitud del contraste; dentro de él, el tamaño de poro domina sobre la porosidad y el espesor. La predicción nominal supera lo medido un 43 %, en una prueba que no fue ciega.</p>
+ <p>El cambio de régimen es una explicación consistente, pero parcial: el tratamiento de la dispersión dependiente no está validado para la red nanoporosa, la absorción no quedó excluida y persisten residuos en las micrométricas. Sin muestras de tamaño intermedio, la ubicación de la transición depende del criterio empleado y no puede medirse directamente.</p>
 </div>
 
 <h2><span class="sec">2</span>Marco teórico</h2>
@@ -53,7 +53,7 @@
 <p>El objeto que dispersa no es una partícula sino un <strong>poro</strong>: aire (índice bajo) dentro del sólido (índice alto). Para un poro de diámetro <var>D</var> iluminado con luz de longitud de onda <var>λ</var>, el parámetro que decide el régimen y el contraste de índice son (Bohren y Huffman 1983)</p>
 <div class="eq"><span><var>x</var> = π<var>D</var>/<var>λ</var> &nbsp;&nbsp; y &nbsp;&nbsp; <var>m</var> = <var>n</var><sub>aire</sub>/<var>n</var><sub>sol</sub>(<var>λ</var>) = 1/<var>n</var><sub>sol</sub>(<var>λ</var>) ≈ 0.68</span><span class="no">(1)</span></div>
 <p><var>x</var> compara la circunferencia asociada al diámetro del poro con la longitud de onda en vacío. Una advertencia de convención: la serie de Mie se escribe con la longitud de onda <em>dentro del medio</em>, o sea <var>x</var><sub>Mie</sub> = <var>n</var><sub>sol</sub>·<var>x</var> ≈ 1.47<var>x</var>; acá <var>x</var> es siempre el de vacío y la conversión se hace en el código. El índice del sólido sale de la curva de dispersión de polímeros ópticos de Sultanova et al. (2009), anclada al valor que Borgmann (2023) reporta para el acetato de celulosa.</p>
-<p>Ese número parte el problema en dos. Del lado <strong>Rayleigh</strong> (<var>x</var> ≲ 1) vale <var>Q</var><sub>sca</sub> = (8/3)<var>x</var><sub>Mie</sub>⁴|(<var>m</var>²−1)/(<var>m</var>²+2)|² —con <var>x</var><sub>Mie</sub> = <var>n</var><sub>sol</sub><var>x</var>, la convención de la serie de Mie que se explica abajo—, y con σ<sub>sca</sub> = <var>Q</var><sub>sca</sub>π<var>D</var>²/4 la dispersión es <strong>fuertemente cromática</strong>. Del lado <strong>Mie</strong> (<var>x</var> ≫ 1), <var>Q</var><sub>sca</sub> tiende a 2 con oscilaciones amortiguadas, <strong>casi sin depender de <var>λ</var></strong>: la respuesta es acromática y la reflectancia sale plana; el límite <var>Q</var><sub>sca</sub> → 2, la llamada paradoja de la extinción, es de van de Hulst (1957) y el límite de Rayleigh, de Bohren y Huffman (1983).</p>
+<p>Ese número parte el problema en dos. Del lado <strong>Rayleigh</strong> (<var>x</var> ≲ 1) vale <var>Q</var><sub>sca</sub> = (8/3)<var>x</var><sub>Mie</sub>⁴|(<var>m</var>²−1)/(<var>m</var>²+2)|² —con <var>x</var><sub>Mie</sub> = <var>n</var><sub>sol</sub><var>x</var>, la convención de la serie de Mie indicada arriba—, y con σ<sub>sca</sub> = <var>Q</var><sub>sca</sub>π<var>D</var>²/4 la dispersión es <strong>fuertemente cromática</strong>. Del lado <strong>Mie</strong> (<var>x</var> ≫ 1), <var>Q</var><sub>sca</sub> tiende a 2 con oscilaciones amortiguadas, <strong>casi sin depender de <var>λ</var></strong>: la respuesta es acromática y la reflectancia sale plana; el límite <var>Q</var><sub>sca</sub> → 2, la llamada paradoja de la extinción, es de van de Hulst (1957) y el límite de Rayleigh, de Bohren y Huffman (1983).</p>
 <div class="eq"><span>σ<sub>sca</sub> ∝ <var>D</var>⁶/<var>λ</var>⁴ &nbsp;(<var>x</var> ≲ 1) &nbsp;&nbsp;&nbsp; <var>Q</var><sub>sca</sub> → 2 &nbsp;(<var>x</var> ≫ 1)</span><span class="no">(2)</span></div>
 <p>Entre ambos límites <var>Q</var><sub>sca</sub>(<var>x</var>) sube desde <var>x</var>⁴ hasta su primer máximo: no hay fórmula cerrada y se evalúa la serie de Mie. Sobre ese flanco, donde la respuesta es <em>más</em> cromática, cae la muestra 4.</p>
 
@@ -73,14 +73,14 @@
 <p>Por último, "el régimen cambia en <var>x</var> ~ 1" no es verificable sin definir la frontera. Se usan tres definiciones sobre la curva de Mie de un poro: <strong>F1</strong>, la convención <var>x</var> = 1; <strong>F2</strong>, donde la dependencia espectral cae a mitad de camino (<var>p</var> = d ln <var>Q</var><sub>sca</sub>/d ln <var>x</var> baja de 2); y <strong>F3</strong>, el máximo de |d<var>Q</var><sub>sca</sub>/d<var>x</var>|. A ellas se agrega <strong>F<sub><var>s</var></sub></strong>, que habla del observable: el <var>x</var> donde la pendiente predicha <em>de la lámina</em> pasa por el punto medio entre las dos pendientes medidas. Reportar las cuatro permite dar la frontera como intervalo y no como un número inventado.</p>
 
 <h2><span class="sec">3</span>Desarrollo del trabajo</h2>
-<p>El trabajo se organizó en etapas encadenadas; cada una cerraba con una verificación automática que debía pasar antes de seguir. La tabla resume el orden real en que se hicieron las cosas.</p>
-<div class="tbl"><table>
+<p>El trabajo se organizó en etapas encadenadas (tabla 1), con verificaciones automáticas y diagnóstico de los criterios no satisfechos; el apéndice distingue controles numéricos e hipótesis físicas.</p>
+<div class="tbl"><div class="table-title">Tabla 1. Etapas del análisis.</div><table>
  <thead><tr><th>etapa</th><th>qué se hizo</th><th>qué dejó</th></tr></thead>
  <tbody>
- <tr><td>Datos</td><td>Consolidar espectros, 78 imágenes SEM y tablas de segmentación con su procedencia; fijar la banda 470–750 nm y excluir 560–568 nm (pico instrumental); descartar deriva de lámpara</td><td><var>R</var> + <var>T</var> &gt; 1 delató un patrón blanco degradado: obligó a usar una <strong>diferencia</strong> de pendientes como observable</td></tr>
- <tr><td>Óptica y morfometría</td><td>Promediar las cinco regiones por muestra y medir <var>s</var> por dos métodos y dos sub-bandas; obtener la distribución completa de tamaños, con la escala leída de la metadata y verificada contra la barra quemada, más porosidad y espesor</td><td>La firma espectral de cada grupo, la elección de la banda roja, y <var>P</var>(<var>D</var>), <var>φ</var> y <var>L</var> con su incertidumbre de método</td></tr>
- <tr><td>Herramientas</td><td>Implementar Mie, factor de estructura, difusión y Monte Carlo, contrastando <em>cada pieza contra un resultado exacto</em> antes de encadenarlas</td><td>Límites de Rayleigh y difracción, compresibilidad exacta de <var>S</var>(0), límite balístico</td></tr>
- <tr><td>Predicción, contraste y controles</td><td>Fijar de antemano observable y criterio y correr <var>P</var>(<var>D</var>) → Mie → ℓ* → <var>S</var>(<var>q</var>) → Monte Carlo sólo con morfología; repetir con morfología publicada por otro grupo; descartar espesor y absorción; repartir el contraste con un diseño factorial y acotar la frontera</td><td>La comparación del § 4.5, el eslabón débil identificado y la frontera como intervalo</td></tr>
+ <tr><td>Datos</td><td>Reunir espectros y 78 imágenes SEM; fijar banda y máscara instrumental; evaluar deriva</td><td>El problema del patrón blanco motivó usar Δ<var>s</var></td></tr>
+ <tr><td>Óptica y morfometría</td><td>Medir pendientes, distribución de poros, porosidad y espesor; verificar la escala SEM</td><td>Firma espectral y entradas morfológicas con sus incertidumbres</td></tr>
+ <tr><td>Herramientas</td><td>Contrastar Mie, factor de estructura y transporte con límites conocidos</td><td>Controles numéricos de cada eslabón</td></tr>
+ <tr><td>Predicción y controles</td><td>Predecir desde la morfología; contrastar con datos propios y externos; evaluar espesor, absorción y frontera</td><td>Comparación sin ajuste, sensibilidad y limitaciones (§§ 4.5–4.8)</td></tr>
  </tbody>
 </table></div>
 
@@ -90,39 +90,39 @@
 <p>La <strong>figura 1</strong> muestra los espectros que hay que explicar.</p>
 <figure>
  <div class="plate"><img src="fig:02_espectros_promedio" alt="Reflectancia difusa media de las cuatro muestras entre 400 y 800 nm, con la banda de análisis y la máscara instrumental marcadas"></div>
- <figcaption><span class="n">Figura 1.</span> Reflectancia difusa <var>R</var> (fracción, 0–1) contra longitud de onda en nm, promediada sobre las cinco regiones medidas de cada muestra; la franja alrededor de cada curva es el desvío entre esas regiones. Azul, verde y roja: muestras 1, 2 y 3; violeta: muestra 4. Fondo gris: banda de análisis, 470–750 nm. Franja naranja: 560–568 nm, excluida por un pico instrumental. Punteada vertical: cruce de curvas, 586 nm.
+ <figcaption><span class="n">Figura 1.</span> Reflectancia difusa <var>R</var> normalizada al patrón blanco (adimensional; los valores &gt; 1 en el azul evidencian el problema de calibración) contra longitud de onda en nm, promediada sobre las cinco regiones medidas de cada muestra; la franja alrededor de cada curva es el desvío entre esas regiones. Azul, verde y roja: muestras 1, 2 y 3; violeta: muestra 4. Fondo gris: banda de análisis, 470–750 nm. Franja naranja: 560–568 nm, excluida por un pico instrumental. Punteada vertical: cruce de curvas, 586 nm.
  <span class="src">scripts/02_espectros_promedio.py · data/reflectancia/</span></figcaption>
  <div class="lectura"><ul>
- <li><strong>Las muestras 1–3 son casi paralelas y casi horizontales</strong> (bajan de ~0.77 a ~0.61); <strong>la muestra 4 es la más inclinada</strong> (de 0.92 a 0.46).</li>
+ <li><strong>En el rojo, las muestras 1–3 son casi horizontales y la 4 cae con fuerza.</strong> En la banda completa de análisis las primeras también muestran una caída apreciable.</li>
  <li><strong>Las curvas se cruzan cerca de 586 nm:</strong> la muestra 4 es la más reflectante en el azul y la menos en el rojo. No refleja "peor": refleja distinto según el color, que es lo que distingue a los dos regímenes.</li>
  </ul></div>
 </figure>
 
 <h3>4.2 La firma espectral de cada grupo</h3>
-<p>Para convertir eso en un número se usa la pendiente espectral <var>s</var> = −d ln <var>R</var>/d ln <var>λ</var>: un material acromático da <var>s</var> ≈ 0 y, cuanto más cae la reflectancia hacia el rojo, mayor es <var>s</var>. Se la mide de dos maneras que fallan distinto. La primera es una <strong>regresión lineal de ln <var>R</var> contra ln <var>λ</var></strong>: ajusta una recta a toda la sub-banda y devuelve una pendiente única, robusta al ruido pero ciega a cualquier curvatura del espectro. La segunda ajusta un <strong>spline suavizado</strong> —una curva flexible que sigue al espectro sin imponerle forma— y promedia su derivada en la misma sub-banda: sigue las variaciones locales, pero es más sensible al ruido y a cuánto se suavice. Que las dos den lo mismo indica que la pendiente está en el dato y no en el procedimiento; por eso la figura 2 muestra las dos.</p>
+<p>La pendiente espectral <var>s</var> = −d ln <var>R</var>/d ln <var>λ</var> resume la dependencia con el color: <var>s</var> ≈ 0 indica reflectancia plana y un valor positivo, caída hacia el rojo. Se estima por dos métodos: una <strong>regresión cuadrática de ln <var>R</var> contra ln <var>λ</var></strong>, cuya derivada se evalúa en el centro geométrico de cada sub-banda, y un <strong>spline suavizado</strong>, cuya derivada se promedia en esa sub-banda. El primero admite curvatura; el segundo es más flexible y sensible al suavizado. Su concordancia permite evaluar la dependencia del resultado con el método (figura 2).</p>
 <figure>
  <div class="plate"><img src="fig:02_pendiente_por_muestra" alt="Pendiente espectral por muestra en las sub-bandas azul y roja, medida por regresión y por spline"></div>
- <figcaption><span class="n">Figura 2.</span> Pendiente espectral <var>s</var> (ordenada, adimensional) de cada muestra (abscisa), en las dos sub-bandas. Círculos llenos: regresión log–log. Cuadrados vacíos: derivada de un spline suavizado. Barras: incertidumbre estadística del ajuste de <var>s</var> en esa muestra, no la dispersión entre regiones. Fondo gris: las tres micrométricas.
+ <figcaption><span class="n">Figura 2.</span> Pendiente espectral <var>s</var> (ordenada, adimensional) de cada muestra (abscisa), en las dos sub-bandas. Círculos llenos: regresión cuadrática log–log. Cuadrados vacíos: derivada de un spline suavizado. Barras: ±error nominal del ajuste en la regresión; ±desvío de la derivada dentro de la sub-banda en el spline. No representan lo mismo ni la dispersión entre regiones (apéndice A.1). Fondo gris: las tres micrométricas.
  <span class="src">scripts/02_pendiente_por_muestra.py · resultados/02_pendiente.csv</span></figcaption>
  <div class="lectura"><ul>
- <li><strong>Los dos métodos coinciden</strong> en cada muestra: la pendiente no es un artefacto del cálculo.</li>
+ <li><strong>Los dos métodos coinciden</strong> en cada muestra: la separación es robusta al método.</li>
  <li><strong>En el rojo (derecha) los grupos se separan</strong> y en el azul (izquierda) se superponen: <strong>la banda roja es la que discrimina</strong>, y es la que se usa después.</li>
  </ul></div>
 </figure>
-<div class="tbl"><table>
- <thead><tr><th>sub-banda</th><th class="num">muestras 1–3</th><th class="num">muestra 4</th><th class="num">Δ<var>s</var></th><th class="num">significancia</th></tr></thead>
+<div class="tbl"><div class="table-title">Tabla 2. Contraste espectral por sub-banda.</div><table>
+ <thead><tr><th>sub-banda</th><th class="num">muestras 1–3</th><th class="num">muestra 4</th><th class="num">Δ<var>s</var></th><th class="num">Δ<var>s</var>/σ<sub>nom</sub></th></tr></thead>
  <tbody>
- <tr><td>azul, 470–590 nm</td><td class="num">0.58</td><td class="num">1.30</td><td class="num">0.71</td><td class="num">1.3 σ</td></tr>
- <tr class="key"><td>rojo, 600–745 nm</td><td class="num">0.21</td><td class="num">1.44</td><td class="num">1.23</td><td class="num">4.9 σ</td></tr>
+ <tr><td>azul, 470–590 nm</td><td class="num">0.58</td><td class="num">1.30</td><td class="num">0.71</td><td class="num">1.3</td></tr>
+ <tr class="key"><td>rojo, 600–745 nm</td><td class="num">0.21</td><td class="num">1.44</td><td class="num">1.23</td><td class="num">4.9</td></tr>
  </tbody>
- <caption>σ acá es la incertidumbre estadística del ajuste de <var>s</var> en una muestra; medida contra la dispersión de <var>s</var> entre las cinco regiones de una misma lámina, que es la unidad experimental independiente, la separación es ~60 σ. Δ<var>s</var> es el observable central: al ser una diferencia entre muestras con la misma calibración, es inmune a un error multiplicativo común del patrón blanco.</caption>
+ <caption>Δ<var>s</var> = <var>s</var>₄ − <var>s̄</var>₁₂₃; las pendientes promedian los dos métodos. σ<sub>nom</sub> combina sus barras distintas (A.1): es una escala nominal, no una significancia estadística calibrada. Δ<var>s</var> cancela un factor multiplicativo de calibración común a las muestras.</caption>
 </table></div>
 
 <h3>4.3 Las dos poblaciones de poros</h3>
 <p>La <strong>figura 3</strong> da la distribución de tamaños de poro medida sobre las imágenes.</p>
 <figure>
  <div class="plate"><img src="fig:03_distribucion_poros" alt="Densidad de probabilidad del diámetro de Feret en escala logarítmica para las cuatro muestras"></div>
- <figcaption><span class="n">Figura 3.</span> Distribución de diámetro de Feret <var>D</var> (abscisa, µm, escala logarítmica) por muestra. La ordenada es densidad de probabilidad por década de <var>D</var>, normalizada a área unidad en cada muestra: por eso se comparan posición y ancho, no altura, entre muestras con distinto <var>n</var> (cantidad de poros medidos). Punteadas: medianas.
+ <figcaption><span class="n">Figura 3.</span> Distribución de diámetro de Feret <var>D</var> (abscisa, µm, escala logarítmica) por muestra. La ordenada es densidad de probabilidad por década de <var>D</var>, normalizada a área unidad en cada muestra: por eso se comparan posición y ancho, no altura, entre muestras con distinto <var>n</var> (cantidad de poros medidos). Punteadas: medianas. En la leyenda, 3k× y 50k× son aumentos de 3000× y 50 000×.
  <span class="src">scripts/03_distribucion_poros.py · data/imagej/ · resultados/03_PD.csv</span></figcaption>
  <div class="lectura"><ul>
  <li><strong>Hay dos grupos, no cuatro:</strong> las muestras 1–3 están superpuestas (medianas 1.76, 1.74 y 1.74 µm) y la 4 está sola (0.100 µm), un factor ~18 sin que las curvas se toquen.</li>
@@ -135,39 +135,40 @@
 <p>La <strong>figura 4</strong> cruza esa distribución con la banda de longitudes de onda: da la distribución completa de <var>x</var> de cada muestra y, con ella, de qué lado de la frontera cae.</p>
 <figure class="ancha">
  <div class="plate"><img src="fig:04_mapa_regimenes" alt="Distribuciones del parámetro de tamaño x de las cuatro muestras sobre un eje logarítmico con la frontera x igual a 1, y fracción de poros de la muestra 4 con x mayor que 1 en función de la longitud de onda"></div>
- <figcaption><span class="n">Figura 4.</span> Izquierda: densidad de <var>x</var> = π<var>D</var>/<var>λ</var> por muestra (abscisa logarítmica, adimensional), evaluada sobre todos los poros y todas las <var>λ</var> de la banda 470–750 nm; las barras inferiores van del percentil 5 al 95 de esa nube y la punteada marca <var>x</var> = 1. El solape entre dos muestras es la integral del mínimo de sus dos densidades: 0 significa que no comparten ningún valor de <var>x</var>. Derecha: porcentaje de poros de la muestra 4 con <var>x</var> &gt; 1 (ordenada) contra longitud de onda en nm (abscisa).
+ <figcaption><span class="n">Figura 4.</span> Izquierda: densidad en log <var>x</var>, normalizada a pico 1, con <var>x</var> = π<var>D</var>/<var>λ</var> por muestra (abscisa logarítmica, adimensional), evaluada sobre todos los poros y todas las <var>λ</var> de la banda 470–750 nm; las barras inferiores van del percentil 5 al 95 de esa nube y la punteada marca <var>x</var> = 1. El factor ×5.1 es mín(p5 de 1–3)/p95 de 4: separación de intervalos centrales, no ausencia de colas. Derecha: porcentaje de poros de la muestra 4 con <var>x</var> &gt; 1 (ordenada) contra longitud de onda en nm (abscisa).
  <span class="src">scripts/04_mapa_regimenes.py · resultados/04_banda_x.csv</span></figcaption>
  <div class="lectura"><ul>
- <li><strong>Las muestras 1–3 quedan del lado Mie</strong> (mediana 9.1, con el 90 % de sus poros dentro de la barra) y <strong>la 4 del lado de la transición</strong> (0.52): solape 0.000 y un hueco de factor 5.1. Como ninguna muestra está cerca de la frontera, la clasificación no depende de dónde se trace la línea.</li>
+ <li><strong>Las muestras 1–3 quedan del lado Mie</strong> (mediana 9.1, con el 90 % de sus poros dentro de la barra) y <strong>la 4 del lado de la transición</strong> (0.52): solape calculado &lt; 0.001. Sus tamaños típicos quedan lejos de la transición; las colas pueden cruzar <var>x</var> = 1.</li>
  <li><strong>Panel derecho:</strong> la cola de poros grandes de la muestra 4 cruza la frontera en el azul (16.7 %) y casi no en el rojo (1.5 %). Es un mecanismo consistente con el cruce de curvas, no una demostración.</li>
  </ul></div>
 </figure>
 
 <h3>4.5 La predicción sin parámetros ajustados</h3>
 <p>El paso que conecta morfología y óptica es predecir la segunda desde la primera. El observable, elegido de antemano, es Δ<var>s</var> = <var>s</var>₄ − <var>s̄</var>₁₂₃ en la banda roja, con criterio de éxito fijado en el plan: signo correcto y razón entre ×0.5 y ×2.</p>
-<div class="tbl"><table>
+<div class="tbl"><div class="table-title">Tabla 3. Predicción y medición en el rojo.</div><table>
  <thead><tr><th>pendiente roja</th><th class="num">m1</th><th class="num">m2</th><th class="num">m3</th><th class="num">m4</th><th class="num">Δ<var>s</var></th></tr></thead>
  <tbody>
  <tr><td>predicha por el modelo</td><td class="num">0.06</td><td class="num">0.10</td><td class="num">0.06</td><td class="num">1.84</td><td class="num">1.77</td></tr>
  <tr><td>medida</td><td class="num">0.19</td><td class="num">0.20</td><td class="num">0.23</td><td class="num">1.44</td><td class="num">1.23</td></tr>
  <tr class="key"><td>razón predicho / medido</td><td></td><td></td><td></td><td></td><td class="num">×1.43</td></tr>
  </tbody>
- <caption>El modelo reproduce el contraste sin haber visto los espectros; en la banda azul, informativo, la razón es ×1.90.</caption>
+ <caption>Parámetros obtenidos de la morfología, sin ajuste a los espectros; desarrollo no ciego. Razón informativa en el azul: ×1.90.</caption>
 </table></div>
 <p><strong>Qué dice:</strong> un modelo alimentado sólo con morfología predice que la nanoporosa caiga hacia el rojo mucho más que las micrométricas, y acierta la magnitud dentro de un 43 %. <strong>Qué no dice:</strong> no es una validación fina. El criterio tolera un factor 2, el signo es esperable al comparar <var>x</var> ≈ 9 con 0.5, y la prueba no fue ciega: la primera versión de la cadena daba ×2.8–3.2 y se la completó —Monte Carlo, factor de estructura, porosidad por muestra— con esos números a la vista, aunque los tres agregados estaban señalados como necesarios de antemano.</p>
 <p>La razón ×1.43 es nominal: las incertidumbres de <var>D</var>, <var>φ</var> y <var>L</var> no se propagan hasta acá (§ 5). Quedan dos residuos de dirección conocida: la muestra 4 queda <strong>sobrepredicha</strong> (1.84 contra 1.44) y a las micrométricas les <strong>falta ~0.13 de pendiente</strong>. Ese faltante aparece también en la transmitancia, medida sin el patrón blanco, así que no es sólo calibración: al modelo le falta una fuente de dispersión que dependa del color.</p>
 
 <h3>4.6 El eslabón débil: la dispersión dependiente</h3>
-<p>Para probar la cadena con datos que no son propios se usa una <strong>referencia externa</strong>: un trabajo publicado por otro grupo sobre películas poliméricas porosas (Syurik et al. 2017), del que se conocen tanto la morfología —tamaño de poro, porosidad e índice— como la reflectancia que ese grupo midió en tres espesores. Alimentando la cadena con esa morfología se compara lo predicho contra lo que ellos midieron, sin que intervenga ningún dato de este trabajo. La tabla reúne esa prueba y el efecto de cada tratamiento del factor de estructura sobre la muestra 4.</p>
-<div class="tbl"><table>
- <thead><tr><th>tratamiento</th><th class="num">referencia externa: <var>R</var> a 9 / 16 / 53 µm</th><th class="num"><var>s</var>₄ rojo</th><th class="num">razón Δ<var>s</var></th></tr></thead>
+<p>La <strong>referencia externa</strong> es el trabajo de Syurik et al. (2017) sobre películas poliméricas porosas: se usa su morfología publicada para predecir la reflectancia que midieron en tres espesores. La tabla 4 separa esa comparación de los resultados de nuestras muestras y muestra cómo cambian ambos al modificar el factor de estructura.</p>
+<div class="tbl"><div class="table-title">Tabla 4. Comparación de los tratamientos de dispersión.</div><table class="comparacion">
+ <thead><tr><th rowspan="2">tratamiento</th><th colspan="3" class="num">Referencia externa<br><var>R</var>(600 nm), según espesor</th><th colspan="2" class="num">Este trabajo</th></tr>
+ <tr><th class="num">9 µm</th><th class="num">16 µm</th><th class="num">53 µm</th><th class="num"><var>s</var>₄ rojo</th><th class="num">Δ<var>s</var><sub>pred</sub>/<br>Δ<var>s</var><sub>med</sub></th></tr></thead>
  <tbody>
- <tr class="key"><td>valores publicados / medidos</td><td class="num">0.57 / 0.70 / 0.90</td><td class="num">1.44</td><td class="num">×1</td></tr>
- <tr><td>sin factor de estructura</td><td class="num">0.53 / 0.68 / 0.88</td><td class="num">0.54</td><td class="num">—</td></tr>
- <tr><td>esferas duras monodispersas</td><td class="num">0.45 / 0.60 / 0.84</td><td class="num">1.84</td><td class="num">×1.43</td></tr>
- <tr><td>corrección por polidispersión</td><td class="num">0.47 / 0.62 / 0.85</td><td class="num">0.62</td><td class="num">×0.46</td></tr>
+ <tr class="key"><td>publicado / medido</td><td class="num">0.57</td><td class="num">0.70</td><td class="num">0.90</td><td class="num">1.44</td><td class="num">1</td></tr>
+ <tr><td>sin <var>S</var>(<var>q</var>)</td><td class="num">0.53</td><td class="num">0.68</td><td class="num">0.88</td><td class="num">0.54</td><td class="num">—</td></tr>
+ <tr><td>monodisperso</td><td class="num">0.45</td><td class="num">0.60</td><td class="num">0.84</td><td class="num">1.84</td><td class="num">1.43</td></tr>
+ <tr><td>polidisperso</td><td class="num">0.47</td><td class="num">0.62</td><td class="num">0.85</td><td class="num">0.62</td><td class="num">0.46</td></tr>
  </tbody>
- <caption>Ninguna fila reproduce las dos columnas a la vez.</caption>
+ <caption>Ningún tratamiento satisface todos los criterios de ambos conjuntos. —: razón no reportada.</caption>
 </table></div>
 <ul>
  <li><strong>El resto de la cadena funciona:</strong> sin factor de estructura la referencia externa se reproduce a ≤ 0.04, y el camino de transporte extraído con el procedimiento de ese mismo trabajo (3.84 µm) cae en el rango que ellos publican. Mie, la densidad de poros, el índice efectivo y el Monte Carlo sobreviven a datos ajenos.</li>
@@ -176,14 +177,14 @@
 </ul>
 
 <h3>4.7 Controles: ¿podría ser otra cosa?</h3>
-<p>Las muestras no difieren sólo en tamaño de poro: también en porosidad y espesor, y podrían diferir en absorción. Los criterios de aceptación se registraron en el control de versiones antes de correr los cálculos. La <strong>figura 5</strong> resume los dos primeros controles.</p>
+<p>Las muestras no difieren sólo en tamaño de poro: también en porosidad y espesor, y podrían diferir en absorción. Los criterios de aceptación se registraron en el control de versiones antes de correr los cálculos. La <strong>figura 5</strong> resume los dos primeros controles. Para la absorción, Γ compara entre rojo corto y largo el balance de luz transmitida y reflejada, relativo entre grupos; sin absorción vale 1.</p>
 <figure class="ancha">
  <div class="plate"><img src="fig:06_controles" alt="Dos rectas numéricas: el contraste predicho bajo variaciones de espesor frente al medido, y el observable Gamma medido frente a lo que exigiría la hipótesis de absorción"></div>
  <figcaption><span class="n">Figura 5.</span> Los dos controles, cada uno sobre una recta numérica. (a) Abscisa: contraste Δ<var>s</var> en la banda roja; barra azul: rango que cubren las cinco variantes de espesor; punto azul: caso nominal; rombo negro: valor medido. (b) Abscisa: Γ (adimensional); punteada gris: Γ = 1, sin absorción; rombo negro con barra: medido ±3σ; puntos naranjas: lo que exigiría la hipótesis de absorción con cada uno de los dos cierres.
  <span class="src">scripts/06_controles.py · resultados/06_controles.csv</span></figcaption>
  <div class="lectura"><ul>
- <li><strong>(a) Espesor.</strong> Con los espesores cambiados ±15 %, en contrafase o intercambiados entre grupos, el contraste predicho se mueve a lo sumo 0.16 y la barra no llega al rombo: <strong>el espesor no genera el contraste.</strong></li>
- <li><strong>(b) Absorción.</strong> Γ = <var>K</var>(745)/<var>K</var>(600), con <var>K</var> = [(1−<var>T</var>)/<var>R</var>]₄ / ⟨(1−<var>T</var>)/<var>R</var>⟩₁₂₃, vale exactamente 1 si ninguna muestra absorbe y cancela un error multiplicativo común de calibración. Lo medido es compatible con 1 y descarta la versión polidispersa, pero queda a sólo 2.1 σ de la monodispersa: <strong>la absorción no quedó excluida con el criterio registrado</strong>. Dato no gateado: esa absorción le daría a las muestras 1–3 una pendiente de ~2, contra 0.21 medida.</li>
+ <li><strong>(a) Espesor.</strong> Con los espesores cambiados ±15 %, en contrafase o intercambiados entre grupos, el contraste cambia a lo sumo 0.16, un 13 % del medido: <strong>es poco sensible a las variantes ensayadas.</strong> Que la barra no alcance el rombo indica, además, que esas variantes no corrigen la discrepancia del modelo.</li>
+ <li><strong>(b) Absorción.</strong> Γ = <var>K</var>(745)/<var>K</var>(600), con <var>K</var> = [(1−<var>T</var>)/<var>R</var>]₄ / ⟨(1−<var>T</var>)/<var>R</var>⟩₁₂₃, vale exactamente 1 si ninguna muestra absorbe y cancela un error multiplicativo común de calibración. Lo medido es compatible con 1 y descarta la versión polidispersa, pero queda a sólo 2.1 σ de la monodispersa: <strong>la absorción no quedó excluida con el criterio registrado</strong>. Indicio adicional, fuera del criterio registrado: esa absorción le daría a las muestras 1–3 una pendiente de ~2, contra 0.21 medida.</li>
  </ul></div>
 </figure>
 <p><strong>Tercer control, tamaño contra entorno:</strong> intercambiando dentro del modelo la distribución de poros y el entorno (porosidad y espesor) entre grupos, el tamaño de poro se queda con el <strong>81 %</strong> del contraste predicho con el cierre monodisperso y el <strong>99 %</strong> con el polidisperso, contra un criterio de 75 % fijado de antemano. Es una atribución <em>interna del modelo</em>, no una fracción medida.</p>
@@ -191,32 +192,33 @@
 <h3>4.8 La frontera, como intervalo</h3>
 <p>La <strong>figura 6</strong> reúne lo que puede decirse sobre dónde está la frontera.</p>
 <figure class="ancha">
- <div class="plate"><img src="fig:06_frontera_acotada" alt="Pendiente roja predicha en función del tamaño típico de poro, con la banda de incertidumbre del modelo, las cuatro muestras y la brecha permitida por los datos"></div>
- <figcaption><span class="n">Figura 6.</span> Pendiente roja <var>s</var> (ordenada) contra <var>x</var> = π<var>D̃</var>/<var>λ</var> (abscisa logarítmica), con <var>D̃</var> la mediana de la distribución y <var>λ</var> = 669 nm. Curva: predicción para una muestra hipotética cuya distribución se reescala a lo largo del eje, con el cierre monodisperso. Banda azul: entre esa curva y la del cierre polidisperso, que es el borde inferior del lado nanoporoso. Puntos: las cuatro muestras medidas, con barras de ±30 % en <var>x</var> y de dispersión entre regiones en <var>s</var>. Gris: la brecha de tamaños que dejan los datos.
+ <div class="plate"><img src="fig:06_frontera_acotada" alt="Pendiente roja predicha en función del tamaño típico de poro, con el rango de los modelos, las cuatro muestras y la brecha permitida por los datos"></div>
+ <figcaption><span class="n">Figura 6.</span> Pendiente roja <var>s</var> (ordenada) contra <var>x</var> = π<var>D̃</var>/<var>λ</var> (abscisa logarítmica), con <var>D̃</var> la mediana de la distribución y <var>λ</var> = 669 nm. Líneas continua y discontinua: cierres monodisperso y polidisperso con el entorno de la muestra 4, reescalando su distribución de poros. Banda azul: rango de ambos cierres y ambos entornos (porosidad y espesor); no es un intervalo de confianza. Puntos: las cuatro muestras medidas, con barras de ±30 % en <var>x</var> y de dispersión entre regiones en <var>s</var>. Gris: brecha entre tamaños típicos, considerando λ y ±30 % en <var>D</var>. Marca superior: inicio de la meseta, 1.12–1.50.
  <span class="src">scripts/06_frontera.py · resultados/06_frontera_s.csv</span></figcaption>
  <div class="lectura"><ul>
- <li><strong>El escalón de la curva <em>es</em> el cambio de régimen</strong> visto en la cantidad que se mide, y las muestras caen en sus dos extremos, donde el modelo las ubica. <strong>El escalón termina siempre entre <var>x</var> ≈ 1.1 y 1.5</strong>, sin importar el tratamiento de la dispersión dependiente: ésa es la parte robusta.</li>
- <li><strong>La banda se ensancha hacia la izquierda</strong> —el eslabón no validado del § 4.6— y <strong>la zona gris es lo que los datos no resuelven</strong>: sin muestras de tamaño intermedio, la frontera se acota pero no se mide.</li>
+ <li><strong>El escalón representa el cambio de régimen en el modelo</strong> visto en la cantidad que se mide, y las muestras caen en sus dos extremos, donde el modelo las ubica. <strong>El escalón termina siempre entre <var>x</var> ≈ 1.1 y 1.5</strong>, en los cierres y entornos ensayados.</li>
+ <li><strong>La banda se ensancha hacia la izquierda</strong> —el eslabón no validado del § 4.6— y <strong>la zona gris es lo que los datos no resuelven</strong>: sin muestras de tamaño intermedio, la transición no se mide directamente.</li>
  </ul></div>
 </figure>
-<div class="tbl"><table>
+<div class="tbl"><div class="table-title">Tabla 5. Criterios para ubicar la transición.</div><table>
  <thead><tr><th>definición</th><th class="num">intervalo en <var>x</var></th><th>estatus</th></tr></thead>
  <tbody>
- <tr class="key"><td>brecha entre los grupos medidos</td><td class="num">0.87 – 5.10</td><td>dato; sin muestras adentro</td></tr>
+ <tr class="key"><td>brecha entre los grupos medidos</td><td class="num">0.87 – 5.10</td><td>tamaños típicos; no es una frontera medida</td></tr>
  <tr><td>F1 · F2 · F3 (teoría de un poro)</td><td class="num">1.00 · 1.58–1.67 · 2.03–2.18</td><td>dentro de la brecha</td></tr>
- <tr><td>inicio de la meseta del observable</td><td class="num">1.12 – 1.50</td><td>robusto al modelo</td></tr>
- <tr><td>punto medio del observable (F<sub><var>s</var></sub>)</td><td class="num">0.38 – 1.19</td><td>depende del cierre no resuelto</td></tr>
+ <tr><td>inicio de la meseta del observable</td><td class="num">1.12 – 1.50</td><td>estable en las variantes ensayadas</td></tr>
+ <tr><td>punto medio del observable (F<sub><var>s</var></sub>)</td><td class="num">0.38 – 1.19</td><td>depende del cierre y del entorno</td></tr>
  </tbody>
+ <caption>La brecha usa medianas extremas en λ y ±30 % en <var>D</var>; no es el hueco entre percentiles de la figura 4. F<sub><var>s</var></sub> mide un cruce de pendientes del modelo: puede quedar fuera de la brecha, por lo que no hay una frontera única validada.</caption>
 </table></div>
-<p><strong>Qué le falta al modelo en las micrométricas.</strong> Se probó si el faltante de ~0.13 podía asociarse a estructura más fina que la longitud de onda dentro de los poros —las "telarañas" visibles en las imágenes—, que la segmentación no incluye. El índice de densidad de esa estructura (3.24, 4.08 y 5.34 µm⁻¹) ordena el faltante de transmitancia (correlación de rangos +1) pero no el de pendiente (+0.5); con tres muestras ninguna correlación puede ser significativa, y la lectura fijada de antemano exigía coincidencia en ambos: <strong>el control no respalda la hipótesis</strong>, aunque tampoco la descarta.</p>
+<p><strong>Estructura fina en las micrométricas.</strong> Las «telarañas» visibles en los poros, ausentes de la segmentación, podrían aportar la pendiente faltante. Su densidad (3.24, 4.08 y 5.34 µm⁻¹) ordena el residuo de transmitancia (correlación de rangos +1), pero no el de pendiente (+0.5). El criterio exigía ambos: <strong>el control no respalda la hipótesis</strong>. Con tres muestras tampoco permite descartarla.</p>
 
 <h2><span class="sec">5</span>Conclusiones</h2>
 <p><strong>La respuesta es "sí, en parte".</strong> Lo que quedó establecido:</p>
 <ol>
- <li><strong>Los dos regímenes existen acá y están bien separados:</strong> dos poblaciones morfológicas sin solape (<var>x</var> ≈ 9 contra 0.52, hueco de factor 5) y dos comportamientos espectrales distinguibles con alta significancia (Δ<var>s</var> = 1.23 en el rojo).</li>
+ <li><strong>Los dos regímenes existen acá y están bien separados:</strong> dos poblaciones morfológicas sin solape (<var>x</var> ≈ 9 contra 0.52, hueco de factor 5) y dos comportamientos espectrales claramente separados en el rojo (Δ<var>s</var> = 1.23 en el rojo).</li>
  <li><strong>Cada régimen tiene la firma que la teoría le asigna:</strong> meseta acromática (<var>s</var> ≈ 0.2) del lado Mie y caída cromática (<var>s</var> ≈ 1.4) del lado de la transición. Ese 1.4 no contradice a Rayleigh: la lámina satura y comprime el exponente, y entender esa compresión fue necesario para no leer mal el dato.</li>
  <li><strong>El cambio de régimen predice el contraste sin ajustar nada</strong>, con signo correcto y magnitud dentro de un factor 1.43, y <strong>las alternativas simples no alcanzan</strong>: el espesor mueve el contraste a lo sumo un 13 % de lo medido.</li>
- <li><strong>La frontera queda acotada, no medida:</strong> cae en la brecha 0.87 &lt; <var>x</var> &lt; 5.1, donde también la ubica la teoría de un poro (1.0–2.2), y el inicio de la meseta del observable (1.1–1.5) es robusto al modelo.</li>
+ <li><strong>La frontera no tiene una ubicación experimental única:</strong> la brecha entre tamaños típicos (0.87–5.10) contiene las definiciones de un poro (1.0–2.2) y el inicio de la meseta (1.1–1.5), pero no todos los cruces F<sub><var>s</var></sub> del modelo.</li>
 </ol>
 <p>Lo que impide decir "enteramente":</p>
 <ol>
@@ -224,7 +226,7 @@
  <li><strong>La absorción no quedó excluida con el criterio registrado</strong>, que estaba mal orientado y se dejó como falla en lugar de reescribirlo; y <strong>falta una fuente de dispersión cromática en las micrométricas</strong>, presente en dos mediciones con calibraciones independientes, así que es física y no instrumental.</li>
  <li><strong>Simplificaciones de fondo:</strong> los poros se tratan como esferas cuando la muestra 4 es una red bicontinua, del tipo que se estudia en escamas de escarabajo (Vukusic et al. 2007; Wilts et al. 2018), y las incertidumbres de tamaño, porosidad y espesor no se propagan hasta la predicción.</li>
 </ol>
-<p>El contraste queda ligado a un origen físico —dos regímenes separados por el tamaño de poro relativo a la longitud de onda— de manera compatible con todo lo medido, pero sin que la atribución causal quede establecida, y cuantitativamente sólo hasta un factor 1.4, con el punto de falla identificado y acotado en lugar de disimulado. Cerrarlo pide tres cosas: láminas de tamaño intermedio que caigan en la brecha y permitan <em>medir</em> la frontera; reflectancia y transmitancia absolutas y simultáneas sobre las mismas regiones, que resuelvan la calibración; y una caracterización estructural de la red nanoporosa, para usar un modelo de dispersión dependiente propio de un medio bicontinuo.</p>
+<p>La atribución causal sigue abierta. Para resolverla hacen falta muestras de tamaño intermedio; reflectancia y transmitancia absolutas y simultáneas sobre las mismas regiones; y una caracterización de la red nanoporosa que permita modelar su dispersión dependiente.</p>
 
 <p class="note">Verificaciones automáticas, registro previo de hipótesis, reproducción independiente, procedencia de cada variable y uso de asistentes de IA: en el <em>Apéndice</em> que acompaña a este informe.</p>
 

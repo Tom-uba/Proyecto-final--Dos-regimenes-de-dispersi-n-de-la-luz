@@ -108,9 +108,15 @@ def main() -> None:
             curvas[(ent, cierre)] = np.array([r["s_rojo"] for r in sel])
     todas = np.vstack(list(curvas.values()))
     ax.fill_between(xs, todas.min(0), todas.max(0), color=AZUL, alpha=0.16, lw=0, zorder=1,
-                    label="rango del modelo según cómo se trate la dispersión dependiente")
+                    label="rango: 2 cierres × 2 entornos (no estadístico)")
     ax.plot(xs, curvas[("4", "monodisperso")], color=AZUL, lw=2.2, zorder=3,
-            label="modelo, cierre de referencia")
+            label="monodisperso, entorno de muestra 4")
+    ax.plot(xs, curvas[("4", "desacople")], color=AZUL, ls="--", lw=1.7, zorder=3,
+            label="polidisperso, entorno de muestra 4")
+    # Intervalo de inicio de meseta reportado en informe §4.8; sólo una guía visual.
+    ax.plot([1.12, 1.50], [1.98, 1.98], color="0.25", marker="|", ms=7, lw=1.3)
+    ax.annotate("inicio de meseta\n1.12–1.50", (1.30, 1.98), xytext=(30, -5),
+                textcoords="offset points", ha="left", va="top", fontsize=8.5)
     ax.axvline(1.0, color="0.35", ls="--", lw=1.2, zorder=2)
     ax.annotate("x = 1", (1.0, 2.08), xytext=(-4, 0), textcoords="offset points",
                 ha="right", fontsize=9, color="0.35")
@@ -135,7 +141,7 @@ def main() -> None:
     ax.set_xlabel("parámetro de tamaño típico   $x = \\pi \\tilde D/\\lambda$")
     ax.set_ylabel("pendiente espectral roja  s")
     ax.grid(alpha=0.18, lw=0.6, which="both")
-    ax.legend(fontsize=8.5, loc="lower left", frameon=False)
+    ax.legend(fontsize=8, loc="lower left", frameon=False)
     ax.set_title("Al achicar los poros, la reflectancia pasa de plana a cromática", fontsize=10.5)
     FIGURES.mkdir(exist_ok=True)
     for ext in ("pdf", "png"):
