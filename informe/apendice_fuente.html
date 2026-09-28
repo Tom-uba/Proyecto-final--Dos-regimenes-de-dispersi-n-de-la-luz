@@ -1,0 +1,68 @@
+<title>Apéndice: verificación y reproducibilidad</title>
+<meta name="description" content="Apéndice del informe: batería de verificaciones, registro previo de hipótesis, reproducción independiente y uso de asistentes de IA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<!--ESTILO-->
+
+<div class="doc">
+<header class="cover col" style="max-width:48rem">
+  <div class="label">Documento complementario</div>
+  <h1>Apéndice: verificación y reproducibilidad</h1>
+  <p class="question">Cómo está sostenido cada resultado del informe <em>Dos regímenes de reflectancia</em>: verificaciones automáticas, registro previo de hipótesis, reproducción por terceros y uso de asistentes de IA.</p>
+  <div class="meta"><span><b>Tomás Chamorro</b></span><span>FCEyN–UBA</span><span class="mono">complementa a informe.pdf</span></div>
+</header>
+
+<main class="col">
+
+<h3>A.1 De dónde sale cada variable</h3>
+<p>Qué símbolo es un dato medido, cuál una constante de literatura y cuál una cantidad calculada. Esa distinción es la que separa una predicción de un ajuste: <strong>ningún símbolo de esta tabla se ajusta contra los espectros</strong>, y ésa es la condición que hace que la comparación del § 4.5 del informe sea una predicción.</p>
+<div class="tbl"><table>
+  <thead><tr><th>símbolo</th><th>qué es</th><th>de dónde sale</th></tr></thead>
+  <tbody>
+    <tr><td><var>λ</var></td><td>longitud de onda en vacío, en nm</td><td><strong>medida</strong>: eje del espectrómetro. Banda de análisis 470–750 nm</td></tr>
+    <tr><td><var>R</var>(<var>λ</var>)</td><td>reflectancia difusa</td><td><strong>medida</strong> con esfera integradora, normalizada contra un patrón blanco; 5 regiones por muestra</td></tr>
+    <tr><td><var>T</var>(<var>λ</var>)</td><td>transmitancia</td><td><strong>medida</strong> con haz directo, sin el patrón blanco: calibración independiente de la de <var>R</var></td></tr>
+    <tr><td><var>s</var></td><td>pendiente espectral, −d ln <var>R</var>/d ln <var>λ</var></td><td><strong>derivada de los datos</strong>: ajuste lineal de ln <var>R</var> contra ln <var>λ</var></td></tr>
+    <tr><td><var>D</var>, <var>P</var>(<var>D</var>)</td><td>diámetro de Feret de un poro y su distribución</td><td><strong>medidos</strong> sobre las imágenes segmentadas; la escala de píxel sale de la metadata del microscopio</td></tr>
+    <tr><td><var>φ</var></td><td>porosidad (fracción de volumen de aire)</td><td><strong>medida</strong>: fracción de área de poro en las imágenes</td></tr>
+    <tr><td><var>L</var></td><td>espesor de la capa porosa, en µm</td><td><strong>medido</strong>, con ±15 %; el espesor total se verificó sobre las imágenes</td></tr>
+    <tr><td><var>n</var><sub>sol</sub>(<var>λ</var>)</td><td>índice de refracción del sólido</td><td><strong>de literatura</strong>: curva de dispersión de polímeros ópticos, anclada en ≈ 1.47</td></tr>
+    <tr><td><var>m</var>, <var>x</var></td><td>contraste de índice y parámetro de tamaño</td><td><strong>calculados</strong>: <var>m</var> = 1/<var>n</var><sub>sol</sub> ≈ 0.68; <var>x</var> = π<var>D</var>/<var>λ</var>, poro a poro</td></tr>
+    <tr><td><var>Q</var><sub>sca</sub>, <var>g</var></td><td>eficiencia de dispersión y anisotropía</td><td><strong>calculados</strong> con la serie de Mie a partir de <var>x</var> y <var>m</var></td></tr>
+    <tr><td>ℓ*, <var>n</var><sub>ef</sub></td><td>camino libre de transporte e índice efectivo</td><td><strong>calculados</strong> a partir de <var>P</var>(<var>D</var>), <var>φ</var>, <var>Q</var><sub>sca</sub> y <var>g</var></td></tr>
+    <tr><td><var>S</var>(<var>q</var>), <var>η</var></td><td>factor de estructura y empaquetamiento</td><td><strong>calculado</strong> con <var>η</var> = <var>φ</var> medida: sin parámetro libre</td></tr>
+  </tbody>
+</table></div>
+
+<h3>A.2 Verificaciones automáticas</h3>
+<p>Cada resultado del informe está atado a una verificación que se puede volver a correr; el conjunto se ejecuta con un solo comando e imprime una línea por prueba con su evidencia numérica. De las 20, <strong>16 pasan y 4 fallan</strong>. Las fallas están registradas tal como salieron, con diagnóstico, y no se les cambió el criterio después de verlas.</p>
+<div class="tbl"><table>
+  <thead><tr><th>qué verifica</th><th>pruebas</th></tr></thead>
+  <tbody>
+    <tr><td>Datos y espectros: identidad del conjunto de datos, robustez de la pendiente al método y a la banda, separación entre grupos, ausencia de deriva del instrumento</td><td><span class="chk pass">0.1</span> <span class="chk pass">2.1</span> <span class="chk pass">2.2</span> <span class="chk pass">2.3</span></td></tr>
+    <tr><td>Morfometría: distribución de poros contra un análisis independiente, escala de las imágenes, espesores</td><td><span class="chk pass">3.1</span> <span class="chk pass">3.2</span> <span class="chk pass">3.3</span></td></tr>
+    <tr><td>Mapa de regímenes: los grupos se solapan entre sí y no con la muestra 4</td><td><span class="chk pass">4.1</span></td></tr>
+    <tr><td>Herramientas contra resultados exactos: límites de Mie, factor de estructura, Monte Carlo, absorción</td><td><span class="chk pass">5.1</span> <span class="chk pass">5.4</span> <span class="chk pass">5.5</span> <span class="chk pass">5.6</span> <span class="chk pass">6.0</span></td></tr>
+    <tr><td>Predicción sin ajuste y contraste con la referencia externa</td><td><span class="chk pass">5.2</span> <span class="chk fail">5.3</span> <span class="chk fail">5.7</span></td></tr>
+    <tr><td>Controles, frontera, atribución y estructura interna</td><td><span class="chk fail">6.1</span> <span class="chk fail">6.2</span> <span class="chk pass">6.3</span> <span class="chk pass">6.4</span></td></tr>
+  </tbody>
+</table></div>
+<p>Las cuatro fallas, en una línea cada una: <strong>5.3</strong>, la referencia externa no se reproduce con el factor de estructura monodisperso (sí sin él); <strong>5.7</strong>, la hipótesis de que la polidispersión corrige ese exceso quedó refutada; <strong>6.1</strong>, la parte de espesor pasa y la de absorción falla por un criterio mal orientado; <strong>6.2</strong>, el punto medio de la frontera depende del cierre no resuelto.</p>
+
+<h3>A.3 Registro previo de las hipótesis</h3>
+<p>Para que una prueba de hipótesis signifique algo, su criterio tiene que estar escrito antes de conocer el resultado. En este trabajo los criterios de las pruebas del factor de estructura polidisperso y de los cuatro controles se subieron al control de versiones antes de su primera ejecución, y ahí se pueden auditar. La prueba principal (§ 4.5) tenía su criterio fijado en el plan de trabajo previo, pero su código y su resultado se subieron juntos y el modelo se completó con resultados parciales a la vista: <strong>no fue una prueba ciega</strong>, y se declara así en lugar de presentarla como tal.</p>
+
+<h3>A.4 Reproducción y revisión independiente</h3>
+<p>Un agente de otro proveedor, sin ningún historial del proyecto, recibió sólo la dirección del repositorio público y el pedido de reproducirlo y criticarlo. Clonó el repositorio, instaló el entorno siguiendo únicamente el archivo de instrucciones, regeneró las figuras y corrió las 20 verificaciones: <strong>obtuvo los mismos números y las mismas cuatro fallas</strong>, y las tablas derivadas salieron idénticas a las versionadas. No encontró errores de unidades, de normalización ni en los controles numéricos.</p>
+<p>Sus objeciones de fondo se incorporaron a este informe: que la atribución del 81–99 % es interna del modelo y no una fracción medida; que tratar como esferas una red continua es frágil; que la prueba principal es permisiva y su registro previo no es auditable; que el error del control de absorción es optimista; que el intervalo de la frontera es una brecha vacía y no una ubicación; y que las incertidumbres morfológicas no se propagan. También detectó un error práctico que la verificación interna no podía ver —las pruebas abortaban en consolas con codificación heredada— que quedó corregido en el código.</p>
+<p>Su veredicto coincide con el de este informe: acepta "sí, en parte" como explicación física consistente y plausible, y no acepta formulaciones más fuertes como conclusión experimental.</p>
+
+<h3>A.5 Sobre el uso de asistentes de IA</h3>
+<p>El análisis se desarrolló con un agente de IA trabajando sobre el repositorio, con el autor decidiendo en cada bifurcación: qué datos y qué calibración usar, qué referencias descartar, qué hipótesis poner a prueba y qué dejar declarado como pendiente. La disciplina que hizo utilizable ese trabajo fue: un registro append-only como fuente de verdad, procedencia declarada en cada script, una verificación por resultado y criterios registrados antes de correr las pruebas.</p>
+<p>Esa disciplina atrapó errores del propio agente —un recorte de imagen que rompía la escala, una función que devolvía una cantidad equivocada, afirmaciones no verificadas, un criterio con el signo invertido—, pero no atrapó todo: la redacción de las conclusiones llegó a ser más fuerte que la evidencia, y eso lo detectó recién una sesión externa sin contexto. La lección metodológica es que la verificación interna y la revisión independiente cubren fallas distintas.</p>
+
+
+<footer>Apéndice del proyecto final <em>Dos regímenes de reflectancia</em>. Generado por <code>scripts/07_informe.py</code> a partir de <code>informe/apendice_fuente.html</code>.</footer>
+</main>
+</div>

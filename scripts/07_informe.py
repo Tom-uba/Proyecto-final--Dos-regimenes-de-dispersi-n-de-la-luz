@@ -18,9 +18,11 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
-FUENTE = RAIZ / "informe" / "informe_fuente.html"
-HTML = RAIZ / "informe" / "informe.html"
-PDF = RAIZ / "informe" / "informe.pdf"
+ESTILO = RAIZ / "informe" / "estilo.css"
+# Dos documentos con el mismo estilo: el informe (con límite de páginas) y el apéndice
+# de verificación, que se separó el 27/09/2026 para que el informe entre en 5 páginas.
+DOCUMENTOS = [("informe_fuente.html", "informe.html", "informe.pdf"),
+              ("apendice_fuente.html", "apendice.html", "apendice.pdf")]
 NAVEGADORES = [
     Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"),
     Path(r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"),
@@ -42,37 +44,51 @@ def incrustar(texto: str) -> tuple[str, list[str]]:
     return re.sub(r'src="fig:([\w\-]+)"', sub, texto), usadas
 
 
-def main() -> None:
-    cuerpo, usadas = incrustar(FUENTE.read_text(encoding="utf-8"))
-    doc = ('<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n'
-           '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-           '</head>\n<body>\n' + cuerpo + '\n</body>\n</html>\n')
-    HTML.write_text(doc, encoding="utf-8")
+def armar(fuente: Path, html: Path) -> list[str]:
+    """Inlinea el estilo compartido y las figuras, y escribe el HTML autocontenido."""
+    texto = fuente.read_text(encoding="utf-8")
+    if "<!--ESTILO-->" not in texto:
+        raise SystemExit(f"07_informe: {fuente.name} no tiene el marcador <!--ESTILO-->")
+    texto = texto.replace("<!--ESTILO-->",
+                          "<style>\n" + ESTILO.read_text(encoding="utf-8") + "</style>")
+    cuerpo, usadas = incrustar(texto)
+    html.write_text('<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n'
+                    '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+                    '</head>\n<body>\n' + cuerpo + '\n</body>\n</html>\n', encoding="utf-8")
+    return usadas
 
-    nav = next((p for p in NAVEGADORES if p.exists()), None)
-    if nav is None:
-        raise SystemExit("07_informe: no hay Edge ni Chrome para imprimir el PDF")
 
+def imprimir(nav: Path, html: Path, pdf: Path) -> None:
     # El PDF viejo se borra ANTES de imprimir. Si no, un fallo silencioso del navegador
-    # (pasa cuando ya hay otra instancia abierta) deja el archivo anterior en su lugar y
-    # parece que salió bien: fue exactamente el error del 24/09/2026, que dejó el PDF
-    # desactualizado en el repositorio mientras el HTML sí tenía las figuras nuevas.
+    # (pasa cuando el archivo está abierto en un visor) deja el anterior en su lugar y
+    # parece que salió bien: fue el error del 24/09/2026, que dejó el PDF desactualizado
+    # en el repositorio mientras el HTML sí tenía las figuras nuevas.
     try:
-        PDF.unlink(missing_ok=True)
+        pdf.unlink(missing_ok=True)
     except PermissionError:
-        raise SystemExit("07_informe: informe.pdf está abierto en un visor y no se puede "
+        raise SystemExit(f"07_informe: {pdf.name} está abierto en un visor y no se puede "
                          "reemplazar. Cerralo y volvé a correr el script.") from None
     with tempfile.TemporaryDirectory() as perfil:
         subprocess.run([str(nav), "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
-                        f"--user-data-dir={perfil}", f"--print-to-pdf={PDF}",
-                        "--virtual-time-budget=15000", HTML.as_uri()],
+                        f"--user-data-dir={perfil}", f"--print-to-pdf={pdf}",
+                        "--virtual-time-budget=15000", html.as_uri()],
                        check=False, capture_output=True, timeout=180)
-    if not PDF.exists():
-        raise SystemExit("07_informe: el navegador no escribió el PDF (¿otra instancia abierta?)")
-    if PDF.stat().st_mtime < HTML.stat().st_mtime:
-        raise SystemExit("07_informe: el PDF es más viejo que el HTML: no se regeneró")
-    print(f"07_informe: {len(usadas)} figuras, HTML {HTML.stat().st_size / 1e6:.1f} MB, "
-          f"PDF {PDF.stat().st_size / 1e6:.1f} MB")
+    if not pdf.exists():
+        raise SystemExit(f"07_informe: el navegador no escribió {pdf.name}")
+    if pdf.stat().st_mtime < html.stat().st_mtime:
+        raise SystemExit(f"07_informe: {pdf.name} es más viejo que el HTML: no se regeneró")
+
+
+def main() -> None:
+    nav = next((p for p in NAVEGADORES if p.exists()), None)
+    if nav is None:
+        raise SystemExit("07_informe: no hay Edge ni Chrome para imprimir el PDF")
+    for f, h, p in DOCUMENTOS:
+        fuente, html, pdf = RAIZ / "informe" / f, RAIZ / "informe" / h, RAIZ / "informe" / p
+        usadas = armar(fuente, html)
+        imprimir(nav, html, pdf)
+        print(f"07_informe: {p} — {len(usadas)} figuras, "
+              f"HTML {html.stat().st_size / 1e6:.1f} MB, PDF {pdf.stat().st_size / 1e6:.1f} MB")
 
 
 if __name__ == "__main__":

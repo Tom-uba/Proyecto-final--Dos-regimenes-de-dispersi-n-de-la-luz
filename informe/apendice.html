@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<title>Apéndice: verificación y reproducibilidad</title>
+<meta name="description" content="Apéndice del informe: batería de verificaciones, registro previo de hipótesis, reproducción independiente y uso de asistentes de IA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  :root {
+    --paper:#f3f5f8; --sheet:#ffffff; --ink:#1a1f27; --ink-2:#4d5664; --ink-3:#7a8391;
+    --rule:#d5dae2; --rayleigh:#33518f; --mie:#a1552f; --tint-r:#e6ebf5; --tint-m:#f4e9e2;
+    --pass:#2d7650; --pass-bg:#e3f1e9; --fail:#ad3535; --fail-bg:#f7e4e4;
+    --plate:#ffffff; --plate-edge:#d5dae2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#11141a; --sheet:#171b22; --ink:#e3e6eb; --ink-2:#a8b0bc; --ink-3:#768090;
+      --rule:#2b313b; --rayleigh:#92aae2; --mie:#d79c77; --tint-r:#1a2336; --tint-m:#2c211a;
+      --pass:#72c59c; --pass-bg:#16291f; --fail:#e88a8a; --fail-bg:#321b1b;
+      --plate:#f4f5f7; --plate-edge:#2b313b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#11141a; --sheet:#171b22; --ink:#e3e6eb; --ink-2:#a8b0bc; --ink-3:#768090;
+    --rule:#2b313b; --rayleigh:#92aae2; --mie:#d79c77; --tint-r:#1a2336; --tint-m:#2c211a;
+    --pass:#72c59c; --pass-bg:#16291f; --fail:#e88a8a; --fail-bg:#321b1b;
+    --plate:#f4f5f7; --plate-edge:#2b313b;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    font-size: 17px; line-height: 1.6; padding-inline: 20px; font-optical-sizing: auto;
+  }
+  .doc { max-width: 1040px; margin: 0 auto; padding-block: 56px 96px; }
+  .col { max-width: 42rem; margin-inline: auto; }
+
+  h1, h2, h3, h4, .label, .chk, figcaption .n, th {
+    font-family: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  }
+  h1 { font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.1rem); line-height: 1.05; font-weight: 600;
+       letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+  h2 { font-size: 1.6rem; line-height: 1.2; font-weight: 600; margin: 3.4rem 0 1rem;
+       text-wrap: balance; display: flex; gap: 0.7rem; align-items: baseline;
+       border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+  h2 .sec { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.85rem;
+            font-weight: 500; color: var(--ink-3); }
+  h3 { font-size: 1.16rem; font-weight: 600; margin: 2.1rem 0 0.5rem; text-wrap: balance; }
+  h4 { font-size: 1rem; font-weight: 600; margin: 1.4rem 0 0.35rem; }
+  p { margin: 0 0 0.95rem; }
+  a { color: var(--rayleigh); text-underline-offset: 2px; }
+  strong { font-weight: 600; }
+  ul, ol { margin: 0.3rem 0 1rem; padding-left: 1.3rem; }
+  li { margin: 0.3rem 0; }
+  code, .mono { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; font-size: 0.84em; }
+  code { background: var(--tint-r); padding: 0.05em 0.3em; border-radius: 3px; word-break: break-word; }
+  var { font-style: italic; font-family: "Source Serif 4", Georgia, serif; }
+
+  .label { font-size: 0.74rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+
+  header.cover { display: grid; gap: 1.1rem; }
+  .question { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); margin: 0; max-width: 44rem; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.4rem 2rem; font-size: 0.92rem; color: var(--ink-2); }
+  .meta b { font-weight: 600; color: var(--ink); }
+
+  .strip { margin-top: 1.4rem; }
+  .strip-bar { position: relative; height: 22px; border-radius: 2px;
+    background: linear-gradient(90deg, #3a63e8 0%, #19a7c9 11%, #3cbf5a 25%, #c9d43a 36%, #f2c230 43%, #f28a22 53%, #e2482a 68%, #b81f24 82%, #7a1418 100%);
+    opacity: 0.9; }
+  .strip-mask { position: absolute; top: -3px; bottom: -3px; left: 32.14%; width: 2.86%;
+    background: repeating-linear-gradient(135deg, rgba(20,20,20,.75) 0 2px, rgba(255,255,255,.35) 2px 4px); }
+  .strip-cross { position: absolute; top: -7px; bottom: -7px; left: 41.43%; width: 0; border-left: 1.5px dashed var(--ink); }
+  .strip-red { position: absolute; top: 100%; left: 46.43%; right: 1.79%; height: 5px; margin-top: 3px; background: var(--ink-2); border-radius: 1px; }
+  .strip-ticks { position: relative; height: 2.6rem; font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--ink-3); }
+  .strip-ticks span { position: absolute; top: 12px; transform: translateX(-50%); white-space: nowrap; }
+  .strip-ticks span:first-child { transform: none; }
+  .strip-ticks span:last-child { transform: translateX(-100%); }
+
+  .abstract { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 1.4rem 1.6rem; margin-top: 2.4rem; }
+  .abstract p:last-child { margin-bottom: 0; }
+  .verdict { font-family: "IBM Plex Sans Condensed", sans-serif; font-weight: 600; font-size: 1.3rem; color: var(--rayleigh); margin: 0.15rem 0 0.6rem; }
+
+  .chk { display: inline-block; font-size: 0.74rem; font-weight: 500; letter-spacing: 0.02em; line-height: 1.35;
+         padding: 0 0.42em; border-radius: 3px; vertical-align: 0.12em; white-space: nowrap; }
+  .chk.pass { color: var(--pass); background: var(--pass-bg); }
+  .chk.fail { color: var(--fail); background: var(--fail-bg); }
+  .chk.pass::before { content: "✓ "; }
+  .chk.fail::before { content: "✗ "; }
+
+  .eq { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0.7rem 0 1.1rem;
+        padding: 0.4rem 0 0.4rem 1.2rem; border-left: 2px solid var(--rule); font-size: 1.06rem; }
+  .eq .no { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--ink-3); }
+
+  figure { margin: 2rem 0 2.4rem; }
+  .plate { background: var(--plate); border: 1px solid var(--plate-edge); border-radius: 3px; padding: 10px; }
+  .plate img { display: block; width: 100%; height: auto; max-width: 100%; }
+  figcaption { max-width: 42rem; margin: 0.7rem auto 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-2); }
+  figcaption .n { font-weight: 600; color: var(--ink); margin-right: 0.3rem; }
+  figcaption .src { display: block; margin-top: 0.35rem; font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--ink-3); }
+  .lectura { max-width: 42rem; margin: 0.9rem auto 0; background: var(--sheet); border: 1px solid var(--rule);
+             border-radius: 4px; padding: 0.9rem 1.1rem; font-size: 0.93rem; }
+  .lectura h4 { margin: 0 0 0.4rem; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .lectura ul { margin: 0; padding-left: 1.1rem; }
+  .lectura li { margin: 0.28rem 0; }
+
+  .tbl { overflow-x: auto; margin: 1rem 0 1.4rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; border-bottom: 1.5px solid var(--ink-3); }
+  td.num, th.num { text-align: right; }
+  tr.key td { background: var(--tint-r); }
+  caption { caption-side: bottom; text-align: left; font-size: 0.82rem; color: var(--ink-3); padding-top: 0.45rem; }
+
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0 1.6rem; }
+  .side { padding: 1rem 1.15rem; border-radius: 4px; }
+  .side.r { background: var(--tint-r); }
+  .side.m { background: var(--tint-m); }
+  .side h4 { margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; }
+  .side.r h4 { color: var(--rayleigh); }
+  .side.m h4 { color: var(--mie); }
+  .side p { margin: 0; font-size: 0.93rem; }
+
+  .note { font-size: 0.93rem; color: var(--ink-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.8rem 0; margin: 1.3rem 0; }
+  .refs li { font-size: 0.9rem; margin: 0.4rem 0; }
+  footer { margin-top: 4rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: 0.82rem; color: var(--ink-3); }
+
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .two { grid-template-columns: 1fr; }
+    .abstract { padding: 1.1rem; }
+  }
+  @media print {
+    :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+      --paper:#ffffff; --sheet:#ffffff; --ink:#111; --ink-2:#333; --ink-3:#666; --rule:#cfd4db;
+      --rayleigh:#33518f; --mie:#a1552f; --tint-r:#eef1f7; --tint-m:#f6eee9;
+      --pass:#2d7650; --pass-bg:#e3f1e9; --fail:#ad3535; --fail-bg:#f7e4e4; --plate:#fff; --plate-edge:#d5dae2;
+    }
+    /* Compacto para impresión (27/09/2026): el informe tiene un límite de páginas.
+       Las dos causas de los huecos en blanco eran (1) `break-inside: avoid` sobre
+       bloques altos —una figura con su pie y su recuadro de lectura no entraba y
+       empujaba una página entera— y (2) figuras a ancho completo. Ahora sólo la
+       figura con su pie evita el corte, y la imagen tiene altura máxima. */
+    @page { size: A4; margin: 12mm 12mm 11mm; }
+    body { font-size: 8.3pt; line-height: 1.31; padding-inline: 0; }
+    .doc { padding-block: 0; max-width: none; }
+    .col { max-width: none; }
+
+    /* Dos columnas, como un paper: entra ~25 % más texto por página y desaparecen los
+       renglones sueltos. Lo que es ancho —figuras, tablas, resumen y títulos de sección—
+       cruza las dos columnas; el resto fluye. */
+    main.col { columns: 2; column-gap: 6.5mm; }
+    /* Sólo el resumen y las figuras cruzan las dos columnas: cada elemento que cruza
+       obliga a cortar las columnas y deja media página vacía. Títulos y tablas fluyen
+       dentro de la columna. */
+    .abstract { column-span: all; }
+    figure { break-inside: avoid; }
+    figure.ancha { column-span: all; }
+    figure.ancha .plate img { max-height: 38mm; }
+    .two, .tbl, .lectura { break-inside: avoid; }
+
+    h1 { font-size: 15pt; }
+    .question { font-size: 9pt; margin-top: 3pt; }
+    .meta { font-size: 7.6pt; margin-top: 6pt; gap: 2pt 14pt; }
+    .label { font-size: 6.8pt; }
+    .strip { display: none; }
+    .strip-bar { height: 11px; }
+    .strip-ticks { height: 1.5rem; font-size: 6.2pt; }
+
+    h2 { font-size: 11.4pt; margin: 9pt 0 4pt; padding-top: 5pt; break-after: avoid; }
+    h3 { font-size: 9.4pt; margin: 7pt 0 2pt; break-after: avoid; }
+    h4 { font-size: 9pt; margin: 6pt 0 2pt; break-after: avoid; }
+    p { margin-bottom: 4.5pt; }
+    ul, ol { margin: 2pt 0 5pt; padding-left: 13pt; }
+    li { margin: 1.5pt 0; }
+
+    .abstract { padding: 7pt 9pt; margin-top: 9pt; }
+    .verdict { font-size: 10.5pt; margin: 1pt 0 4pt; }
+    .eq { font-size: 9.2pt; margin: 3pt 0 5pt; padding: 2pt 0 2pt 9pt; }
+    .note { padding: 5pt 0; margin: 6pt 0; font-size: 8.4pt; }
+    .two { gap: 6pt; margin: 6pt 0 7pt; }
+    .side { padding: 6pt 8pt; }
+    .side p { font-size: 8.3pt; }
+
+    figure { margin: 8pt 0 9pt; break-inside: avoid; }
+    .plate { padding: 3px; }
+    .plate img { max-height: 44mm; width: auto; max-width: 100%; margin: 0 auto; }
+    figcaption { font-size: 7.2pt; line-height: 1.35; margin-top: 3pt; max-width: none; }
+    figcaption .src { font-size: 6.4pt; margin-top: 1pt; }
+    .lectura { font-size: 7.3pt; padding: 4pt 6pt; margin-top: 3pt; max-width: none; }
+    .lectura h4 { font-size: 6.8pt; margin-bottom: 2pt; }
+
+    .tbl { margin: 4pt 0 6pt; }
+    table { font-size: 7.3pt; }
+    th, td { padding: 1.8pt 4pt; }
+    caption { font-size: 7pt; padding-top: 2pt; }
+
+    .refs li { font-size: 7.1pt; margin: 1pt 0; }
+    footer { margin-top: 10pt; padding-top: 5pt; font-size: 7pt; }
+    a { color: inherit; }
+  }
+</style>
+
+<div class="doc">
+<header class="cover col" style="max-width:48rem">
+  <div class="label">Documento complementario</div>
+  <h1>Apéndice: verificación y reproducibilidad</h1>
+  <p class="question">Cómo está sostenido cada resultado del informe <em>Dos regímenes de reflectancia</em>: verificaciones automáticas, registro previo de hipótesis, reproducción por terceros y uso de asistentes de IA.</p>
+  <div class="meta"><span><b>Tomás Chamorro</b></span><span>FCEyN–UBA</span><span class="mono">complementa a informe.pdf</span></div>
+</header>
+
+<main class="col">
+
+<h3>A.1 De dónde sale cada variable</h3>
+<p>Qué símbolo es un dato medido, cuál una constante de literatura y cuál una cantidad calculada. Esa distinción es la que separa una predicción de un ajuste: <strong>ningún símbolo de esta tabla se ajusta contra los espectros</strong>, y ésa es la condición que hace que la comparación del § 4.5 del informe sea una predicción.</p>
+<div class="tbl"><table>
+  <thead><tr><th>símbolo</th><th>qué es</th><th>de dónde sale</th></tr></thead>
+  <tbody>
+    <tr><td><var>λ</var></td><td>longitud de onda en vacío, en nm</td><td><strong>medida</strong>: eje del espectrómetro. Banda de análisis 470–750 nm</td></tr>
+    <tr><td><var>R</var>(<var>λ</var>)</td><td>reflectancia difusa</td><td><strong>medida</strong> con esfera integradora, normalizada contra un patrón blanco; 5 regiones por muestra</td></tr>
+    <tr><td><var>T</var>(<var>λ</var>)</td><td>transmitancia</td><td><strong>medida</strong> con haz directo, sin el patrón blanco: calibración independiente de la de <var>R</var></td></tr>
+    <tr><td><var>s</var></td><td>pendiente espectral, −d ln <var>R</var>/d ln <var>λ</var></td><td><strong>derivada de los datos</strong>: ajuste lineal de ln <var>R</var> contra ln <var>λ</var></td></tr>
+    <tr><td><var>D</var>, <var>P</var>(<var>D</var>)</td><td>diámetro de Feret de un poro y su distribución</td><td><strong>medidos</strong> sobre las imágenes segmentadas; la escala de píxel sale de la metadata del microscopio</td></tr>
+    <tr><td><var>φ</var></td><td>porosidad (fracción de volumen de aire)</td><td><strong>medida</strong>: fracción de área de poro en las imágenes</td></tr>
+    <tr><td><var>L</var></td><td>espesor de la capa porosa, en µm</td><td><strong>medido</strong>, con ±15 %; el espesor total se verificó sobre las imágenes</td></tr>
+    <tr><td><var>n</var><sub>sol</sub>(<var>λ</var>)</td><td>índice de refracción del sólido</td><td><strong>de literatura</strong>: curva de dispersión de polímeros ópticos, anclada en ≈ 1.47</td></tr>
+    <tr><td><var>m</var>, <var>x</var></td><td>contraste de índice y parámetro de tamaño</td><td><strong>calculados</strong>: <var>m</var> = 1/<var>n</var><sub>sol</sub> ≈ 0.68; <var>x</var> = π<var>D</var>/<var>λ</var>, poro a poro</td></tr>
+    <tr><td><var>Q</var><sub>sca</sub>, <var>g</var></td><td>eficiencia de dispersión y anisotropía</td><td><strong>calculados</strong> con la serie de Mie a partir de <var>x</var> y <var>m</var></td></tr>
+    <tr><td>ℓ*, <var>n</var><sub>ef</sub></td><td>camino libre de transporte e índice efectivo</td><td><strong>calculados</strong> a partir de <var>P</var>(<var>D</var>), <var>φ</var>, <var>Q</var><sub>sca</sub> y <var>g</var></td></tr>
+    <tr><td><var>S</var>(<var>q</var>), <var>η</var></td><td>factor de estructura y empaquetamiento</td><td><strong>calculado</strong> con <var>η</var> = <var>φ</var> medida: sin parámetro libre</td></tr>
+  </tbody>
+</table></div>
+
+<h3>A.2 Verificaciones automáticas</h3>
+<p>Cada resultado del informe está atado a una verificación que se puede volver a correr; el conjunto se ejecuta con un solo comando e imprime una línea por prueba con su evidencia numérica. De las 20, <strong>16 pasan y 4 fallan</strong>. Las fallas están registradas tal como salieron, con diagnóstico, y no se les cambió el criterio después de verlas.</p>
+<div class="tbl"><table>
+  <thead><tr><th>qué verifica</th><th>pruebas</th></tr></thead>
+  <tbody>
+    <tr><td>Datos y espectros: identidad del conjunto de datos, robustez de la pendiente al método y a la banda, separación entre grupos, ausencia de deriva del instrumento</td><td><span class="chk pass">0.1</span> <span class="chk pass">2.1</span> <span class="chk pass">2.2</span> <span class="chk pass">2.3</span></td></tr>
+    <tr><td>Morfometría: distribución de poros contra un análisis independiente, escala de las imágenes, espesores</td><td><span class="chk pass">3.1</span> <span class="chk pass">3.2</span> <span class="chk pass">3.3</span></td></tr>
+    <tr><td>Mapa de regímenes: los grupos se solapan entre sí y no con la muestra 4</td><td><span class="chk pass">4.1</span></td></tr>
+    <tr><td>Herramientas contra resultados exactos: límites de Mie, factor de estructura, Monte Carlo, absorción</td><td><span class="chk pass">5.1</span> <span class="chk pass">5.4</span> <span class="chk pass">5.5</span> <span class="chk pass">5.6</span> <span class="chk pass">6.0</span></td></tr>
+    <tr><td>Predicción sin ajuste y contraste con la referencia externa</td><td><span class="chk pass">5.2</span> <span class="chk fail">5.3</span> <span class="chk fail">5.7</span></td></tr>
+    <tr><td>Controles, frontera, atribución y estructura interna</td><td><span class="chk fail">6.1</span> <span class="chk fail">6.2</span> <span class="chk pass">6.3</span> <span class="chk pass">6.4</span></td></tr>
+  </tbody>
+</table></div>
+<p>Las cuatro fallas, en una línea cada una: <strong>5.3</strong>, la referencia externa no se reproduce con el factor de estructura monodisperso (sí sin él); <strong>5.7</strong>, la hipótesis de que la polidispersión corrige ese exceso quedó refutada; <strong>6.1</strong>, la parte de espesor pasa y la de absorción falla por un criterio mal orientado; <strong>6.2</strong>, el punto medio de la frontera depende del cierre no resuelto.</p>
+
+<h3>A.3 Registro previo de las hipótesis</h3>
+<p>Para que una prueba de hipótesis signifique algo, su criterio tiene que estar escrito antes de conocer el resultado. En este trabajo los criterios de las pruebas del factor de estructura polidisperso y de los cuatro controles se subieron al control de versiones antes de su primera ejecución, y ahí se pueden auditar. La prueba principal (§ 4.5) tenía su criterio fijado en el plan de trabajo previo, pero su código y su resultado se subieron juntos y el modelo se completó con resultados parciales a la vista: <strong>no fue una prueba ciega</strong>, y se declara así en lugar de presentarla como tal.</p>
+
+<h3>A.4 Reproducción y revisión independiente</h3>
+<p>Un agente de otro proveedor, sin ningún historial del proyecto, recibió sólo la dirección del repositorio público y el pedido de reproducirlo y criticarlo. Clonó el repositorio, instaló el entorno siguiendo únicamente el archivo de instrucciones, regeneró las figuras y corrió las 20 verificaciones: <strong>obtuvo los mismos números y las mismas cuatro fallas</strong>, y las tablas derivadas salieron idénticas a las versionadas. No encontró errores de unidades, de normalización ni en los controles numéricos.</p>
+<p>Sus objeciones de fondo se incorporaron a este informe: que la atribución del 81–99 % es interna del modelo y no una fracción medida; que tratar como esferas una red continua es frágil; que la prueba principal es permisiva y su registro previo no es auditable; que el error del control de absorción es optimista; que el intervalo de la frontera es una brecha vacía y no una ubicación; y que las incertidumbres morfológicas no se propagan. También detectó un error práctico que la verificación interna no podía ver —las pruebas abortaban en consolas con codificación heredada— que quedó corregido en el código.</p>
+<p>Su veredicto coincide con el de este informe: acepta "sí, en parte" como explicación física consistente y plausible, y no acepta formulaciones más fuertes como conclusión experimental.</p>
+
+<h3>A.5 Sobre el uso de asistentes de IA</h3>
+<p>El análisis se desarrolló con un agente de IA trabajando sobre el repositorio, con el autor decidiendo en cada bifurcación: qué datos y qué calibración usar, qué referencias descartar, qué hipótesis poner a prueba y qué dejar declarado como pendiente. La disciplina que hizo utilizable ese trabajo fue: un registro append-only como fuente de verdad, procedencia declarada en cada script, una verificación por resultado y criterios registrados antes de correr las pruebas.</p>
+<p>Esa disciplina atrapó errores del propio agente —un recorte de imagen que rompía la escala, una función que devolvía una cantidad equivocada, afirmaciones no verificadas, un criterio con el signo invertido—, pero no atrapó todo: la redacción de las conclusiones llegó a ser más fuerte que la evidencia, y eso lo detectó recién una sesión externa sin contexto. La lección metodológica es que la verificación interna y la revisión independiente cubren fallas distintas.</p>
+
+
+<footer>Apéndice del proyecto final <em>Dos regímenes de reflectancia</em>. Generado por <code>scripts/07_informe.py</code> a partir de <code>informe/apendice_fuente.html</code>.</footer>
+</main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+  :root {
+    --paper:#f3f5f8; --sheet:#ffffff; --ink:#1a1f27; --ink-2:#4d5664; --ink-3:#7a8391;
+    --rule:#d5dae2; --rayleigh:#33518f; --mie:#a1552f; --tint-r:#e6ebf5; --tint-m:#f4e9e2;
+    --pass:#2d7650; --pass-bg:#e3f1e9; --fail:#ad3535; --fail-bg:#f7e4e4;
+    --plate:#ffffff; --plate-edge:#d5dae2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#11141a; --sheet:#171b22; --ink:#e3e6eb; --ink-2:#a8b0bc; --ink-3:#768090;
+      --rule:#2b313b; --rayleigh:#92aae2; --mie:#d79c77; --tint-r:#1a2336; --tint-m:#2c211a;
+      --pass:#72c59c; --pass-bg:#16291f; --fail:#e88a8a; --fail-bg:#321b1b;
+      --plate:#f4f5f7; --plate-edge:#2b313b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#11141a; --sheet:#171b22; --ink:#e3e6eb; --ink-2:#a8b0bc; --ink-3:#768090;
+    --rule:#2b313b; --rayleigh:#92aae2; --mie:#d79c77; --tint-r:#1a2336; --tint-m:#2c211a;
+    --pass:#72c59c; --pass-bg:#16291f; --fail:#e88a8a; --fail-bg:#321b1b;
+    --plate:#f4f5f7; --plate-edge:#2b313b;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    font-size: 17px; line-height: 1.6; padding-inline: 20px; font-optical-sizing: auto;
+  }
+  .doc { max-width: 1040px; margin: 0 auto; padding-block: 56px 96px; }
+  .col { max-width: 42rem; margin-inline: auto; }
+
+  h1, h2, h3, h4, .label, .chk, figcaption .n, th {
+    font-family: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  }
+  h1 { font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.1rem); line-height: 1.05; font-weight: 600;
+       letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+  h2 { font-size: 1.6rem; line-height: 1.2; font-weight: 600; margin: 3.4rem 0 1rem;
+       text-wrap: balance; display: flex; gap: 0.7rem; align-items: baseline;
+       border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+  h2 .sec { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.85rem;
+            font-weight: 500; color: var(--ink-3); }
+  h3 { font-size: 1.16rem; font-weight: 600; margin: 2.1rem 0 0.5rem; text-wrap: balance; }
+  h4 { font-size: 1rem; font-weight: 600; margin: 1.4rem 0 0.35rem; }
+  p { margin: 0 0 0.95rem; }
+  a { color: var(--rayleigh); text-underline-offset: 2px; }
+  strong { font-weight: 600; }
+  ul, ol { margin: 0.3rem 0 1rem; padding-left: 1.3rem; }
+  li { margin: 0.3rem 0; }
+  code, .mono { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; font-size: 0.84em; }
+  code { background: var(--tint-r); padding: 0.05em 0.3em; border-radius: 3px; word-break: break-word; }
+  var { font-style: italic; font-family: "Source Serif 4", Georgia, serif; }
+
+  .label { font-size: 0.74rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+
+  header.cover { display: grid; gap: 1.1rem; }
+  .question { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); margin: 0; max-width: 44rem; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.4rem 2rem; font-size: 0.92rem; color: var(--ink-2); }
+  .meta b { font-weight: 600; color: var(--ink); }
+
+  .strip { margin-top: 1.4rem; }
+  .strip-bar { position: relative; height: 22px; border-radius: 2px;
+    background: linear-gradient(90deg, #3a63e8 0%, #19a7c9 11%, #3cbf5a 25%, #c9d43a 36%, #f2c230 43%, #f28a22 53%, #e2482a 68%, #b81f24 82%, #7a1418 100%);
+    opacity: 0.9; }
+  .strip-mask { position: absolute; top: -3px; bottom: -3px; left: 32.14%; width: 2.86%;
+    background: repeating-linear-gradient(135deg, rgba(20,20,20,.75) 0 2px, rgba(255,255,255,.35) 2px 4px); }
+  .strip-cross { position: absolute; top: -7px; bottom: -7px; left: 41.43%; width: 0; border-left: 1.5px dashed var(--ink); }
+  .strip-red { position: absolute; top: 100%; left: 46.43%; right: 1.79%; height: 5px; margin-top: 3px; background: var(--ink-2); border-radius: 1px; }
+  .strip-ticks { position: relative; height: 2.6rem; font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--ink-3); }
+  .strip-ticks span { position: absolute; top: 12px; transform: translateX(-50%); white-space: nowrap; }
+  .strip-ticks span:first-child { transform: none; }
+  .strip-ticks span:last-child { transform: translateX(-100%); }
+
+  .abstract { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 1.4rem 1.6rem; margin-top: 2.4rem; }
+  .abstract p:last-child { margin-bottom: 0; }
+  .verdict { font-family: "IBM Plex Sans Condensed", sans-serif; font-weight: 600; font-size: 1.3rem; color: var(--rayleigh); margin: 0.15rem 0 0.6rem; }
+
+  .chk { display: inline-block; font-size: 0.74rem; font-weight: 500; letter-spacing: 0.02em; line-height: 1.35;
+         padding: 0 0.42em; border-radius: 3px; vertical-align: 0.12em; white-space: nowrap; }
+  .chk.pass { color: var(--pass); background: var(--pass-bg); }
+  .chk.fail { color: var(--fail); background: var(--fail-bg); }
+  .chk.pass::before { content: "✓ "; }
+  .chk.fail::before { content: "✗ "; }
+
+  .eq { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0.7rem 0 1.1rem;
+        padding: 0.4rem 0 0.4rem 1.2rem; border-left: 2px solid var(--rule); font-size: 1.06rem; }
+  .eq .no { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--ink-3); }
+
+  figure { margin: 2rem 0 2.4rem; }
+  .plate { background: var(--plate); border: 1px solid var(--plate-edge); border-radius: 3px; padding: 10px; }
+  .plate img { display: block; width: 100%; height: auto; max-width: 100%; }
+  figcaption { max-width: 42rem; margin: 0.7rem auto 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-2); }
+  figcaption .n { font-weight: 600; color: var(--ink); margin-right: 0.3rem; }
+  figcaption .src { display: block; margin-top: 0.35rem; font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--ink-3); }
+  .lectura { max-width: 42rem; margin: 0.9rem auto 0; background: var(--sheet); border: 1px solid var(--rule);
+             border-radius: 4px; padding: 0.9rem 1.1rem; font-size: 0.93rem; }
+  .lectura h4 { margin: 0 0 0.4rem; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .lectura ul { margin: 0; padding-left: 1.1rem; }
+  .lectura li { margin: 0.28rem 0; }
+
+  .tbl { overflow-x: auto; margin: 1rem 0 1.4rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; border-bottom: 1.5px solid var(--ink-3); }
+  td.num, th.num { text-align: right; }
+  tr.key td { background: var(--tint-r); }
+  caption { caption-side: bottom; text-align: left; font-size: 0.82rem; color: var(--ink-3); padding-top: 0.45rem; }
+
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0 1.6rem; }
+  .side { padding: 1rem 1.15rem; border-radius: 4px; }
+  .side.r { background: var(--tint-r); }
+  .side.m { background: var(--tint-m); }
+  .side h4 { margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; }
+  .side.r h4 { color: var(--rayleigh); }
+  .side.m h4 { color: var(--mie); }
+  .side p { margin: 0; font-size: 0.93rem; }
+
+  .note { font-size: 0.93rem; color: var(--ink-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.8rem 0; margin: 1.3rem 0; }
+  .refs li { font-size: 0.9rem; margin: 0.4rem 0; }
+  footer { margin-top: 4rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: 0.82rem; color: var(--ink-3); }
+
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .two { grid-template-columns: 1fr; }
+    .abstract { padding: 1.1rem; }
+  }
+  @media print {
+    :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+      --paper:#ffffff; --sheet:#ffffff; --ink:#111; --ink-2:#333; --ink-3:#666; --rule:#cfd4db;
+      --rayleigh:#33518f; --mie:#a1552f; --tint-r:#eef1f7; --tint-m:#f6eee9;
+      --pass:#2d7650; --pass-bg:#e3f1e9; --fail:#ad3535; --fail-bg:#f7e4e4; --plate:#fff; --plate-edge:#d5dae2;
+    }
+    /* Compacto para impresión (27/09/2026): el informe tiene un límite de páginas.
+       Las dos causas de los huecos en blanco eran (1) `break-inside: avoid` sobre
+       bloques altos —una figura con su pie y su recuadro de lectura no entraba y
+       empujaba una página entera— y (2) figuras a ancho completo. Ahora sólo la
+       figura con su pie evita el corte, y la imagen tiene altura máxima. */
+    @page { size: A4; margin: 12mm 12mm 11mm; }
+    body { font-size: 8.3pt; line-height: 1.31; padding-inline: 0; }
+    .doc { padding-block: 0; max-width: none; }
+    .col { max-width: none; }
+
+    /* Dos columnas, como un paper: entra ~25 % más texto por página y desaparecen los
+       renglones sueltos. Lo que es ancho —figuras, tablas, resumen y títulos de sección—
+       cruza las dos columnas; el resto fluye. */
+    main.col { columns: 2; column-gap: 6.5mm; }
+    /* Sólo el resumen y las figuras cruzan las dos columnas: cada elemento que cruza
+       obliga a cortar las columnas y deja media página vacía. Títulos y tablas fluyen
+       dentro de la columna. */
+    .abstract { column-span: all; }
+    figure { break-inside: avoid; }
+    figure.ancha { column-span: all; }
+    figure.ancha .plate img { max-height: 38mm; }
+    .two, .tbl, .lectura { break-inside: avoid; }
+
+    h1 { font-size: 15pt; }
+    .question { font-size: 9pt; margin-top: 3pt; }
+    .meta { font-size: 7.6pt; margin-top: 6pt; gap: 2pt 14pt; }
+    .label { font-size: 6.8pt; }
+    .strip { display: none; }
+    .strip-bar { height: 11px; }
+    .strip-ticks { height: 1.5rem; font-size: 6.2pt; }
+
+    h2 { font-size: 11.4pt; margin: 9pt 0 4pt; padding-top: 5pt; break-after: avoid; }
+    h3 { font-size: 9.4pt; margin: 7pt 0 2pt; break-after: avoid; }
+    h4 { font-size: 9pt; margin: 6pt 0 2pt; break-after: avoid; }
+    p { margin-bottom: 4.5pt; }
+    ul, ol { margin: 2pt 0 5pt; padding-left: 13pt; }
+    li { margin: 1.5pt 0; }
+
+    .abstract { padding: 7pt 9pt; margin-top: 9pt; }
+    .verdict { font-size: 10.5pt; margin: 1pt 0 4pt; }
+    .eq { font-size: 9.2pt; margin: 3pt 0 5pt; padding: 2pt 0 2pt 9pt; }
+    .note { padding: 5pt 0; margin: 6pt 0; font-size: 8.4pt; }
+    .two { gap: 6pt; margin: 6pt 0 7pt; }
+    .side { padding: 6pt 8pt; }
+    .side p { font-size: 8.3pt; }
+
+    figure { margin: 8pt 0 9pt; break-inside: avoid; }
+    .plate { padding: 3px; }
+    .plate img { max-height: 44mm; width: auto; max-width: 100%; margin: 0 auto; }
+    figcaption { font-size: 7.2pt; line-height: 1.35; margin-top: 3pt; max-width: none; }
+    figcaption .src { font-size: 6.4pt; margin-top: 1pt; }
+    .lectura { font-size: 7.3pt; padding: 4pt 6pt; margin-top: 3pt; max-width: none; }
+    .lectura h4 { font-size: 6.8pt; margin-bottom: 2pt; }
+
+    .tbl { margin: 4pt 0 6pt; }
+    table { font-size: 7.3pt; }
+    th, td { padding: 1.8pt 4pt; }
+    caption { font-size: 7pt; padding-top: 2pt; }
+
+    .refs li { font-size: 7.1pt; margin: 1pt 0; }
+    footer { margin-top: 10pt; padding-top: 5pt; font-size: 7pt; }
+    a { color: inherit; }
+  }
